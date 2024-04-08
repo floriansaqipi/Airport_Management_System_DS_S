@@ -6,5 +6,9 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
 http://www.liquibase.org/xml/ns/dbchangelog
 https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
+    <include file="/db/changelog/scripts/01-creating-airports-table.sql"/>
+    <include file="/db/changelog/scripts/02-creating-airlines-table.sql"/>
+    <include file="/db/changelog/scripts/03-creating-aircraft-table.sql"/>
+    <include file="/db/changelog/scripts/04-creating-flights-table.sql"/>
 
 </databaseChangeLog>
