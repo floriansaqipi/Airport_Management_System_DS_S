@@ -14,4 +14,9 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <include file="/db/changelog/scripts/06-creating-rental_services-table.sql"/>
     <include file="/db/changelog/scripts/07-creating-parking-table.sql"/>
     <include file="/db/changelog/scripts/08-creating-security_checkpoints-table.sql"/>
+    <include file="/db/changelog/scripts/09-creating-passengers-table.sql"/>
+    <include file="/db/changelog/scripts/10-creating-employees-table.sql"/>
+    <include file="/db/changelog/scripts/11-creating-maintenance-table.sql"/>
+    <include file="/db/changelog/scripts/12-creating-feedback-table.sql"/>
+
 </databaseChangeLog>
