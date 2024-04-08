@@ -22,5 +22,9 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <include file="/db/changelog/scripts/14-creating-gate_assignments-table.sql"/>
     <include file="/db/changelog/scripts/15-creating-flight_schedule-table.sql"/>
     <include file="/db/changelog/scripts/16-creating-flight_crews-table.sql"/>
+    <include file="/db/changelog/scripts/17-creating-cargo-table.sql"/>
+    <include file="/db/changelog/scripts/18-creating-baggage-table.sql"/>
+    <include file="/db/changelog/scripts/19-creating-tickets-table.sql"/>
+    <include file="/db/changelog/scripts/20-creating-boarding_passes-table.sql"/>
 
 </databaseChangeLog>
