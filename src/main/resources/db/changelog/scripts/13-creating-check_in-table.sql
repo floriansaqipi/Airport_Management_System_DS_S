@@ -1,4 +1,4 @@
-CREATE TABLE if NOT EXISTS check_in (
+CREATE TABLE IF NOT EXISTS check_in (
     check_in_id INT AUTO_INCREMENT PRIMARY KEY,
     passenger_id INT,
     flight_id INT,

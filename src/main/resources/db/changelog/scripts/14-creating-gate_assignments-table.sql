@@ -1,4 +1,4 @@
-CREATE TABLE if NOT EXISTS gate_assignments (
+CREATE TABLE IF NOT EXISTS gate_assignments (
     assignment_id INT AUTO_INCREMENT PRIMARY KEY,
     flight_id INT,
     gate VARCHAR(10),
