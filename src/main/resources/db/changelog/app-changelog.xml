@@ -10,5 +10,8 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <include file="/db/changelog/scripts/02-creating-airlines-table.sql"/>
     <include file="/db/changelog/scripts/03-creating-aircraft-table.sql"/>
     <include file="/db/changelog/scripts/04-creating-flights-table.sql"/>
-
+    <include file="/db/changelog/scripts/05-creating-airport_services-table.sql"/>
+    <include file="/db/changelog/scripts/06-creating-rental_services-table.sql"/>
+    <include file="/db/changelog/scripts/07-creating-parking-table.sql"/>
+    <include file="/db/changelog/scripts/08-creating-security_checkpoints-table.sql"/>
 </databaseChangeLog>
