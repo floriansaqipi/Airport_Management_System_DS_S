@@ -11,30 +11,24 @@ public class GateAssignment {
     @Column(name = "assignment_id")
     private Integer assignmentId;
 
-    @Column(name = "flight_id")
-    private Integer flightId;
-
-    @Column(name = "gate", length = 10)
+    @Column(name = "gate")
     private String gate;
 
-    @Column(name = "assignment_time", nullable = false)
+    @Column(name = "assignment_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date assignmentTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flight_id", insertable = false, updatable = false)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "flight_id")
     private Flight flight;
 
     // Constructors
     public GateAssignment() {
     }
 
-    public GateAssignment(Integer assignmentId, Integer flightId, String gate, Date assignmentTime, Flight flight) {
-        this.assignmentId = assignmentId;
-        this.flightId = flightId;
+    public GateAssignment(String gate, Date assignmentTime) {
         this.gate = gate;
         this.assignmentTime = assignmentTime;
-        this.flight = flight;
     }
 
     // Getters and Setters
@@ -44,14 +38,6 @@ public class GateAssignment {
 
     public void setAssignmentId(Integer assignmentId) {
         this.assignmentId = assignmentId;
-    }
-
-    public Integer getFlightId() {
-        return flightId;
-    }
-
-    public void setFlightId(Integer flightId) {
-        this.flightId = flightId;
     }
 
     public String getGate() {
@@ -76,6 +62,15 @@ public class GateAssignment {
 
     public void setFlight(Flight flight) {
         this.flight = flight;
+    }
+
+    @Override
+    public String toString() {
+        return "GateAssignment{" +
+                "assignmentTime=" + assignmentTime +
+                ", gate='" + gate + '\'' +
+                ", assignmentId=" + assignmentId +
+                '}';
     }
 }
 

@@ -11,39 +11,27 @@ public class CheckIn {
     @Column(name = "check_in_id")
     private Integer checkInId;
 
-    @Column(name = "passenger_id")
-    private Integer passengerId;
-
-    @Column(name = "flight_id")
-    private Integer flightId;
-
-    @Column(name = "check_in_time", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "check_in_time")
     private Date checkInTime;
 
     @Column(name = "desk_number")
     private Integer deskNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "passenger_id", insertable = false, updatable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "passenger_id")
     private Passenger passenger;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flight_id", insertable = false, updatable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "flight_id")
     private Flight flight;
 
     // Constructors
     public CheckIn() {
     }
 
-    public CheckIn(Integer checkInId, Integer passengerId, Integer flightId, Date checkInTime, Integer deskNumber, Passenger passenger, Flight flight) {
-        this.checkInId = checkInId;
-        this.passengerId = passengerId;
-        this.flightId = flightId;
+    public CheckIn(Date checkInTime, Integer deskNumber) {
         this.checkInTime = checkInTime;
         this.deskNumber = deskNumber;
-        this.passenger = passenger;
-        this.flight = flight;
     }
 
     // Getters and Setters
@@ -53,22 +41,6 @@ public class CheckIn {
 
     public void setCheckInId(Integer checkInId) {
         this.checkInId = checkInId;
-    }
-
-    public Integer getPassengerId() {
-        return passengerId;
-    }
-
-    public void setPassengerId(Integer passengerId) {
-        this.passengerId = passengerId;
-    }
-
-    public Integer getFlightId() {
-        return flightId;
-    }
-
-    public void setFlightId(Integer flightId) {
-        this.flightId = flightId;
     }
 
     public Date getCheckInTime() {
@@ -101,6 +73,15 @@ public class CheckIn {
 
     public void setFlight(Flight flight) {
         this.flight = flight;
+    }
+
+    @Override
+    public String toString() {
+        return "CheckIn{" +
+                "deskNumber=" + deskNumber +
+                ", checkInTime=" + checkInTime +
+                ", checkInId=" + checkInId +
+                '}';
     }
 }
 
