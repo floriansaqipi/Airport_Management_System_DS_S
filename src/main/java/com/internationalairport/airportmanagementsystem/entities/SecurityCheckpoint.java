@@ -2,45 +2,34 @@ package com.internationalairport.airportmanagementsystem.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="airport_services")
-public class AirportServices{
+@Table(name = "security_checkpoints")
+public class SecurityCheckpoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "service_id")
-    private Integer serviceId;
-
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "checkpoint_id")
+    private Integer checkpointId;
 
     @Column(name = "location")
     private String location;
 
+
     @Column(name = "operating_hours")
     private String operatingHours;
 
-    public AirportServices() {
+    public SecurityCheckpoint() {
     }
 
-    public AirportServices(String name, String location, String operatingHours) {
-        this.name = name;
+    public SecurityCheckpoint(String location, String operatingHours) {
         this.location = location;
         this.operatingHours = operatingHours;
     }
 
-    public Integer getServiceId() {
-        return serviceId;
+    public Integer getCheckpointId() {
+        return checkpointId;
     }
 
-    public void setServiceId(Integer serviceId) {
-        this.serviceId = serviceId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setCheckpointId(Integer checkpointId) {
+        this.checkpointId = checkpointId;
     }
 
     public String getLocation() {
@@ -61,9 +50,8 @@ public class AirportServices{
 
     @Override
     public String toString() {
-        return "AirportService{" +
-                "serviceId=" + serviceId +
-                ", name='" + name + '\'' +
+        return "SecurityCheckpoint{" +
+                "checkpointId=" + checkpointId +
                 ", location='" + location + '\'' +
                 ", operatingHours='" + operatingHours + '\'' +
                 '}';

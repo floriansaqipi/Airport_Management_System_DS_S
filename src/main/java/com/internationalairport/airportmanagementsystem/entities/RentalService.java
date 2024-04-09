@@ -2,7 +2,7 @@ package com.internationalairport.airportmanagementsystem.entities;
 import jakarta.persistence.*;
 
 @Entity
-public class RentalServices {
+public class RentalService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rental_id")
@@ -17,10 +17,10 @@ public class RentalServices {
     @Column(name = "rate")
     private Double rate;
 
-    public RentalServices() {
+    public RentalService() {
     }
 
-    public RentalServices(String type, String description, Double rate) {
+    public RentalService(String type, String description, Double rate) {
         this.type = type;
         this.description = description;
         this.rate = rate;
