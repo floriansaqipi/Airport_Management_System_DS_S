@@ -1,4 +1,4 @@
-package com.internationalairport.airportmanagementsystem.entity;
+package com.internationalairport.airportmanagementsystem.entities;
 
 public class ErrorResponse {
 
