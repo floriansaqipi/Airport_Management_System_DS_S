@@ -22,7 +22,7 @@ public class FlightSchedule {
     @Column(name = "status")
     private String status;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "flight_id")
     private Flight flight;
 

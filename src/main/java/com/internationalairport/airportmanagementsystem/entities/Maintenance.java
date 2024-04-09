@@ -13,25 +13,25 @@ public class Maintenance {
     @Column(name = "maintenance_id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "aircraft_id")
     private Aircraft aircraft;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "date")
     private LocalDateTime date;
 
-    @Column(name = "type", nullable = false)
+    @Column(name = "type")
     private String type;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description")
     private String description;
 
     // Constructors, getters, and setters
     public Maintenance() {
     }
 
-    public Maintenance(Aircraft aircraft, LocalDateTime date, String type, String description) {
-        this.aircraft = aircraft;
+    public Maintenance(LocalDateTime date, String type, String description) {
         this.date = date;
         this.type = type;
         this.description = description;
@@ -76,5 +76,15 @@ public class Maintenance {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Maintenance{" +
+                "id=" + id +
+                ", date=" + date +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

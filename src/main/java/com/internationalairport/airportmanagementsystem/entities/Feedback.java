@@ -11,27 +11,27 @@ public class Feedback {
     @Column(name = "feedback_id")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "passenger_id")
     private Passenger passenger;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    @Column(name = "content", columnDefinition = "TEXT")
+    @Column(name = "content")
     private String content;
 
-    @Column(name = "status", length = 50)
+    @Column(name = "status")
     private String status;
 
     // Constructors, getters, and setters
     public Feedback() {
     }
 
-    public Feedback(Passenger passenger, Flight flight, String content, String status) {
-        this.passenger = passenger;
-        this.flight = flight;
+    public Feedback( String content, String status) {
         this.content = content;
         this.status = status;
     }
@@ -76,5 +76,13 @@ public class Feedback {
     public void setStatus(String status) {
         this.status = status;
     }
-}
 
+    @Override
+    public String toString() {
+        return "Feedback{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
+}

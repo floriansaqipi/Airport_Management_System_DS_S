@@ -11,13 +11,13 @@ public class Parking {
     @Column(name = "parking_id")
     private Integer parkingId;
 
-    @Column(name = "location", nullable = false, length = 255)
+    @Column(name = "location")
     private String location;
 
-    @Column(name = "capacity", nullable = false)
+    @Column(name = "capacity")
     private Integer capacity;
 
-    @Column(name = "rate", precision = 5, scale = 2, nullable = false)
+    @Column(name = "rate")
     private BigDecimal rate;
 
     public Parking() {

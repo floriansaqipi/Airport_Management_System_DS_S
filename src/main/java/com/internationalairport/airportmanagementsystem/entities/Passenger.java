@@ -2,6 +2,9 @@ package com.internationalairport.airportmanagementsystem.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Table(name = "passengers")
@@ -12,17 +15,35 @@ public class Passenger {
     @Column(name = "passenger_id")
     private Integer id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "passport_number", unique = true, nullable = false)
+    @Column(name = "passport_number")
     private String passportNumber;
 
-    @Column(name = "nationality", nullable = false)
+    @Column(name = "nationality")
     private String nationality;
 
     @Column(name = "contact_details")
     private String contactDetails;
+
+    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<CheckIn> checkIns;
+
+    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Ticket> tickets;
+
+    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Baggage> baggages;
+
+
 
     // Constructors, getters, and setters
     public Passenger() {
@@ -75,4 +96,93 @@ public class Passenger {
     public void setContactDetails(String contactDetails) {
         this.contactDetails = contactDetails;
     }
+
+    @Override
+    public String toString() {
+        return "Passenger{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", passportNumber='" + passportNumber + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", contactDetails='" + contactDetails + '\'' +
+                '}';
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
+    }
+
+    public List<CheckIn> getCheckIns() {
+        return checkIns;
+    }
+
+    public void setCheckIns(List<CheckIn> checkIns) {
+        this.checkIns = checkIns;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    public List<Baggage> getBaggages() {
+        return baggages;
+    }
+
+    public void setBaggages(List<Baggage> baggages) {
+        this.baggages = baggages;
+    }
+
+
+    // define convenient methods
+
+    public void addFeedback(Feedback tempFeedback) {
+        if( feedbacks == null) {
+            feedbacks = new ArrayList<>();
+        }
+
+        feedbacks.add(tempFeedback);
+
+        tempFeedback.setPassenger(this);
+    }
+
+    public void addTicket(Ticket tempTicket) {
+        if (tickets == null) {
+            tickets = new ArrayList<>();
+        }
+
+        tickets.add(tempTicket);
+
+        tempTicket.setPassenger(this);
+    }
+
+    public void addBaggage(Baggage tempBaggage) {
+        if (baggages == null) {
+            baggages = new ArrayList<>();
+        }
+
+        baggages.add(tempBaggage);
+
+        tempBaggage.setPassenger(this);
+    }
+
+    public void addCheckIn(CheckIn tempCheckIn) {
+        if (checkIns == null) {
+            checkIns = new ArrayList<>();
+        }
+
+        checkIns.add(tempCheckIn);
+
+        tempCheckIn.setPassenger(this);
+    }
+
+
+
 }

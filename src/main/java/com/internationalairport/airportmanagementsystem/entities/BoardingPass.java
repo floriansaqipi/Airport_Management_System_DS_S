@@ -13,9 +13,6 @@ public class BoardingPass {
     @Column(name = "boarding_pass_id")
     private Integer boardingPassId;
 
-    @Column(name = "ticket_id")
-    private Long ticketId;
-
     @Column(name = "gate")
     private String gate;
 
@@ -51,14 +48,6 @@ public class BoardingPass {
         this.boardingPassId = boardingPassId;
     }
 
-    public Long getTicketId() {
-        return ticketId;
-    }
-
-    public void setTicketId(Long ticketId) {
-        this.ticketId = ticketId;
-    }
-
     public String getGate() {
         return gate;
     }
@@ -81,5 +70,14 @@ public class BoardingPass {
 
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
+    }
+
+    @Override
+    public String toString() {
+        return "BoardingPass{" +
+                "boardingPassId=" + boardingPassId +
+                ", gate='" + gate + '\'' +
+                ", boardingTime=" + boardingTime +
+                '}';
     }
 }

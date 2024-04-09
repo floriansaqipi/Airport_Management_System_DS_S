@@ -18,7 +18,8 @@ public class GateAssignment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date assignmentTime;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
