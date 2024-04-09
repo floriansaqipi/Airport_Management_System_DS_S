@@ -2,6 +2,9 @@ package com.internationalairport.airportmanagementsystem.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "aircrafts")
 public class Aircraft {
@@ -11,29 +14,38 @@ public class Aircraft {
     @Column(name = "aircraft_id")
     private Integer aircraftId;
 
-    @Column(name = "tail_number", unique = true, nullable = false, length = 10)
+    @Column(name = "tail_number")
     private String tailNumber;
 
-    @Column(name = "model", nullable = false, length = 50)
+    @Column(name = "model")
     private String model;
 
-    @Column(name = "capacity", nullable = false)
+    @Column(name = "capacity")
     private Integer capacity;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "airline_id")
     private Airline airline;
+
+    @OneToMany(mappedBy = "aircraft",
+               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Flight> flights;
+
+    @OneToMany(mappedBy = "aircraft",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Maintenance> maintenances;
 
     // Constructors, Getters, and Setters
     public Aircraft() {
     }
 
-    public Aircraft(Integer aircraftId, String tailNumber, String model, Integer capacity, Airline airline) {
-        this.aircraftId = aircraftId;
+    public Aircraft(String tailNumber, String model, Integer capacity) {
         this.tailNumber = tailNumber;
         this.model = model;
         this.capacity = capacity;
-        this.airline = airline;
     }
 
     public Integer getAircraftId() {
@@ -74,6 +86,52 @@ public class Aircraft {
 
     public void setAirline(Airline airline) {
         this.airline = airline;
+    }
+
+    public List<Maintenance> getMaintenances() {
+        return maintenances;
+    }
+
+    public void setMaintenances(List<Maintenance> maintenances) {
+        this.maintenances = maintenances;
+    }
+
+    @Override
+    public String toString() {
+        return "Aircraft{" +
+                "aircraftId=" + aircraftId +
+                ", tailNumber='" + tailNumber + '\'' +
+                ", model='" + model + '\'' +
+                ", capacity=" + capacity +
+                '}';
+    }
+
+    public List<Flight> getFlights() {
+        return flights;
+    }
+
+    public void setFlights(List<Flight> flights) {
+        this.flights = flights;
+    }
+
+    public void addFlight(Flight tempFlight) {
+        if (flights == null){
+            flights = new ArrayList<>();
+        }
+
+        flights.add(tempFlight);
+
+        tempFlight.setAircraft(this);
+    }
+
+    public void addMaintenance(Maintenance tempMaintenance) {
+        if (maintenances == null){
+            maintenances = new ArrayList<>();
+        }
+
+        maintenances.add(tempMaintenance);
+
+        tempMaintenance.setAircraft(this);
     }
 }
 
