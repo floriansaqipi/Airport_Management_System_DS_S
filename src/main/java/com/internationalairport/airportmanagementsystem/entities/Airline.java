@@ -1,12 +1,9 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "airlines", uniqueConstraints = {@UniqueConstraint(columnNames = {"code"})})
@@ -17,18 +14,22 @@ public class Airline {
     @Column(name = "airline_id")
     private Integer airlineId;
 
-    @Column(name = "code", unique = true, nullable = false, length = 5)
+    @Column(name = "code")
     private String code;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "airline",
+               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Aircraft> aircrafts;
 
     // Constructors, Getters, and Setters
     public Airline() {
     }
 
-    public Airline(Integer airlineId, String code, String name) {
-        this.airlineId = airlineId;
+    public Airline(String code, String name) {
         this.code = code;
         this.name = name;
     }
@@ -55,6 +56,33 @@ public class Airline {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Airline{" +
+                "airlineId=" + airlineId +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public List<Aircraft> getAircrafts() {
+        return aircrafts;
+    }
+
+    public void setAircrafts(List<Aircraft> aircrafts) {
+        this.aircrafts = aircrafts;
+    }
+
+    public void addAircraft(Aircraft tempAircraft) {
+        if (aircrafts == null){
+            aircrafts = new ArrayList<>();
+        }
+
+        aircrafts.add(tempAircraft);
+
+        tempAircraft.setAirline(this);
     }
 }
 

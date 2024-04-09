@@ -1,12 +1,9 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "airports", uniqueConstraints = {@UniqueConstraint(columnNames = {"code"})})
@@ -17,24 +14,33 @@ public class Airport {
     @Column(name = "airport_id")
     private Integer airportId;
 
-    @Column(name = "code", unique = true, nullable = false, length = 5)
+    @Column(name = "code")
     private String code;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "location_city", nullable = false, length = 255)
+    @Column(name = "location_city")
     private String locationCity;
 
-    @Column(name = "location_country", nullable = false, length = 255)
+    @Column(name = "location_country")
     private String locationCountry;
+
+    @OneToMany(mappedBy = "departureAirport",
+               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Flight> departures;
+
+    @OneToMany(mappedBy = "arrivalAirport",
+               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Flight> arrivals;
 
     // Constructors, Getters, and Setters
     public Airport() {
     }
 
-    public Airport(Integer airportId, String code, String name, String locationCity, String locationCountry) {
-        this.airportId = airportId;
+    public Airport(String code, String name, String locationCity, String locationCountry) {
         this.code = code;
         this.name = name;
         this.locationCity = locationCity;
@@ -79,5 +85,54 @@ public class Airport {
 
     public void setLocationCountry(String locationCountry) {
         this.locationCountry = locationCountry;
+    }
+
+    @Override
+    public String toString() {
+        return "Airport{" +
+                "airportId=" + airportId +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", locationCity='" + locationCity + '\'' +
+                ", locationCountry='" + locationCountry + '\'' +
+                '}';
+    }
+
+    public List<Flight> getDepartures() {
+        return departures;
+    }
+
+    public void setDepartures(List<Flight> departures) {
+        this.departures = departures;
+    }
+
+    public List<Flight> getArrivals() {
+        return arrivals;
+    }
+
+    public void setArrivals(List<Flight> arrivals) {
+        this.arrivals = arrivals;
+    }
+
+    // add convenience methods for bi-directional relationship
+
+    public void addDeparture(Flight tempDeparture) {
+        if (departures == null){
+            departures = new ArrayList<>();
+        }
+
+        departures.add(tempDeparture);
+
+        tempDeparture.setDepartureAirport(this);
+    }
+
+    public void addArrival(Flight tempArrival) {
+        if (departures == null){
+            departures = new ArrayList<>();
+        }
+
+        departures.add(tempArrival);
+
+        tempArrival.setArrivalAirport(this);
     }
 }
