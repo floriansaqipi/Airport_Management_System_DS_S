@@ -11,8 +11,12 @@ public class Cargo {
     @Column(name = "cargo_id")
     private Integer cargoId;
 
-    @Column(name = "flight_id")
-    private Integer flightId;
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH
+    })
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
 
     @Column(name = "weight")
     private Double weight;
@@ -20,13 +24,10 @@ public class Cargo {
     @Column(name = "dimensions")
     private String dimensions;
 
-    // Constructors, getters, and setters
-
     public Cargo() {
     }
 
-    public Cargo(Integer flightId, Double weight, String dimensions) {
-        this.flightId = flightId;
+    public Cargo( Double weight, String dimensions) {
         this.weight = weight;
         this.dimensions = dimensions;
     }
@@ -39,12 +40,12 @@ public class Cargo {
         this.cargoId = cargoId;
     }
 
-    public Integer getFlightId() {
-        return flightId;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setFlightId(Integer flightId) {
-        this.flightId = flightId;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public Double getWeight() {
@@ -61,5 +62,14 @@ public class Cargo {
 
     public void setDimensions(String dimensions) {
         this.dimensions = dimensions;
+    }
+
+    @Override
+    public String toString() {
+        return "Cargo{" +
+                "cargoId=" + cargoId +
+                ", weight=" + weight +
+                ", dimensions='" + dimensions + '\'' +
+                '}';
     }
 }

@@ -11,7 +11,7 @@ public class BoardingPass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "boarding_pass_id")
-    private Long boardingPassId;
+    private Integer boardingPassId;
 
     @Column(name = "ticket_id")
     private Long ticketId;
@@ -22,8 +22,11 @@ public class BoardingPass {
     @Column(name = "boarding_time", nullable = false)
     private LocalDateTime boardingTime;
 
-    @ManyToOne
-    @JoinColumn(name = "ticket_id", referencedColumnName = "ticket_id", insertable = false, updatable = false)
+    @OneToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH
+    })
+    @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
     // Constructors
@@ -32,19 +35,19 @@ public class BoardingPass {
         // Default constructor
     }
 
-    public BoardingPass(Long ticketId, String gate, LocalDateTime boardingTime) {
-        this.ticketId = ticketId;
+    public BoardingPass( String gate, LocalDateTime boardingTime) {
+
         this.gate = gate;
         this.boardingTime = boardingTime;
     }
 
     // Getters and Setters
 
-    public Long getBoardingPassId() {
+    public Integer getBoardingPassId() {
         return boardingPassId;
     }
 
-    public void setBoardingPassId(Long boardingPassId) {
+    public void setBoardingPassId(Integer boardingPassId) {
         this.boardingPassId = boardingPassId;
     }
 

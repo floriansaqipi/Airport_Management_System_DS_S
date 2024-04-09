@@ -9,13 +9,21 @@ public class Baggage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "baggage_id")
-    private Long baggageId;
+    private Integer baggageId;
 
-    @Column(name = "passenger_id")
-    private Long passengerId;
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH
+    })
+    @JoinColumn(name = "passenger_id")
+    private Passenger passenger;
 
-    @Column(name = "flight_id")
-    private Long flightId;
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH
+    })
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
 
     @Column(name = "weight")
     private Double weight;
@@ -26,36 +34,33 @@ public class Baggage {
         // Default constructor
     }
 
-    public Baggage(Long passengerId, Long flightId, Double weight) {
-        this.passengerId = passengerId;
-        this.flightId = flightId;
+    public Baggage(Double weight) {
         this.weight = weight;
     }
 
-    // Getters and Setters
-
-    public Long getBaggageId() {
+    public Integer getBaggageId() {
         return baggageId;
     }
 
-    public void setBaggageId(Long baggageId) {
+    public void setBaggageId(Integer baggageId) {
         this.baggageId = baggageId;
     }
 
-    public Long getPassengerId() {
-        return passengerId;
+
+    public Passenger getPassenger() {
+        return passenger;
     }
 
-    public void setPassengerId(Long passengerId) {
-        this.passengerId = passengerId;
+    public void setPassenger(Passenger passenger) {
+        this.passenger = passenger;
     }
 
-    public Long getFlightId() {
-        return flightId;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setFlightId(Long flightId) {
-        this.flightId = flightId;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public Double getWeight() {
@@ -64,5 +69,13 @@ public class Baggage {
 
     public void setWeight(Double weight) {
         this.weight = weight;
+    }
+
+    @Override
+    public String toString() {
+        return "Baggage{" +
+                "baggageId=" + baggageId +
+                ", weight=" + weight +
+                '}';
     }
 }
