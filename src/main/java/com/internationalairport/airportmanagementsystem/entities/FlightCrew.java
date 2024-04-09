@@ -10,14 +10,16 @@ public class FlightCrew {
     @Column(name = "crew_id")
     private Integer crewId;
 
-    @Column(name = "role", length = 50)
+    @Column(name = "role")
     private String role;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
@@ -67,7 +69,6 @@ public class FlightCrew {
         return "FlightCrew{" +
                 "crewId=" + crewId +
                 ", role='" + role + '\'' +
-                ", flight=" + flight +
                 '}';
     }
 }

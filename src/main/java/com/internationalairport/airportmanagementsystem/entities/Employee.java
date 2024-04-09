@@ -3,6 +3,9 @@ package com.internationalairport.airportmanagementsystem.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -12,18 +15,24 @@ public class Employee {
     @Column(name = "employee_id")
     private Integer id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
     private String role;
 
     @Column(name = "contact_info")
     private String contactInfo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "airport_id")
     private Airport airport;
+
+    @OneToMany(mappedBy = "employee",
+            cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<FlightCrew> flightCrews;
 
     // Constructors, getters, and setters
     public Employee() {
@@ -75,5 +84,35 @@ public class Employee {
 
     public void setAirport(Airport airport) {
         this.airport = airport;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", role='" + role + '\'' +
+                ", contactInfo='" + contactInfo + '\'' +
+                ", flightCrews=" + flightCrews +
+                '}';
+    }
+
+    public List<FlightCrew> getFlightCrews() {
+        return flightCrews;
+    }
+
+    public void setFlightCrews(List<FlightCrew> flightCrews) {
+        this.flightCrews = flightCrews;
+    }
+
+    // define convenient methods
+    public void addFlightCrew(FlightCrew tempFlightCrew) {
+        if( flightCrews == null) {
+            flightCrews = new ArrayList<>();
+        }
+
+        flightCrews.add(tempFlightCrew);
+
+        tempFlightCrew.setEmployee(this);
     }
 }
