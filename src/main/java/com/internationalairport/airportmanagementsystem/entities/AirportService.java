@@ -2,34 +2,45 @@ package com.internationalairport.airportmanagementsystem.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "security_checkpoints")
-public class SecurityCheckpoints {
+@Table(name="airport_services")
+public class AirportService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "checkpoint_id")
-    private Integer checkpointId;
+    @Column(name = "service_id")
+    private Integer serviceId;
 
-    @Column(name = "location", nullable = false, length = 255)
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "location")
     private String location;
 
-
-    @Column(name = "operating_hours", nullable = false, length = 50)
+    @Column(name = "operating_hours")
     private String operatingHours;
 
-    public SecurityCheckpoints() {
+    public AirportService() {
     }
 
-    public SecurityCheckpoints(String location, String operatingHours) {
+    public AirportService(String name, String location, String operatingHours) {
+        this.name = name;
         this.location = location;
         this.operatingHours = operatingHours;
     }
 
-    public Integer getCheckpointId() {
-        return checkpointId;
+    public Integer getServiceId() {
+        return serviceId;
     }
 
-    public void setCheckpointId(Integer checkpointId) {
-        this.checkpointId = checkpointId;
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLocation() {
@@ -50,8 +61,9 @@ public class SecurityCheckpoints {
 
     @Override
     public String toString() {
-        return "SecurityCheckpoint{" +
-                "checkpointId=" + checkpointId +
+        return "AirportService{" +
+                "serviceId=" + serviceId +
+                ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
                 ", operatingHours='" + operatingHours + '\'' +
                 '}';
