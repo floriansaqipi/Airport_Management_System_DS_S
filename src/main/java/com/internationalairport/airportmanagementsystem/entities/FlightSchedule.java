@@ -11,35 +11,29 @@ public class FlightSchedule {
     @Column(name = "schedule_id")
     private Integer scheduleId;
 
-    @Column(name = "flight_id")
-    private Integer flightId;
-
-    @Column(name = "scheduled_departure_time", nullable = false)
+    @Column(name = "scheduled_departure_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date scheduledDepartureTime;
 
-    @Column(name = "scheduled_arrival_time", nullable = false)
+    @Column(name = "scheduled_arrival_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date scheduledArrivalTime;
 
-    @Column(name = "status", length = 50)
+    @Column(name = "status")
     private String status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flight_id", insertable = false, updatable = false)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "flight_id")
     private Flight flight;
 
     // Constructors
     public FlightSchedule() {
     }
 
-    public FlightSchedule(Integer scheduleId, Integer flightId, Date scheduledDepartureTime, Date scheduledArrivalTime, String status, Flight flight) {
-        this.scheduleId = scheduleId;
-        this.flightId = flightId;
+    public FlightSchedule(Date scheduledDepartureTime, Date scheduledArrivalTime, String status) {
         this.scheduledDepartureTime = scheduledDepartureTime;
         this.scheduledArrivalTime = scheduledArrivalTime;
         this.status = status;
-        this.flight = flight;
     }
 
     // Getters and Setters
@@ -49,14 +43,6 @@ public class FlightSchedule {
 
     public void setScheduleId(Integer scheduleId) {
         this.scheduleId = scheduleId;
-    }
-
-    public Integer getFlightId() {
-        return flightId;
-    }
-
-    public void setFlightId(Integer flightId) {
-        this.flightId = flightId;
     }
 
     public Date getScheduledDepartureTime() {
@@ -89,6 +75,16 @@ public class FlightSchedule {
 
     public void setFlight(Flight flight) {
         this.flight = flight;
+    }
+
+    @Override
+    public String toString() {
+        return "FlightSchedule{" +
+                "status='" + status + '\'' +
+                ", scheduledArrivalTime=" + scheduledArrivalTime +
+                ", scheduledDepartureTime=" + scheduledDepartureTime +
+                ", scheduleId=" + scheduleId +
+                '}';
     }
 }
 
