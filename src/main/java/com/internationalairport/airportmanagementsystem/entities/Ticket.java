@@ -9,7 +9,7 @@ public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ticket_id")
-    private Long ticketId;
+    private Integer ticketId;
 
     @Column(name = "seat_number")
     private String seatNumber;
@@ -20,23 +20,30 @@ public class Ticket {
     @Column(name = "price")
     private Double price;
 
-    @ManyToOne
-    @JoinColumn(name = "flight_id", referencedColumnName = "flight_id", insertable = false, updatable = false)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH
+    })
+    @JoinColumn(name = "passenger_id")
+    private Passenger passenger;
+
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH
+    })
+    @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    @ManyToOne
-    @JoinColumn(name = "passenger_id", referencedColumnName = "passenger_id", insertable = false, updatable = false)
-    private Passenger passenger;
+    @OneToOne(mappedBy = "ticketId", cascade = CascadeType.ALL)
+    private BoardingPass boardingPass;
 
     public Ticket() {
     }
 
-    public Ticket(String seatNumber, String ticketClass, Double price, Flight flight, Passenger passenger) {
+    public Ticket(String seatNumber, String ticketClass, Double price) {
         this.seatNumber = seatNumber;
         this.ticketClass = ticketClass;
         this.price = price;
-        this.flight = flight;
-        this.passenger = passenger;
     }
 
     public String getSeatNumber() {
@@ -77,5 +84,15 @@ public class Ticket {
 
     public void setPassenger(Passenger passenger) {
         this.passenger = passenger;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "ticketId=" + ticketId +
+                ", seatNumber='" + seatNumber + '\'' +
+                ", ticketClass='" + ticketClass + '\'' +
+                ", price=" + price +
+                '}';
     }
 }
