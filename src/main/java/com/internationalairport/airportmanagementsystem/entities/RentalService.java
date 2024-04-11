@@ -2,6 +2,7 @@ package com.internationalairport.airportmanagementsystem.entities;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "rental_services")
 public class RentalService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

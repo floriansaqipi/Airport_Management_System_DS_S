@@ -34,7 +34,7 @@ public class Ticket {
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    @OneToOne(mappedBy = "ticketId", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
     private BoardingPass boardingPass;
 
     public Ticket() {
