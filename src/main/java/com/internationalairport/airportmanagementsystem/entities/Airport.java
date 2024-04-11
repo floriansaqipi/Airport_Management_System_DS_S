@@ -1,12 +1,13 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "airports", uniqueConstraints = {@UniqueConstraint(columnNames = {"code"})})
+@Table(name = "airports")
 public class Airport {
 
     @Id
@@ -39,6 +40,7 @@ public class Airport {
     @OneToMany(mappedBy = "airport",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonManagedReference
     private List<Employee> employees;
 
 
