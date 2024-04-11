@@ -1,6 +1,6 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ public class Employee {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "airport_id")
+    @JsonBackReference
     private Airport airport;
 
     @OneToMany(mappedBy = "employee",
@@ -38,11 +39,10 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String name, String role, String contactInfo, Airport airport) {
+    public Employee(String name, String role, String contactInfo) {
         this.name = name;
         this.role = role;
         this.contactInfo = contactInfo;
-        this.airport = airport;
     }
 
     // Getters and setters
@@ -93,7 +93,6 @@ public class Employee {
                 ", name='" + name + '\'' +
                 ", role='" + role + '\'' +
                 ", contactInfo='" + contactInfo + '\'' +
-                ", flightCrews=" + flightCrews +
                 '}';
     }
 
