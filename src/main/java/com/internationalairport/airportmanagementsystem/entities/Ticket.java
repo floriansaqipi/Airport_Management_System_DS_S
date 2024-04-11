@@ -46,6 +46,22 @@ public class Ticket {
         this.price = price;
     }
 
+    public Integer getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(Integer ticketId) {
+        this.ticketId = ticketId;
+    }
+
+    public BoardingPass getBoardingPass() {
+        return boardingPass;
+    }
+
+    public void setBoardingPass(BoardingPass boardingPass) {
+        this.boardingPass = boardingPass;
+    }
+
     public String getSeatNumber() {
         return seatNumber;
     }
