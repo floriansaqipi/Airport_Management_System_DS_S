@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS parking (
+    parking_id INT AUTO_INCREMENT PRIMARY KEY,
+    location VARCHAR(255) NOT NULL,
+    capacity INT NOT NULL,
+    rate DECIMAL(5, 2) NOT NULL
+);
