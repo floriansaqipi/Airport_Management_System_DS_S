@@ -34,7 +34,8 @@ Our project is an Airport Management System designed as a REST API, developed by
 - **Rental_Services**
 - **Feedback**
 
-![ER-DIAGRAM.png](..%2F..%2F..%2FDownloads%2FER-DIAGRAM.png)
+
+![ER-DIAGRAM](https://github.com/floriansaqipi/Airport_Management_System_DS_S/assets/53408143/d9379a89-0df6-4160-a556-82a72349f39d)
 
 ### Database Migration with Liquibase
 
