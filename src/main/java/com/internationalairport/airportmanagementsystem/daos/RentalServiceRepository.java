@@ -1,4 +1,4 @@
-package com.internationalairport.airportmanagementsystem.dao;
+package com.internationalairport.airportmanagementsystem.daos;
 
 import com.internationalairport.airportmanagementsystem.entities.RentalService;
 import org.springframework.data.jpa.repository.JpaRepository;

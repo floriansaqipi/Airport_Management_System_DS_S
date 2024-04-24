@@ -1,6 +1,6 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.FeedbackRepository;
+import com.internationalairport.airportmanagementsystem.daos.FeedbackRepository;
 import com.internationalairport.airportmanagementsystem.entities.Feedback;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;

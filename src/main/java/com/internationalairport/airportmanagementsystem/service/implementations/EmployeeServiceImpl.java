@@ -1,7 +1,7 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 
-import com.internationalairport.airportmanagementsystem.dao.EmployeeRepository;
+import com.internationalairport.airportmanagementsystem.daos.EmployeeRepository;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
 import com.internationalairport.airportmanagementsystem.service.interfaces.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;

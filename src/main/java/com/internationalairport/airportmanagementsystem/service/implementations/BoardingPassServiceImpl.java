@@ -1,8 +1,9 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.BoardingPassRepository;
-import com.internationalairport.airportmanagementsystem.entities.Baggage;
+import com.internationalairport.airportmanagementsystem.daos.BoardingPassRepository;
+import com.internationalairport.airportmanagementsystem.dtos.PostBoardingPassDto;
 import com.internationalairport.airportmanagementsystem.entities.BoardingPass;
+import com.internationalairport.airportmanagementsystem.mappers.BoardingPassMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.BoardingPassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,17 @@ public class BoardingPassServiceImpl implements BoardingPassService {
 
     private BoardingPassRepository boardingPassRepository;
 
+    private BoardingPassMapper boardingPassMapper;
+
     @Autowired
-    public BoardingPassServiceImpl(BoardingPassRepository theBoardingPassRepository){
+    public BoardingPassServiceImpl(BoardingPassRepository theBoardingPassRepository, BoardingPassMapper theBoardingPassMapper){
         boardingPassRepository = theBoardingPassRepository;
+        boardingPassMapper = theBoardingPassMapper;
     }
     @Override
-    public BoardingPass save(BoardingPass theBoardingPass) {
-        return boardingPassRepository.save(theBoardingPass);
+    public BoardingPass save(PostBoardingPassDto postBoardingPassDto) {
+        BoardingPass boardingPass = boardingPassMapper.toBoardingPass(postBoardingPassDto);
+        return boardingPassRepository.save(boardingPass);
     }
 
     @Override

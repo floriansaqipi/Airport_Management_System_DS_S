@@ -1,5 +1,6 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class Flight {
     @OneToMany(mappedBy = "flight",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                        CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonManagedReference
     private List<Cargo> cargos;
 
     @OneToMany(mappedBy = "flight",

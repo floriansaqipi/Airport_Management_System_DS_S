@@ -1,6 +1,6 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.GateAssignmentRepository;
+import com.internationalairport.airportmanagementsystem.daos.GateAssignmentRepository;
 import com.internationalairport.airportmanagementsystem.entities.GateAssignment;
 import com.internationalairport.airportmanagementsystem.service.interfaces.GateAssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;

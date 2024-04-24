@@ -1,8 +1,9 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.CargoRepository;
-import com.internationalairport.airportmanagementsystem.entities.Baggage;
+import com.internationalairport.airportmanagementsystem.daos.CargoRepository;
+import com.internationalairport.airportmanagementsystem.dtos.PostCargoDto;
 import com.internationalairport.airportmanagementsystem.entities.Cargo;
+import com.internationalairport.airportmanagementsystem.mappers.CargoMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.CargoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +16,17 @@ public class CargoServiceImpl implements CargoService {
 
     private CargoRepository cargoRepository;
 
+    private CargoMapper cargoMapper;
+
     @Autowired
-    public CargoServiceImpl(CargoRepository theCargoRepository){
+    public CargoServiceImpl(CargoRepository theCargoRepository, CargoMapper theCargoMapper){
         cargoRepository = theCargoRepository;
+        cargoMapper = theCargoMapper;
     }
     @Override
-    public Cargo save(Cargo theCargo) {
-        return cargoRepository.save(theCargo);
+    public Cargo save(PostCargoDto postCargoDto) {
+        Cargo postCargo = cargoMapper.toCargo(postCargoDto);
+        return cargoRepository.save(postCargo);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class PassengerRestController {
         return dbPassenger;
     }
 
-    @PutMapping("/employees")
+    @PutMapping("/passengers")
     public Passenger updatePassenger(@RequestBody Passenger thePassenger) {
 
         Passenger dbPassenger = passengerService.save(thePassenger);

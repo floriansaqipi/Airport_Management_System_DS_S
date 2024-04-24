@@ -1,6 +1,6 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.SecurityCheckpointRepository;
+import com.internationalairport.airportmanagementsystem.daos.SecurityCheckpointRepository;
 import com.internationalairport.airportmanagementsystem.entities.SecurityCheckpoint;
 import com.internationalairport.airportmanagementsystem.service.interfaces.SecurityCheckpointService;
 import org.springframework.beans.factory.annotation.Autowired;
