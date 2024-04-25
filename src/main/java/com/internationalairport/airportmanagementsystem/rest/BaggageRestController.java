@@ -1,7 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.PostBaggageDto;
 import com.internationalairport.airportmanagementsystem.entities.Baggage;
-import com.internationalairport.airportmanagementsystem.entities.Cargo;
 import com.internationalairport.airportmanagementsystem.service.interfaces.BaggageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,15 +34,13 @@ public class BaggageRestController{
     }
 
     @PostMapping("/baggage")
-    public Baggage addBaggage(@RequestBody Baggage theBaggage){
-        theBaggage.setBaggageId(0);
-        Baggage baggage = baggageService.save(theBaggage);
-        return baggage;
+    public Baggage addBaggage(@RequestBody PostBaggageDto postBaggageDto){
+        return baggageService.save(postBaggageDto);
     }
 
     @PutMapping("/baggage")
-    public Baggage updateBaggage(@RequestBody Baggage theBaggage){
-        Baggage dbBaggage = baggageService.save(theBaggage);
+    public Baggage updateBaggage(@RequestBody PostBaggageDto postBaggageDto){
+        Baggage dbBaggage = baggageService.save(postBaggageDto);
         return dbBaggage;
     }
 

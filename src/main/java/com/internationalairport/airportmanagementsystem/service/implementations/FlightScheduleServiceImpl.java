@@ -1,6 +1,6 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.FlightScheduleRepository;
+import com.internationalairport.airportmanagementsystem.daos.FlightScheduleRepository;
 import com.internationalairport.airportmanagementsystem.entities.FlightSchedule;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FlightScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;

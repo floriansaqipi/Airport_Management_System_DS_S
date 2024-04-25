@@ -1,8 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-import com.internationalairport.airportmanagementsystem.entities.Cargo;
+import com.internationalairport.airportmanagementsystem.dtos.PostTicketDto;
 import com.internationalairport.airportmanagementsystem.entities.Ticket;
-import com.internationalairport.airportmanagementsystem.service.interfaces.CargoService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ public class TicketRestController {
         ticketService = theTicketService;
     }
 
-    @GetMapping("/ticket")
+    @GetMapping("/tickets")
     public List<Ticket> findAll(){
         return ticketService.findAll();
     }
@@ -33,20 +32,19 @@ public class TicketRestController {
         return theTicket;
     }
 
-    @PostMapping("/ticket")
-    public Ticket addTicket(@RequestBody Ticket theTicket){
-        theTicket.setTicketId(0);
-        Ticket ticket = ticketService.save(theTicket);
-        return ticket;
+    @PostMapping("/tickets")
+    public Ticket addTicket(@RequestBody PostTicketDto postTicketDto){
+
+        return ticketService.save(postTicketDto);
+
     }
 
-    @PutMapping("/ticket")
-    public Ticket updateTicket(@RequestBody Ticket theTicket){
-        Ticket dbTicket = ticketService.save(theTicket);
-        return dbTicket;
+    @PutMapping("/tickets")
+    public Ticket updateTicket(@RequestBody PostTicketDto postTicketDto){
+        return ticketService.save(postTicketDto);
     }
 
-    @DeleteMapping("/ticket/{ticketId}")
+    @DeleteMapping("/tickets/{ticketId}")
     public String deleteTicket(@PathVariable int ticketId){
         Ticket tempTicket = ticketService.findById(ticketId);
         if(tempTicket == null){

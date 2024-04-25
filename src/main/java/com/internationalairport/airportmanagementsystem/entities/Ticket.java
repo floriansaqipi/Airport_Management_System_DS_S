@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,34 +17,37 @@ public class Ticket {
     private String seatNumber;
 
     @Column(name = "class")
-    private String ticketClass;
+    private String _class;
 
     @Column(name = "price")
     private Double price;
 
     @ManyToOne(cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "passenger_id")
+    @JsonBackReference
     private Passenger passenger;
 
     @ManyToOne(cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "flight_id")
+    @JsonBackReference
     private Flight flight;
 
     @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private BoardingPass boardingPass;
 
     public Ticket() {
     }
 
-    public Ticket(String seatNumber, String ticketClass, Double price) {
+    public Ticket(String seatNumber, String _class, Double price) {
         this.seatNumber = seatNumber;
-        this.ticketClass = ticketClass;
+        this._class = _class;
         this.price = price;
     }
 
@@ -70,12 +75,12 @@ public class Ticket {
         this.seatNumber = seatNumber;
     }
 
-    public String getTicketClass() {
-        return ticketClass;
+    public String get_class() {
+        return _class;
     }
 
-    public void setTicketClass(String ticketClass) {
-        this.ticketClass = ticketClass;
+    public void set_class(String _class) {
+        this._class = _class;
     }
 
     public Double getPrice() {
@@ -107,7 +112,7 @@ public class Ticket {
         return "Ticket{" +
                 "ticketId=" + ticketId +
                 ", seatNumber='" + seatNumber + '\'' +
-                ", ticketClass='" + ticketClass + '\'' +
+                ", ticketClass='" + _class + '\'' +
                 ", price=" + price +
                 '}';
     }

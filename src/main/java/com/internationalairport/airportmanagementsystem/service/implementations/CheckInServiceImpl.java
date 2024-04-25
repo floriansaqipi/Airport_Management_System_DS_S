@@ -1,6 +1,6 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.CheckInRepository;
+import com.internationalairport.airportmanagementsystem.daos.CheckInRepository;
 import com.internationalairport.airportmanagementsystem.entities.CheckIn;
 import com.internationalairport.airportmanagementsystem.service.interfaces.CheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
