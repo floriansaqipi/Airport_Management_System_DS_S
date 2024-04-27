@@ -1,7 +1,9 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 import com.internationalairport.airportmanagementsystem.daos.AirlineRepository;
+import com.internationalairport.airportmanagementsystem.dtos.PostAirlineDto;
 import com.internationalairport.airportmanagementsystem.entities.Airline;
+import com.internationalairport.airportmanagementsystem.mappers.AirlineMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AirlineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,15 +14,18 @@ import java.util.Optional;
 @Service
 public class AirlineServiceImpl implements AirlineService {
 
-    private final AirlineRepository airlineRepository;
+    private AirlineRepository airlineRepository;
+    private AirlineMapper airlineMapper;
 
     @Autowired
-    public AirlineServiceImpl(AirlineRepository airlineRepository) {
-        this.airlineRepository = airlineRepository;
+    public AirlineServiceImpl(AirlineRepository theAirlineRepository, AirlineMapper theAirlineMapper) {
+        airlineRepository = theAirlineRepository;
+        airlineMapper = theAirlineMapper;
     }
 
     @Override
-    public Airline save(Airline airline) {
+    public Airline save(PostAirlineDto postAirlineDto) {
+        Airline airline = airlineMapper.toAirline(postAirlineDto);
         return airlineRepository.save(airline);
     }
 
