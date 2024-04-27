@@ -1,5 +1,6 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -21,11 +22,13 @@ public class Flight {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "departure_airport_id")
+    @JsonManagedReference
     private Airport departureAirport;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "arrival_airport_id")
+    @JsonManagedReference
     private Airport arrivalAirport;
 
     @Column(name = "departure_time")
@@ -37,46 +40,54 @@ public class Flight {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "aircraft_id")
+    @JsonManagedReference
     private Aircraft aircraft;
 
     @OneToMany(mappedBy = "flight",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonBackReference
     private List<CheckIn> checkIns;
 
     @OneToMany(mappedBy = "flight",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonBackReference
     private List<Baggage> baggages;
 
     @OneToMany(mappedBy = "flight",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonBackReference
     private List<Feedback> feedbacks;
 
-    @OneToOne(mappedBy = "flight",
-            cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "assignment_id")
+    @JsonManagedReference
     private GateAssignment gateAssignments;
 
     @OneToMany(mappedBy = "flight",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonBackReference
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "flight",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonBackReference
     private List<FlightSchedule> flightSchedules;
 
     @OneToMany(mappedBy = "flight",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                        CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonManagedReference
+    @JsonBackReference
     private List<Cargo> cargos;
 
-    @OneToMany(mappedBy = "flight",
+    @ManyToMany(mappedBy = "flight",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonBackReference
     private List<FlightCrew> flightCrews;
 
     // Constructors, Getters, and Setters

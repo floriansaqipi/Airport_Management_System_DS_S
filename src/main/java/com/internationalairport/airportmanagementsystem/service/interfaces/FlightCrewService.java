@@ -1,7 +1,5 @@
 package com.internationalairport.airportmanagementsystem.service.interfaces;
 
-import com.internationalairport.airportmanagementsystem.entities.FlightCrew;
-
 import java.util.List;
 
 public interface FlightCrewService {

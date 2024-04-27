@@ -1,5 +1,6 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -29,18 +30,22 @@ public class Passenger {
 
     @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonBackReference
     private List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonBackReference
     private List<CheckIn> checkIns;
 
     @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonBackReference
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonBackReference
     private List<Baggage> baggages;
 
 

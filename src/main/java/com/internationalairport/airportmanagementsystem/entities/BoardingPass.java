@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,8 +21,7 @@ public class BoardingPass {
     @Column(name = "boarding_time", nullable = false)
     private LocalDateTime boardingTime;
 
-    @OneToOne
-    @JoinColumn(name = "ticket_id")
+    @OneToOne(mappedBy = "boardingPass")
     @JsonBackReference
     private Ticket ticket;
 

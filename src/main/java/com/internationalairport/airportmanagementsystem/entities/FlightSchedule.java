@@ -1,5 +1,6 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class FlightSchedule {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "flight_id")
+    @JsonManagedReference
     private Flight flight;
 
     // Constructors

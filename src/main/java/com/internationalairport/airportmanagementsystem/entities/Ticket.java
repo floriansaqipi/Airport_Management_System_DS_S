@@ -27,7 +27,7 @@ public class Ticket {
             CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "passenger_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Passenger passenger;
 
     @ManyToOne(cascade = {
@@ -35,10 +35,11 @@ public class Ticket {
             CascadeType.DETACH, CascadeType.REFRESH
     })
     @JoinColumn(name = "flight_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Flight flight;
 
-    @OneToOne(mappedBy = "ticket", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "boarding_pass_id")
     @JsonManagedReference
     private BoardingPass boardingPass;
 

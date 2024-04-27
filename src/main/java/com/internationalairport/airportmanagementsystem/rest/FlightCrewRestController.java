@@ -1,6 +1,5 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-import com.internationalairport.airportmanagementsystem.entities.FlightCrew;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FlightCrewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

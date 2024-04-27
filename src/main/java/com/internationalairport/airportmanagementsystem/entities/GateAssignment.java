@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.Date;
 
@@ -18,9 +20,8 @@ public class GateAssignment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date assignmentTime;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "flight_id")
+    @OneToOne(mappedBy = "gateAssignments")
+    @JsonBackReference
     private Flight flight;
 
     // Constructors
