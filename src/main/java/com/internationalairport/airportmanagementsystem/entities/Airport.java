@@ -40,11 +40,6 @@ public class Airport {
     @JsonBackReference
     private List<Flight> arrivals;
 
-    @OneToMany(mappedBy = "airport",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonBackReference
-    private List<Employee> employees;
 
 
     // Constructors, Getters, and Setters
@@ -125,14 +120,6 @@ public class Airport {
         this.arrivals = arrivals;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
-
     // add convenience methods for bi-directional relationship
 
     public void addDeparture(Flight tempDeparture) {
@@ -153,15 +140,5 @@ public class Airport {
         departures.add(tempArrival);
 
         tempArrival.setArrivalAirport(this);
-    }
-
-    public void addEmployee(Employee tempEmployee) {
-        if (employees == null){
-            employees = new ArrayList<>();
-        }
-
-        employees.add(tempEmployee);
-
-        tempEmployee.setAirport(this);
     }
 }

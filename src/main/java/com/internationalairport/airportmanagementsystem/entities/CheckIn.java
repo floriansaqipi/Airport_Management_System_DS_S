@@ -21,13 +21,13 @@ public class CheckIn {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "passenger_id")
-    @JsonManagedReference
+
     private Passenger passenger;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "flight_id")
-    @JsonManagedReference
+
     private Flight flight;
 
     // Constructors

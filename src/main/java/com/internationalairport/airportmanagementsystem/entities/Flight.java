@@ -84,11 +84,16 @@ public class Flight {
     @JsonBackReference
     private List<Cargo> cargos;
 
-    @ManyToMany(mappedBy = "flight",
+    @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonBackReference
-    private List<FlightCrew> flightCrews;
+    @JoinTable(
+            name = "flight_crews",
+            joinColumns = @JoinColumn(name = "flight_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    @JsonManagedReference
+    private List<Employee> employees;
 
     // Constructors, Getters, and Setters
     public Flight() {
@@ -266,14 +271,21 @@ public class Flight {
         tempCargo.setFlight(this);
     }
 
-    public void addFlightCrew(FlightCrew tempFlightCrew) {
-        if (flightCrews == null){
-            flightCrews = new ArrayList<>();
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public void addEmployee(Employee tempEmployee) {
+        if (employees == null){
+            employees = new ArrayList<>();
         }
 
-        flightCrews.add(tempFlightCrew);
-
-        tempFlightCrew.setFlight(this);
+        employees.add(tempEmployee);
     }
+
 }
 
