@@ -22,24 +22,17 @@ public class Ticket {
     @Column(name = "price")
     private Double price;
 
-    @ManyToOne(cascade = {
-            CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
+    @ManyToOne
     @JoinColumn(name = "passenger_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Passenger passenger;
 
-    @ManyToOne(cascade = {
-            CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
+    @ManyToOne
     @JoinColumn(name = "flight_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Flight flight;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "boarding_pass_id")
+    @OneToOne(mappedBy = "ticket")
     @JsonManagedReference
     private BoardingPass boardingPass;
 

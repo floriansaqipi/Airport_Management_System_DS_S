@@ -31,13 +31,13 @@ public class Airport {
     @OneToMany(mappedBy = "departureAirport",
                cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonBackReference
+    @JsonManagedReference
     private List<Flight> departures;
 
     @OneToMany(mappedBy = "arrivalAirport",
                cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonBackReference
+    @JsonManagedReference
     private List<Flight> arrivals;
 
 

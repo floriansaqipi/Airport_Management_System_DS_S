@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-import com.internationalairport.airportmanagementsystem.dtos.PostTicketDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostTicketDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutTicketDto;
 import com.internationalairport.airportmanagementsystem.entities.Ticket;
 import com.internationalairport.airportmanagementsystem.service.interfaces.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,8 @@ public class TicketRestController {
     }
 
     @PutMapping("/tickets")
-    public Ticket updateTicket(@RequestBody PostTicketDto postTicketDto){
-        return ticketService.save(postTicketDto);
+    public Ticket updateTicket(@RequestBody PutTicketDto putTicketDto){
+        return ticketService.save(putTicketDto);
     }
 
     @DeleteMapping("/tickets/{ticketId}")

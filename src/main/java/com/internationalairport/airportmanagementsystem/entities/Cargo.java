@@ -13,12 +13,9 @@ public class Cargo {
     @Column(name = "cargo_id")
     private Integer cargoId;
 
-    @ManyToOne(cascade = {
-            CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-            })
+    @ManyToOne
     @JoinColumn(name = "flight_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Flight flight;
 
     @Column(name = "weight")

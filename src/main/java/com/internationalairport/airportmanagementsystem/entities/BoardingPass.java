@@ -21,7 +21,8 @@ public class BoardingPass {
     @Column(name = "boarding_time", nullable = false)
     private LocalDateTime boardingTime;
 
-    @OneToOne(mappedBy = "boardingPass")
+    @OneToOne
+    @JoinColumn(name = "ticket_id")
     @JsonBackReference
     private Ticket ticket;
 

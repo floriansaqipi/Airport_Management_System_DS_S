@@ -1,7 +1,8 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 import com.internationalairport.airportmanagementsystem.daos.BoardingPassRepository;
-import com.internationalairport.airportmanagementsystem.dtos.PostBoardingPassDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostBoardingPassDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutBoardingPassDto;
 import com.internationalairport.airportmanagementsystem.entities.BoardingPass;
 import com.internationalairport.airportmanagementsystem.mappers.BoardingPassMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.BoardingPassService;
@@ -25,7 +26,13 @@ public class BoardingPassServiceImpl implements BoardingPassService {
     }
     @Override
     public BoardingPass save(PostBoardingPassDto postBoardingPassDto) {
-        BoardingPass boardingPass = boardingPassMapper.toBoardingPass(postBoardingPassDto);
+        BoardingPass boardingPass = boardingPassMapper.postToBoardingPass(postBoardingPassDto);
+        return boardingPassRepository.save(boardingPass);
+    }
+
+    @Override
+    public BoardingPass save(PutBoardingPassDto putBoardingPassDto) {
+        BoardingPass boardingPass = boardingPassMapper.putToBoardingPass(putBoardingPassDto);
         return boardingPassRepository.save(boardingPass);
     }
 

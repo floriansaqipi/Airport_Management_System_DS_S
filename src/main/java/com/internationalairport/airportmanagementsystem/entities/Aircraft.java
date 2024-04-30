@@ -28,19 +28,19 @@ public class Aircraft {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "airline_id")
-    @JsonManagedReference
+    @JsonBackReference
     private Airline airline;
 
     @OneToMany(mappedBy = "aircraft",
                cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonBackReference
+    @JsonManagedReference
     private List<Flight> flights;
 
     @OneToMany(mappedBy = "aircraft",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonBackReference
+    @JsonManagedReference
     private List<Maintenance> maintenances;
 
     // Constructors, Getters, and Setters

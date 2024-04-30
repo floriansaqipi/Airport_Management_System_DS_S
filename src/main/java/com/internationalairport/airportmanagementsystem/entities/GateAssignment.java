@@ -20,7 +20,8 @@ public class GateAssignment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date assignmentTime;
 
-    @OneToOne(mappedBy = "gateAssignments")
+    @OneToOne
+    @JoinColumn(name = "flight_id")
     @JsonBackReference
     private Flight flight;
 

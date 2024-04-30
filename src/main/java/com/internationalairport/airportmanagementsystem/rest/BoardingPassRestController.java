@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-import com.internationalairport.airportmanagementsystem.dtos.PostBoardingPassDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostBoardingPassDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutBoardingPassDto;
 import com.internationalairport.airportmanagementsystem.entities.BoardingPass;
 import com.internationalairport.airportmanagementsystem.service.interfaces.BoardingPassService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +40,17 @@ public class BoardingPassRestController {
     }
 
     @PutMapping("/boarding_passes")
-    public BoardingPass updateBoardingPass(@RequestBody PostBoardingPassDto postBoardingPassDto){
-        return boardingPassService.save(postBoardingPassDto);
+    public BoardingPass updateBoardingPass(@RequestBody PutBoardingPassDto putBoardingPassDto){
+        return boardingPassService.save(putBoardingPassDto);
     }
 
     @DeleteMapping("/boarding_passes/{boarding_passId}")
     public String deleteBoardingPass(@PathVariable int boarding_passId){
         BoardingPass tempBoardingPass = boardingPassService.findById(boarding_passId);
         if(tempBoardingPass == null){
-            throw new RuntimeException("Cargo id not found - " + boarding_passId);
+            throw new RuntimeException("Boarding Pass id not found - " + boarding_passId);
         }
         boardingPassService.deleteById(boarding_passId);
-        return "Deleted Cargo id - " + boarding_passId;
+        return "Deleted Boarding Pass id - " + boarding_passId;
     }
 }
