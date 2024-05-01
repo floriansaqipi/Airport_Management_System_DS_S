@@ -25,21 +25,18 @@ public class Aircraft {
     @Column(name = "capacity")
     private Integer capacity;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "airline_id")
     @JsonBackReference
     private Airline airline;
 
     @OneToMany(mappedBy = "aircraft",
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+    cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Flight> flights;
 
     @OneToMany(mappedBy = "aircraft",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+    cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Maintenance> maintenances;
 
