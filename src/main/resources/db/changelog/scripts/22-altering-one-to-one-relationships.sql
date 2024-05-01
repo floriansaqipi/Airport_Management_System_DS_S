@@ -35,3 +35,11 @@ ALTER TABLE gate_assignments
 ADD CONSTRAINT fk_flight_id
 FOREIGN KEY (flight_id)
 REFERENCES flights(flight_id);
+
+-- changeset Florian_Saqipi:23
+ALTER TABLE flight_crews
+DROP CONSTRAINT flight_crews_ibfk_3;
+
+-- changeset Florian_Saqipi:24
+ALTER TABLE flight_crews
+DROP CONSTRAINT flight_crews_ibfk_4;
