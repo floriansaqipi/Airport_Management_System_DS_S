@@ -19,14 +19,12 @@ public class CheckIn {
     @Column(name = "desk_number")
     private Integer deskNumber;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "passenger_id")
     @JsonBackReference
     private Passenger passenger;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "flight_id")
     @JsonBackReference
     private Flight flight;

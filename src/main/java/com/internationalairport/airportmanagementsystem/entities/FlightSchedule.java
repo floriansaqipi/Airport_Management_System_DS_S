@@ -24,7 +24,7 @@ public class FlightSchedule {
     @Column(name = "status")
     private String status;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "flight_id")
     @JsonBackReference
     private Flight flight;
