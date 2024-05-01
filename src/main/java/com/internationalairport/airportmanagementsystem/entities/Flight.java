@@ -207,14 +207,6 @@ public class Flight {
         this.cargos = cargos;
     }
 
-    public List<FlightCrew> getFlightCrews() {
-        return flightCrews;
-    }
-
-    public void setFlightCrews(List<FlightCrew> flightCrews) {
-        this.flightCrews = flightCrews;
-    }
-
     @Override
     public String toString() {
         return "Flight{" +
