@@ -1,4 +1,4 @@
-package com.internationalairport.airportmanagementsystem.dtos;
+package com.internationalairport.airportmanagementsystem.dtos.post;
 
 public record PostBaggageDto(
         Integer passengerId,

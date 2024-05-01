@@ -1,7 +1,8 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 import com.internationalairport.airportmanagementsystem.daos.BaggageRepository;
-import com.internationalairport.airportmanagementsystem.dtos.PostBaggageDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostBaggageDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutBaggageDto;
 import com.internationalairport.airportmanagementsystem.entities.Baggage;
 import com.internationalairport.airportmanagementsystem.mappers.BaggageMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.BaggageService;
@@ -25,7 +26,13 @@ public class BaggageServiceImpl implements BaggageService {
     }
     @Override
     public Baggage save(PostBaggageDto postBaggageDto) {
-        Baggage baggage = baggageMapper.toBaggage(postBaggageDto);
+        Baggage baggage = baggageMapper.postToBaggage(postBaggageDto);
+        return baggageRepository.save(baggage);
+    }
+
+    @Override
+    public Baggage save(PutBaggageDto putBaggageDto) {
+        Baggage baggage = baggageMapper.putToBaggage(putBaggageDto);
         return baggageRepository.save(baggage);
     }
 

@@ -1,5 +1,6 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -36,12 +37,6 @@ public class Airport {
                cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Flight> arrivals;
-
-    @OneToMany(mappedBy = "airport",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JsonManagedReference
-    private List<Employee> employees;
-
 
     // Constructors, Getters, and Setters
     public Airport() {
@@ -121,14 +116,6 @@ public class Airport {
         this.arrivals = arrivals;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
-
     // add convenience methods for bi-directional relationship
 
     public void addDeparture(Flight tempDeparture) {
@@ -149,15 +136,5 @@ public class Airport {
         departures.add(tempArrival);
 
         tempArrival.setArrivalAirport(this);
-    }
-
-    public void addEmployee(Employee tempEmployee) {
-        if (employees == null){
-            employees = new ArrayList<>();
-        }
-
-        employees.add(tempEmployee);
-
-        tempEmployee.setAirport(this);
     }
 }

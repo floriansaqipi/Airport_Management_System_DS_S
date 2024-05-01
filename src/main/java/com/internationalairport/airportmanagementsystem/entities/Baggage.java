@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,18 +13,12 @@ public class Baggage {
     @Column(name = "baggage_id")
     private Integer baggageId;
 
-    @ManyToOne(cascade = {
-            CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
+    @ManyToOne
     @JoinColumn(name = "passenger_id")
     @JsonBackReference
     private Passenger passenger;
 
-    @ManyToOne(cascade = {
-             CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
+    @ManyToOne
     @JoinColumn(name = "flight_id")
     @JsonBackReference
     private Flight flight;

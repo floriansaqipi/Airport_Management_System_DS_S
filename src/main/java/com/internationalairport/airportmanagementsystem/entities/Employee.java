@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -24,16 +25,16 @@ public class Employee {
     @Column(name = "contact_info")
     private String contactInfo;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "airport_id")
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "flight_crews",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "flight_id")
+    )
     @JsonBackReference
-    private Airport airport;
-
-    @OneToMany(mappedBy = "employee",
-            cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<FlightCrew> flightCrews;
+    private List<Flight> flights;
 
     // Constructors, getters, and setters
     public Employee() {
@@ -78,14 +79,6 @@ public class Employee {
         this.contactInfo = contactInfo;
     }
 
-    public Airport getAirport() {
-        return airport;
-    }
-
-    public void setAirport(Airport airport) {
-        this.airport = airport;
-    }
-
     @Override
     public String toString() {
         return "Employee{" +
@@ -96,22 +89,20 @@ public class Employee {
                 '}';
     }
 
-    public List<FlightCrew> getFlightCrews() {
-        return flightCrews;
+    public List<Flight> getFlights() {
+        return flights;
     }
 
-    public void setFlightCrews(List<FlightCrew> flightCrews) {
-        this.flightCrews = flightCrews;
+    public void setFlights(List<Flight> flights) {
+        this.flights = flights;
     }
 
     // define convenient methods
-    public void addFlightCrew(FlightCrew tempFlightCrew) {
-        if( flightCrews == null) {
-            flightCrews = new ArrayList<>();
+    public void addFlight(Flight tempFlight) {
+        if( flights == null) {
+            flights = new ArrayList<>();
         }
 
-        flightCrews.add(tempFlightCrew);
-
-        tempFlightCrew.setEmployee(this);
+        flights.add(tempFlight);
     }
 }

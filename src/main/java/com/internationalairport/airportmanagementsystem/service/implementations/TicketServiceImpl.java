@@ -1,13 +1,17 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 import com.internationalairport.airportmanagementsystem.daos.TicketRepository;
-import com.internationalairport.airportmanagementsystem.dtos.PostTicketDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostTicketDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutTicketDto;
+import com.internationalairport.airportmanagementsystem.entities.BoardingPass;
 import com.internationalairport.airportmanagementsystem.entities.Ticket;
 import com.internationalairport.airportmanagementsystem.mappers.TicketMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +28,14 @@ public class TicketServiceImpl implements TicketService {
     }
     @Override
     public Ticket save(PostTicketDto postTicketDto) {
-        Ticket ticket = ticketMapper.toTicket(postTicketDto);
+        Ticket ticket = ticketMapper.postToTicket(postTicketDto);
+//        ticket.setBoardingPass(new BoardingPass("sasf", LocalDateTime.now()));
+        return ticketRepository.save(ticket);
+    }
+
+    @Override
+    public Ticket save(PutTicketDto putTicketDto) {
+        Ticket ticket = ticketMapper.putToTicket(putTicketDto);
         return ticketRepository.save(ticket);
     }
 

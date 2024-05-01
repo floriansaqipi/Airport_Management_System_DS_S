@@ -31,12 +31,12 @@ public class Aircraft {
     private Airline airline;
 
     @OneToMany(mappedBy = "aircraft",
-               cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Flight> flights;
 
     @OneToMany(mappedBy = "aircraft",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Maintenance> maintenances;
 

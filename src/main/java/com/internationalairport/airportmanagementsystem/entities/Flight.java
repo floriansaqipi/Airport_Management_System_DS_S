@@ -55,9 +55,8 @@ public class Flight {
     @JsonManagedReference
     private List<Feedback> feedbacks;
 
-    @OneToOne(mappedBy = "flight",
-            cascade = CascadeType.ALL)
-    @JsonBackReference
+    @OneToOne(mappedBy = "flight", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private GateAssignment gateAssignments;
 
     @OneToMany(mappedBy = "flight",
@@ -75,11 +74,17 @@ public class Flight {
     @JsonManagedReference
     private List<Cargo> cargos;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                    CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "flight_crews",
+            joinColumns = @JoinColumn(name = "flight_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
     @JsonManagedReference
-    private List<FlightCrew> flightCrews;
-
+    private List<Employee> employees;
+  
     // Constructors, Getters, and Setters
     public Flight() {
     }
@@ -202,14 +207,6 @@ public class Flight {
         this.cargos = cargos;
     }
 
-    public List<FlightCrew> getFlightCrews() {
-        return flightCrews;
-    }
-
-    public void setFlightCrews(List<FlightCrew> flightCrews) {
-        this.flightCrews = flightCrews;
-    }
-
     @Override
     public String toString() {
         return "Flight{" +
@@ -280,14 +277,21 @@ public class Flight {
         tempCargo.setFlight(this);
     }
 
-    public void addFlightCrew(FlightCrew tempFlightCrew) {
-        if (flightCrews == null){
-            flightCrews = new ArrayList<>();
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public void addEmployee(Employee tempEmployee) {
+        if (employees == null){
+            employees = new ArrayList<>();
         }
 
-        flightCrews.add(tempFlightCrew);
-
-        tempFlightCrew.setFlight(this);
+        employees.add(tempEmployee);
     }
+
 }
 
