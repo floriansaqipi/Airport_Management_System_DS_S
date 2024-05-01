@@ -29,18 +29,14 @@ public class Airport {
     private String locationCountry;
 
     @OneToMany(mappedBy = "departureAirport",
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+               cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Flight> departures;
 
     @OneToMany(mappedBy = "arrivalAirport",
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+               cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Flight> arrivals;
-
-
 
     // Constructors, Getters, and Setters
     public Airport() {

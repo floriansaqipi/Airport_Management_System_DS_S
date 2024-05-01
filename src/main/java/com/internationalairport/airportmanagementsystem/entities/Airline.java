@@ -23,8 +23,7 @@ public class Airline {
     private String name;
 
     @OneToMany(mappedBy = "airline",
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+               cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Aircraft> aircrafts;
 

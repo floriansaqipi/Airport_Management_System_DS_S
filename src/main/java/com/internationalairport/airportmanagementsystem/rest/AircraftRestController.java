@@ -1,5 +1,6 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.PostAircraftDto;
 import com.internationalairport.airportmanagementsystem.entities.Aircraft;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AircraftService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class AircraftRestController {
     }
 
     @GetMapping("/aircrafts")
-    public List<Aircraft> findAllAircrafts() {
+    public List<Aircraft> findAll() {
         return aircraftService.findAll();
     }
 
@@ -33,14 +34,13 @@ public class AircraftRestController {
     }
 
     @PostMapping("/aircrafts")
-    public Aircraft addAircraft(@RequestBody Aircraft aircraft) {
-        aircraft.setAircraftId(0);
-        return aircraftService.save(aircraft);
+    public Aircraft addAircraft(@RequestBody PostAircraftDto postAircraftDto) {
+        return aircraftService.save(postAircraftDto);
     }
 
     @PutMapping("/aircrafts")
-    public Aircraft updateAircraft(@RequestBody Aircraft aircraft) {
-        return aircraftService.save(aircraft);
+    public Aircraft updateAircraft(@RequestBody PostAircraftDto postAircraftDto) {
+        return aircraftService.save(postAircraftDto);
     }
 
     @DeleteMapping("/aircrafts/{aircraftId}")

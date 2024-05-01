@@ -19,14 +19,12 @@ public class Flight {
     @Column(name = "flight_number")
     private String flightNumber;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "departure_airport_id")
     @JsonBackReference
     private Airport departureAirport;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "arrival_airport_id")
     @JsonBackReference
     private Airport arrivalAirport;
@@ -37,27 +35,23 @@ public class Flight {
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "aircraft_id")
     @JsonBackReference
     private Aircraft aircraft;
 
     @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<CheckIn> checkIns;
 
     @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Baggage> baggages;
 
     @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Feedback> feedbacks;
 
@@ -66,20 +60,17 @@ public class Flight {
     private GateAssignment gateAssignments;
 
     @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<FlightSchedule> flightSchedules;
 
     @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                       CascadeType.DETACH, CascadeType.REFRESH})
+            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JsonManagedReference
     private List<Cargo> cargos;
 
@@ -93,7 +84,7 @@ public class Flight {
     )
     @JsonManagedReference
     private List<Employee> employees;
-
+  
     // Constructors, Getters, and Setters
     public Flight() {
     }
@@ -198,6 +189,30 @@ public class Flight {
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    public List<FlightSchedule> getFlightSchedules() {
+        return flightSchedules;
+    }
+
+    public void setFlightSchedules(List<FlightSchedule> flightSchedules) {
+        this.flightSchedules = flightSchedules;
+    }
+
+    public List<Cargo> getCargos() {
+        return cargos;
+    }
+
+    public void setCargos(List<Cargo> cargos) {
+        this.cargos = cargos;
+    }
+
+    public List<FlightCrew> getFlightCrews() {
+        return flightCrews;
+    }
+
+    public void setFlightCrews(List<FlightCrew> flightCrews) {
+        this.flightCrews = flightCrews;
     }
 
     @Override
