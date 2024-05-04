@@ -17,7 +17,7 @@ public class CheckInMapper {
         );
 
         Passenger passenger = new Passenger();
-        passenger.setId(postCheckInDto.passengerId());
+        passenger.setPassengerId(postCheckInDto.passengerId());
 
         Flight flight = new Flight();
         flight.setFlightId(postCheckInDto.flightId());
@@ -36,7 +36,7 @@ public class CheckInMapper {
         checkIn.setCheckInId(putCheckInDto.checkInId());
 
         Passenger passenger = new Passenger();
-        passenger.setId(putCheckInDto.passengerId());
+        passenger.setPassengerId(putCheckInDto.passengerId());
 
         Flight flight = new Flight();
         flight.setFlightId(putCheckInDto.flightId());
