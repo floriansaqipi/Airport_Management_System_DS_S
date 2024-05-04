@@ -1,7 +1,8 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 import com.internationalairport.airportmanagementsystem.daos.AircraftRepository;
-import com.internationalairport.airportmanagementsystem.dtos.PostAircraftDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostAircraftDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutAircraftDto;
 import com.internationalairport.airportmanagementsystem.entities.Aircraft;
 import com.internationalairport.airportmanagementsystem.mappers.AircraftMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AircraftService;
@@ -25,7 +26,13 @@ public class AircraftServiceImpl implements AircraftService {
 
     @Override
     public Aircraft save(PostAircraftDto postAircraftDto) {
-        Aircraft aircraft = aircraftMapper.toAircraft(postAircraftDto);
+        Aircraft aircraft = aircraftMapper.postToAircraft(postAircraftDto);
+        return aircraftRepository.save(aircraft);
+    }
+
+    @Override
+    public Aircraft save(PutAircraftDto putAircraftDto) {
+        Aircraft aircraft = aircraftMapper.putToAircraft(putAircraftDto);
         return aircraftRepository.save(aircraft);
     }
 

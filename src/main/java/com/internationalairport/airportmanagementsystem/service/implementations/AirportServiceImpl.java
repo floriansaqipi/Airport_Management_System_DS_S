@@ -1,7 +1,8 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 import com.internationalairport.airportmanagementsystem.daos.AirportRepository;
-import com.internationalairport.airportmanagementsystem.dtos.PostAirportDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostAirportDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutAirportDto;
 import com.internationalairport.airportmanagementsystem.entities.Airport;
 import com.internationalairport.airportmanagementsystem.mappers.AirportMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AirportService;
@@ -25,7 +26,13 @@ public class AirportServiceImpl implements AirportService {
 
     @Override
     public Airport save(PostAirportDto postAirportDto) {
-        Airport airport = airportMapper.toAirport(postAirportDto);
+        Airport airport = airportMapper.postToAirport(postAirportDto);
+        return airportRepository.save(airport);
+    }
+
+    @Override
+    public Airport save(PutAirportDto putAirportDto) {
+        Airport airport = airportMapper.putToAirport(putAirportDto);
         return airportRepository.save(airport);
     }
 

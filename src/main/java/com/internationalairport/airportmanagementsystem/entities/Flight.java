@@ -19,12 +19,12 @@ public class Flight {
     @Column(name = "flight_number")
     private String flightNumber;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "departure_airport_id")
     @JsonBackReference
     private Airport departureAirport;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "arrival_airport_id")
     @JsonBackReference
     private Airport arrivalAirport;
@@ -35,23 +35,20 @@ public class Flight {
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "aircraft_id")
     @JsonBackReference
     private Aircraft aircraft;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
     @JsonManagedReference
     private List<CheckIn> checkIns;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
     @JsonManagedReference
     private List<Baggage> baggages;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
     @JsonManagedReference
     private List<Feedback> feedbacks;
 
@@ -59,29 +56,19 @@ public class Flight {
     @JsonManagedReference
     private GateAssignment gateAssignments;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
     @JsonManagedReference
     private List<Ticket> tickets;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
     @JsonManagedReference
     private List<FlightSchedule> flightSchedules;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
     @JsonManagedReference
     private List<Cargo> cargos;
 
-    @ManyToMany(
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name = "flight_crews",
-            joinColumns = @JoinColumn(name = "flight_id"),
-            inverseJoinColumns = @JoinColumn(name = "employee_id")
-    )
+    @ManyToMany(mappedBy = "flights")
     @JsonManagedReference
     private List<Employee> employees;
   

@@ -28,13 +28,11 @@ public class Airport {
     @Column(name = "location_country")
     private String locationCountry;
 
-    @OneToMany(mappedBy = "departureAirport",
-               cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "departureAirport")
     @JsonManagedReference
     private List<Flight> departures;
 
-    @OneToMany(mappedBy = "arrivalAirport",
-               cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "arrivalAirport")
     @JsonManagedReference
     private List<Flight> arrivals;
 

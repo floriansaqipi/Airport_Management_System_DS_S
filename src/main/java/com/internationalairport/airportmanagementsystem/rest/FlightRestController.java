@@ -1,6 +1,6 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-import com.internationalairport.airportmanagementsystem.dtos.PostFlightDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightDto;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;

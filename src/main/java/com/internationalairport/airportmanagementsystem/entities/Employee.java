@@ -25,9 +25,7 @@ public class Employee {
     @Column(name = "contact_info")
     private String contactInfo;
 
-    @ManyToMany(
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToMany
     @JoinTable(
             name = "flight_crews",
             joinColumns = @JoinColumn(name = "employee_id"),

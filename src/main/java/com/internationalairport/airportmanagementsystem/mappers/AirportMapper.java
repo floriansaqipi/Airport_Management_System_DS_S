@@ -1,47 +1,32 @@
 package com.internationalairport.airportmanagementsystem.mappers;
 
-import com.internationalairport.airportmanagementsystem.dtos.PostAirportDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostAirportDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutAirportDto;
 import com.internationalairport.airportmanagementsystem.entities.Airport;
-import com.internationalairport.airportmanagementsystem.entities.Flight;
-import com.internationalairport.airportmanagementsystem.entities.Employee;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class AirportMapper {
-    public Airport toAirport(PostAirportDto postAirportDto) {
+    public Airport postToAirport(PostAirportDto postAirportDto) {
         Airport airport = new Airport(
                 postAirportDto.code(),
                 postAirportDto.name(),
                 postAirportDto.locationCity(),
                 postAirportDto.locationCountry()
         );
+        airport.setAirportId(0);
 
-        List<Flight> departures = new ArrayList<>();
-        postAirportDto.departures().forEach(departureId -> {
-            Flight departure = new Flight();
-            departure.setFlightId(departureId);
-            departures.add(departure);
-        });
-        airport.setDepartures(departures);
+        return airport;
+    }
 
-        List<Flight> arrivals = new ArrayList<>();
-        postAirportDto.arrivals().forEach(arrivalId -> {
-            Flight arrival = new Flight();
-            arrival.setFlightId(arrivalId);
-            arrivals.add(arrival);
-        });
-        airport.setArrivals(arrivals);
-
-        List<Employee> employees = new ArrayList<>();
-        postAirportDto.employees().forEach(employeeId -> {
-            Employee employee = new Employee();
-            employee.setId(employeeId);
-            employees.add(employee);
-        });
-        airport.setEmployees(employees);
+    public Airport putToAirport(PutAirportDto putAirportDto) {
+        Airport airport = new Airport(
+                putAirportDto.code(),
+                putAirportDto.name(),
+                putAirportDto.locationCity(),
+                putAirportDto.locationCountry()
+        );
+        airport.setAirportId(putAirportDto.airportId());
 
         return airport;
     }

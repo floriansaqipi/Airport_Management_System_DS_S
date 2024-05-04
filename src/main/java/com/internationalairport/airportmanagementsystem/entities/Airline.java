@@ -22,8 +22,7 @@ public class Airline {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "airline",
-               cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "airline")
     @JsonManagedReference
     private List<Aircraft> aircrafts;
 
