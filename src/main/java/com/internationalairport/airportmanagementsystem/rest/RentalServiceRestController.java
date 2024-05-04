@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostRentalServiceDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutRentalServiceDto;
 import com.internationalairport.airportmanagementsystem.entities.RentalService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.RentalServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +35,13 @@ public class RentalServiceRestController {
     }
 
     @PostMapping("/rental_services")
-    public RentalService addRentalService(@RequestBody RentalService theRentalService){
-        theRentalService.setRentalId(0);
-        RentalService rentalService=rentalServiceService.save(theRentalService);
-        return rentalService;
+    public RentalService addRentalService(@RequestBody PostRentalServiceDto postRentalServiceDto){
+        return rentalServiceService.save(postRentalServiceDto);
     }
 
     @PutMapping("/rental_services")
-    public RentalService updateRentalService(@RequestBody RentalService theRentalService){
-        RentalService rentalService = rentalServiceService.save(theRentalService);
-        return rentalService;
+    public RentalService updateRentalService(@RequestBody PutRentalServiceDto putRentalServiceDto){
+        return rentalServiceService.save(putRentalServiceDto);
     }
 
     @DeleteMapping("/rental_services/{rentalServiceId}")

@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostSecurityCheckpointDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutSecurityCheckpointDto;
 import com.internationalairport.airportmanagementsystem.entities.SecurityCheckpoint;
 import com.internationalairport.airportmanagementsystem.service.interfaces.SecurityCheckpointService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +35,14 @@ public class SecurityCheckpointRestController {
     }
 
     @PostMapping("/security_checkpoints")
-    public SecurityCheckpoint addSecurityCheckpoint(@RequestBody SecurityCheckpoint theSecurityCheckpoint){
-        theSecurityCheckpoint.setCheckpointId(0);
-        SecurityCheckpoint securityCheckpoint=securityCheckpointService.save(theSecurityCheckpoint);
-        return securityCheckpoint;
+    public SecurityCheckpoint addSecurityCheckpoint(@RequestBody PostSecurityCheckpointDto postSecurityCheckpointDto){
+        return securityCheckpointService.save(postSecurityCheckpointDto);
     }
 
     //add mapping for put
     @PutMapping("/security_checkpoints")
-    public SecurityCheckpoint updateSecurityCheckpoint(@RequestBody SecurityCheckpoint theSecurityCheckpoint){
-        SecurityCheckpoint securityCheckpoint = securityCheckpointService.save(theSecurityCheckpoint);
-        return securityCheckpoint;
+    public SecurityCheckpoint updateSecurityCheckpoint(@RequestBody PutSecurityCheckpointDto putSecurityCheckpointDto){
+        return securityCheckpointService.save(putSecurityCheckpointDto);
     }
 
     @DeleteMapping("/security_checkpoints/{securityCheckpointId}")
