@@ -1,6 +1,6 @@
 package com.internationalairport.airportmanagementsystem.service.interfaces;
 
-import com.internationalairport.airportmanagementsystem.dtos.PostFlightDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightDto;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
 
 import java.util.List;

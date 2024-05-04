@@ -1,7 +1,7 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 import com.internationalairport.airportmanagementsystem.daos.FlightRepository;
-import com.internationalairport.airportmanagementsystem.dtos.PostFlightDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightDto;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
 import com.internationalairport.airportmanagementsystem.mappers.FlightMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FlightService;
@@ -25,7 +25,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public Flight save(PostFlightDto postFlightDto) {
-        Flight flight = flightMapper.toFlight(postFlightDto);
+        Flight flight = flightMapper.postToFlight(postFlightDto);
         return flightRepository.save(flight);
     }
 

@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.mappers;
 
-import com.internationalairport.airportmanagementsystem.dtos.PostAircraftDto;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostAircraftDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutAircraftDto;
 import com.internationalairport.airportmanagementsystem.entities.Aircraft;
 import com.internationalairport.airportmanagementsystem.entities.Airline;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
@@ -12,31 +13,36 @@ import java.util.List;
 
 @Service
 public class AircraftMapper {
-    public Aircraft toAircraft(PostAircraftDto postAircraftDto) {
-        Aircraft aircraft = new Aircraft();
-        aircraft.setTailNumber(postAircraftDto.tailNumber());
-        aircraft.setModel(postAircraftDto.model());
-        aircraft.setCapacity(postAircraftDto.capacity());
+    public Aircraft postToAircraft(PostAircraftDto postAircraftDto) {
+        Aircraft aircraft = new Aircraft(
+                postAircraftDto.tailNumber(),
+                postAircraftDto.model(),
+                postAircraftDto.capacity()
+        );
+      aircraft.setAircraftId(0);
 
-        Airline airline = new Airline();
-        airline.setAirlineId(postAircraftDto.airlineId());
-        aircraft.setAirline(airline);
+      if(postAircraftDto.airlineId() != null){
+          Airline airline = new Airline();
+          airline.setAirlineId(postAircraftDto.airlineId());
+          aircraft.setAirline(airline);
+      }
 
-        List<Flight> flights = new ArrayList<>();
-        postAircraftDto.flights().forEach(flightId -> {
-            Flight flight = new Flight();
-            flight.setFlightId(flightId);
-            flights.add(flight);
-        });
-        aircraft.setFlights(flights);
+      return aircraft;
+    }
 
-        List<Maintenance> maintenances = new ArrayList<>();
-        postAircraftDto.maintenances().forEach(maintenanceId -> {
-            Maintenance maintenance = new Maintenance();
-            maintenance.setId(maintenanceId);
-            maintenances.add(maintenance);
-        });
-        aircraft.setMaintenances(maintenances);
+    public Aircraft putToAircraft(PutAircraftDto putAircraftDto) {
+        Aircraft aircraft = new Aircraft(
+                putAircraftDto.tailNumber(),
+                putAircraftDto.model(),
+                putAircraftDto.capacity()
+        );
+        aircraft.setAircraftId(putAircraftDto.aircraftId());
+
+        if(putAircraftDto.airlineId() != null){
+            Airline airline = new Airline();
+            airline.setAirlineId(putAircraftDto.airlineId());
+            aircraft.setAirline(airline);
+        }
 
         return aircraft;
     }
