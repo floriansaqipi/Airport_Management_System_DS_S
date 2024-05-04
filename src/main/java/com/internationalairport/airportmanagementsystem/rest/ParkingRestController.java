@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostParkingDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutParkingDto;
 import com.internationalairport.airportmanagementsystem.entities.Parking;
 import com.internationalairport.airportmanagementsystem.service.interfaces.ParkingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +35,14 @@ public class ParkingRestController {
     }
 
     @PostMapping("/parkings")
-    public Parking addParking(@RequestBody Parking theParking){
-        theParking.setParkingId(0);
-        Parking parking= parkingService.save(theParking);
-        return parking;
+    public Parking addParking(@RequestBody PostParkingDto postParkingDto){
+        return parkingService.save(postParkingDto);
     }
 
     //add mapping for put
     @PutMapping("/parkings")
-    public Parking updateParking(@RequestBody Parking theParking){
-        Parking parking = parkingService.save(theParking);
-        return parking;
+    public Parking updateParking(@RequestBody PutParkingDto putParkingDto){
+        return parkingService.save(putParkingDto);
     }
 
     @DeleteMapping("/parkings/{parkingId}")
