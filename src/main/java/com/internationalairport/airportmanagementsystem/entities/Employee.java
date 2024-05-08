@@ -14,7 +14,7 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id")
-    private Integer id;
+    private Integer employeeId;
 
     @Column(name = "name")
     private String name;
@@ -45,12 +45,12 @@ public class Employee {
     }
 
     // Getters and setters
-    public Integer getId() {
-        return id;
+    public Integer getEmployeeId() {
+        return employeeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -80,10 +80,11 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "id=" + id +
+                "employeeId=" + employeeId +
                 ", name='" + name + '\'' +
                 ", role='" + role + '\'' +
                 ", contactInfo='" + contactInfo + '\'' +
+                ", flights=" + flights +
                 '}';
     }
 

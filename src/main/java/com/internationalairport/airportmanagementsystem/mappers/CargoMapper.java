@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CargoMapper {
-
     public Cargo postToCargo(PostCargoDto postCargoDto){
         Cargo cargo = new Cargo(
                 postCargoDto.weight(),

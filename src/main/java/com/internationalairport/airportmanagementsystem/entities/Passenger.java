@@ -15,7 +15,7 @@ public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "passenger_id")
-    private Integer id;
+    private Integer passengerId;
 
     @Column(name = "name")
     private String name;
@@ -63,12 +63,12 @@ public class Passenger {
     }
 
     // Getters and setters
-    public Integer getId() {
-        return id;
+    public Integer getPassengerId() {
+        return passengerId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPassengerId(Integer passengerId) {
+        this.passengerId = passengerId;
     }
 
     public String getName() {
@@ -106,11 +106,15 @@ public class Passenger {
     @Override
     public String toString() {
         return "Passenger{" +
-                "id=" + id +
+                "passengerId=" + passengerId +
                 ", name='" + name + '\'' +
                 ", passportNumber='" + passportNumber + '\'' +
                 ", nationality='" + nationality + '\'' +
                 ", contactDetails='" + contactDetails + '\'' +
+                ", feedbacks=" + feedbacks +
+                ", checkIns=" + checkIns +
+                ", tickets=" + tickets +
+                ", baggages=" + baggages +
                 '}';
     }
 

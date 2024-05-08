@@ -2,7 +2,10 @@ package com.internationalairport.airportmanagementsystem.service.implementations
 
 
 import com.internationalairport.airportmanagementsystem.daos.EmployeeRepository;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostEmployeeDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
+import com.internationalairport.airportmanagementsystem.mappers.EmployeeMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,12 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository employeeRepository;
+    private EmployeeMapper employeeMapper;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository) {
+    public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository, EmployeeMapper thEmployeeMapper) {
         employeeRepository = theEmployeeRepository;
+        employeeMapper = thEmployeeMapper;
     }
 
     @Override
@@ -42,8 +47,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee save(Employee theEmployee) {
-        return employeeRepository.save(theEmployee);
+    public Employee save(PutEmployeeDto putEmployeeDto) {
+        Employee employee = employeeMapper.putToEmployee(putEmployeeDto);
+        return employeeRepository.save(employee);
+    }
+
+    @Override
+    public Employee save(PostEmployeeDto postEmployeeDto) {
+        Employee employee = employeeMapper.postToEmployee(postEmployeeDto);
+        return employeeRepository.save(employee);
     }
 
     @Override
