@@ -25,12 +25,7 @@ public class Employee {
     @Column(name = "contact_info")
     private String contactInfo;
 
-    @ManyToMany
-    @JoinTable(
-            name = "flight_crews",
-            joinColumns = @JoinColumn(name = "employee_id"),
-            inverseJoinColumns = @JoinColumn(name = "flight_id")
-    )
+    @ManyToMany(mappedBy = "employees")
     @JsonBackReference
     private List<Flight> flights;
 

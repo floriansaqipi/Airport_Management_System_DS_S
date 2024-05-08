@@ -14,9 +14,13 @@ public class GateAssignmentMapper {
                 postGateAssignmentDto.gate(),
                 postGateAssignmentDto.assignmentTime()
         );
-        Flight flight = new Flight();
-        flight.setFlightId(postGateAssignmentDto.flightId());
-        gateAssignment.setFlight(flight);
+        gateAssignment.setAssignmentId(0);
+
+        if(postGateAssignmentDto.flightId() != null){
+            Flight flight = new Flight();
+            flight.setFlightId(postGateAssignmentDto.flightId());
+            gateAssignment.setFlight(flight);
+        }
         return gateAssignment;
     }
 
@@ -26,9 +30,12 @@ public class GateAssignmentMapper {
                 putGateAssignmentDto.assignmentTime()
         );
         gateAssignment.setAssignmentId(putGateAssignmentDto.assignmentId());
-        Flight flight = new Flight();
-        flight.setFlightId(putGateAssignmentDto.flightId());
-        gateAssignment.setFlight(flight);
+
+        if(putGateAssignmentDto.flightId() != null){
+            Flight flight = new Flight();
+            flight.setFlightId(putGateAssignmentDto.flightId());
+            gateAssignment.setFlight(flight);
+        }
         return gateAssignment;
     }
 }

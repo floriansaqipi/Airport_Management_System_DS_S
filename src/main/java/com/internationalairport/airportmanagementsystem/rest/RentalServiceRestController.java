@@ -52,7 +52,7 @@ public class RentalServiceRestController {
 
         }
         rentalServiceService.deleteById(rentalServiceId);
-        return "Deleted  id - "+rentalServiceId;
+        return "Deleted Rental Service id - "+rentalServiceId;
     }
     @DeleteMapping("/rental_services")
     public String deleteAllRentalServices() {

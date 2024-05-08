@@ -18,12 +18,12 @@ public class Parking {
     private Integer capacity;
 
     @Column(name = "rate")
-    private BigDecimal rate;
+    private Double rate;
 
     public Parking() {
     }
 
-    public Parking(String location, Integer capacity, BigDecimal rate) {
+    public Parking(String location, Integer capacity, Double rate) {
         this.location = location;
         this.capacity = capacity;
         this.rate = rate;
@@ -53,11 +53,11 @@ public class Parking {
         this.capacity = capacity;
     }
 
-    public BigDecimal getRate() {
+    public Double getRate() {
         return rate;
     }
 
-    public void setRate(BigDecimal rate) {
+    public void setRate(Double rate) {
         this.rate = rate;
     }
 

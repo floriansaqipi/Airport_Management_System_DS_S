@@ -15,16 +15,18 @@ public class CheckInMapper {
                 postCheckInDto.checkInTime(),
                 postCheckInDto.deskNumber()
         );
+        checkIn.setCheckInId(0);
+        if(postCheckInDto.passengerId() != null){
+            Passenger passenger = new Passenger();
+            passenger.setId(postCheckInDto.passengerId());
+            checkIn.setPassenger(passenger);
+        }
 
-        Passenger passenger = new Passenger();
-        passenger.setId(postCheckInDto.passengerId());
-
-        Flight flight = new Flight();
-        flight.setFlightId(postCheckInDto.flightId());
-
-        checkIn.setPassenger(passenger);
-        checkIn.setFlight(flight);
-
+        if(postCheckInDto.flightId() != null){
+            Flight flight = new Flight();
+            flight.setFlightId(postCheckInDto.flightId());
+            checkIn.setFlight(flight);
+        }
         return checkIn;
     }
 
@@ -35,14 +37,17 @@ public class CheckInMapper {
         );
         checkIn.setCheckInId(putCheckInDto.checkInId());
 
-        Passenger passenger = new Passenger();
-        passenger.setId(putCheckInDto.passengerId());
+        if(putCheckInDto.passengerId() != null){
+            Passenger passenger = new Passenger();
+            passenger.setId(putCheckInDto.passengerId());
+            checkIn.setPassenger(passenger);
+        }
 
-        Flight flight = new Flight();
-        flight.setFlightId(putCheckInDto.flightId());
-
-        checkIn.setPassenger(passenger);
-        checkIn.setFlight(flight);
+        if(putCheckInDto.flightId() != null){
+            Flight flight = new Flight();
+            flight.setFlightId(putCheckInDto.flightId());
+            checkIn.setFlight(flight);
+        }
 
         return checkIn;
     }

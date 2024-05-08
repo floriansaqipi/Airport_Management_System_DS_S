@@ -1,12 +1,12 @@
 package com.internationalairport.airportmanagementsystem.service.interfaces;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightCrewDto;
+import com.internationalairport.airportmanagementsystem.entities.Flight;
+
 import java.util.List;
 
 public interface FlightCrewService {
-//    FlightCrew save(FlightCrew flightCrew);
-//    FlightCrew findById(Integer flightCrewId);
-//    List<FlightCrew> findAll();
-//    void deleteById(Integer flightCrewId);
-//    String deleteAll();
+    Flight save(PostFlightCrewDto postFlightCrewDto);
+    void deleteByFlightIdAndEmployeeId(Integer flightId, Integer employeeId);
 }
 

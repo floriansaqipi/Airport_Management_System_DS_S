@@ -53,7 +53,7 @@ public class CheckInRestController {
             throw new RuntimeException("Id not found - " + checkInId);
         }
         checkInService.deleteById(checkInId);
-        return "Deleted id - " + checkInId;
+        return "Deleted Check In id - " + checkInId;
     }
 
     @DeleteMapping("/check_ins")

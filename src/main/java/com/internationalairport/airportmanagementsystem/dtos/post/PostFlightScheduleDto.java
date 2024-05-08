@@ -1,11 +1,12 @@
 package com.internationalairport.airportmanagementsystem.dtos.post;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public record PostFlightScheduleDto(
         Integer flightId,
-        Date scheduledDepartureTime,
-        Date scheduledArrivalTime,
+        LocalDateTime scheduledDepartureTime,
+        LocalDateTime scheduledArrivalTime,
         String status
 ) {
 }

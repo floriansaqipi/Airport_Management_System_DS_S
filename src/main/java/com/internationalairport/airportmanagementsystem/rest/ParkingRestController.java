@@ -53,7 +53,7 @@ public class ParkingRestController {
 
         }
         parkingService.deleteById(parkingId);
-        return "Deleted id - "+parkingId;
+        return "Deleted Parking id - "+parkingId;
     }
     @DeleteMapping("/parkings")
     public String deleteAllParkings() {
