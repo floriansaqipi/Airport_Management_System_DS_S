@@ -13,14 +13,12 @@ public class Feedback {
     @Column(name = "feedback_id")
     private Integer feedbackId;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "passenger_id")
     @JsonBackReference
     private Passenger passenger;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "flight_id")
     @JsonBackReference
     private Flight flight;
