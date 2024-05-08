@@ -19,7 +19,7 @@ public class TicketMapper {
         ticket.setTicketId(0);
 
         Passenger passenger = new Passenger();
-        passenger.setId(postTicketDto.passengerId());
+        passenger.setPassengerId(postTicketDto.passengerId());
         Flight flight = new Flight();
         flight.setFlightId(postTicketDto.flightId());
 
@@ -38,7 +38,7 @@ public class TicketMapper {
         ticket.setTicketId(putTicketDto.tickedId());
 
         Passenger passenger = new Passenger();
-        passenger.setId(putTicketDto.passengerId());
+        passenger.setPassengerId(putTicketDto.passengerId());
         Flight flight = new Flight();
         flight.setFlightId(putTicketDto.flightId());
 

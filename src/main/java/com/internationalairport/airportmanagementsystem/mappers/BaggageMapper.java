@@ -16,7 +16,7 @@ public class BaggageMapper {
         );
         baggage.setBaggageId(0);
         Passenger passenger = new Passenger();
-        passenger.setId(postBaggageDto.passengerId());
+        passenger.setPassengerId(postBaggageDto.passengerId());
         Flight flight = new Flight();
         flight.setFlightId(postBaggageDto.flightId());
 
@@ -31,7 +31,7 @@ public class BaggageMapper {
         );
         baggage.setBaggageId(putBaggageDto.baggageId());
         Passenger passenger = new Passenger();
-        passenger.setId(putBaggageDto.passengerId());
+        passenger.setPassengerId(putBaggageDto.passengerId());
         Flight flight = new Flight();
         flight.setFlightId(putBaggageDto.flightId());
 

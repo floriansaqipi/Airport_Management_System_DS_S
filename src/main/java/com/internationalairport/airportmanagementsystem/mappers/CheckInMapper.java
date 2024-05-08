@@ -27,6 +27,7 @@ public class CheckInMapper {
             flight.setFlightId(postCheckInDto.flightId());
             checkIn.setFlight(flight);
         }
+      
         return checkIn;
     }
 

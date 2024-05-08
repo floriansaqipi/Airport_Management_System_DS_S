@@ -1,7 +1,10 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
 import com.internationalairport.airportmanagementsystem.daos.FeedbackRepository;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostFeedbackDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutFeedbackDto;
 import com.internationalairport.airportmanagementsystem.entities.Feedback;
+import com.internationalairport.airportmanagementsystem.mappers.FeedbackMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +15,12 @@ import java.util.Optional;
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
     private FeedbackRepository feedbackRepository;
+    private FeedbackMapper feedbackMapper;
 
     @Autowired
-    public FeedbackServiceImpl(FeedbackRepository theFeedbackRepository) {
+    public FeedbackServiceImpl(FeedbackRepository theFeedbackRepository, FeedbackMapper theFeedbackMapper) {
         feedbackRepository = theFeedbackRepository;
+        feedbackMapper = theFeedbackMapper;
     }
 
     @Override
@@ -41,9 +46,17 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public Feedback save(Feedback theFeedback) {
-        return feedbackRepository.save(theFeedback);
+    public Feedback save(PutFeedbackDto putFeedbackDto) {
+        Feedback feedback = feedbackMapper.putToFeedback(putFeedbackDto);
+        return feedbackRepository.save(feedback);
     }
+
+    @Override
+    public Feedback save(PostFeedbackDto postFeedbackDto) {
+        Feedback feedback = feedbackMapper.postToFeedback(postFeedbackDto);
+        return feedbackRepository.save(feedback);
+    }
+
 
     @Override
     public void deleteById(int theId) {
