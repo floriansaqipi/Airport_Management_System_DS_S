@@ -6,7 +6,7 @@ public record PutParkingDto(
     Integer parkingId,
     String location,
     Integer capacity,
-    BigDecimal rate
+    Double rate
 ){
 
 }

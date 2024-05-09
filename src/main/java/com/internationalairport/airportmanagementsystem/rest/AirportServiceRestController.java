@@ -52,7 +52,7 @@ public class AirportServiceRestController {
 
         }
         airportServiceService.deleteById(airportServiceId);
-        return "Deleted  id - "+airportServiceId;
+        return "Deleted Airport Service id - "+airportServiceId;
     }
     @DeleteMapping("/airport_services")
     public String deleteAllAirportServices() {

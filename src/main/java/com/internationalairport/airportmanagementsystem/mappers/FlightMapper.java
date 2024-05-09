@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.mappers;
 
 import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutFlightDto;
 import com.internationalairport.airportmanagementsystem.entities.Aircraft;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
@@ -26,6 +27,31 @@ public class FlightMapper {
             for (Integer employeeId: postFlightDto.employeeIds()) {
                 Employee employee = new Employee();
                 employee.setEmployeeId(employeeId);
+                flight.addEmployee(employee);
+            }
+        }
+        return flight;
+    }
+
+
+    public Flight putToFlight(PutFlightDto putFlightDto) {
+        Flight flight = new Flight(
+                putFlightDto.flightNumber(),
+                putFlightDto.departureTime(),
+                putFlightDto.arrivalTime()
+        );
+        flight.setFlightId(putFlightDto.flightId());
+
+        if(putFlightDto.aircraftId() != null){
+            Aircraft aircraft = new Aircraft();
+            aircraft.setAircraftId(putFlightDto.aircraftId());
+            flight.setAircraft(aircraft);
+        }
+
+        if(putFlightDto.employeeIds() != null && !putFlightDto.employeeIds().isEmpty()){
+            for (Integer employeeId: putFlightDto.employeeIds()) {
+                Employee employee = new Employee();
+                employee.setId(employeeId);
                 flight.addEmployee(employee);
             }
         }

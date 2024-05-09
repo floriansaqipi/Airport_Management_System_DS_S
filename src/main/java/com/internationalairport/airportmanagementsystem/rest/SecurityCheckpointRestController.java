@@ -53,7 +53,7 @@ public class SecurityCheckpointRestController {
 
         }
         securityCheckpointService.deleteById(securityCheckpointId);
-        return "Deleted  id - "+securityCheckpointId;
+        return "Deleted Security Checkpoint id - "+securityCheckpointId;
     }
     @DeleteMapping("/security_checkpoints")
     public String deleteAllSecurityCheckpoints() {

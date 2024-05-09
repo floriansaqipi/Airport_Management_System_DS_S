@@ -68,7 +68,12 @@ public class Flight {
     @JsonManagedReference
     private List<Cargo> cargos;
 
-    @ManyToMany(mappedBy = "flights")
+    @ManyToMany
+    @JoinTable(
+            name = "flight_crews",
+            joinColumns = @JoinColumn(name = "flight_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
     @JsonManagedReference
     private List<Employee> employees;
   

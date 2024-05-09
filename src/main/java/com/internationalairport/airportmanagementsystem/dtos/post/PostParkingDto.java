@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 public record PostParkingDto(
     String location,
     Integer capacity,
-    BigDecimal rate
+    Double rate
 ){
 
 }
