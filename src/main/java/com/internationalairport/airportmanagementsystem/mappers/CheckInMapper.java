@@ -18,7 +18,7 @@ public class CheckInMapper {
         checkIn.setCheckInId(0);
         if(postCheckInDto.passengerId() != null){
             Passenger passenger = new Passenger();
-            passenger.setId(postCheckInDto.passengerId());
+            passenger.setPassengerId(postCheckInDto.passengerId());
             checkIn.setPassenger(passenger);
         }
 
@@ -40,7 +40,7 @@ public class CheckInMapper {
 
         if(putCheckInDto.passengerId() != null){
             Passenger passenger = new Passenger();
-            passenger.setId(putCheckInDto.passengerId());
+            passenger.setPassengerId(putCheckInDto.passengerId());
             checkIn.setPassenger(passenger);
         }
 

@@ -51,7 +51,7 @@ public class FlightMapper {
         if(putFlightDto.employeeIds() != null && !putFlightDto.employeeIds().isEmpty()){
             for (Integer employeeId: putFlightDto.employeeIds()) {
                 Employee employee = new Employee();
-                employee.setId(employeeId);
+                employee.setEmployeeId(employeeId);
                 flight.addEmployee(employee);
             }
         }
