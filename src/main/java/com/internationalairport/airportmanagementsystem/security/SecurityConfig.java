@@ -27,26 +27,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BasicAuthenticationEntryPoint basicAuthenticationEntryPoint() {
-        BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-        entryPoint.setRealmName("My Realm");
-        return entryPoint;
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf().disable()
                 .authorizeRequests()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET).authenticated()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(basicAuthenticationEntryPoint()));
+                .httpBasic();
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(
