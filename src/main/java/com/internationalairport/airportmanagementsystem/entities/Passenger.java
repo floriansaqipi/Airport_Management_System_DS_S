@@ -49,6 +49,10 @@ public class Passenger {
     @JsonManagedReference
     private List<Baggage> baggages;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
+    private UserEntity userEntity;
 
 
     // Constructors, getters, and setters
@@ -193,6 +197,11 @@ public class Passenger {
         tempCheckIn.setPassenger(this);
     }
 
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
 
-
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
 }

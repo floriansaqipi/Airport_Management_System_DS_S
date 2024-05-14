@@ -29,6 +29,11 @@ public class Employee {
     @JsonBackReference
     private List<Flight> flights;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonManagedReference
+    private UserEntity userEntity;
+
     // Constructors, getters, and setters
     public Employee() {
     }
