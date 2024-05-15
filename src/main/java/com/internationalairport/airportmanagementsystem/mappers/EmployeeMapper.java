@@ -3,6 +3,7 @@ package com.internationalairport.airportmanagementsystem.mappers;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostEmployeeDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
+import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,8 @@ public class EmployeeMapper {
                 postEmployeeDto.contactInfo()
         );
         employee.setEmployeeId(0);
+        UserEntity user= new UserEntity(postEmployeeDto.username(), postEmployeeDto.password());
+        employee.setUserEntity(user);
         return employee;
     }
 
