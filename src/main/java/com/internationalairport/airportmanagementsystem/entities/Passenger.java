@@ -3,6 +3,7 @@ package com.internationalairport.airportmanagementsystem.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.engine.internal.Cascade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,10 @@ public class Passenger {
     @JsonManagedReference
     private List<Baggage> baggages;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "p_user_id")
+    @JsonManagedReference
+    private UserEntity userEntity;
 
 
     // Constructors, getters, and setters
@@ -193,6 +198,11 @@ public class Passenger {
         tempCheckIn.setPassenger(this);
     }
 
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
 
-
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
 }

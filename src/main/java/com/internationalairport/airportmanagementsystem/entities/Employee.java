@@ -29,6 +29,11 @@ public class Employee {
     @JsonBackReference
     private List<Flight> flights;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "e_user_id")
+    @JsonManagedReference
+    private UserEntity userEntity;
+
     // Constructors, getters, and setters
     public Employee() {
     }
@@ -98,5 +103,13 @@ public class Employee {
         }
 
         flights.add(tempFlight);
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }
