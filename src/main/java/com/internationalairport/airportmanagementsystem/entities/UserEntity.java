@@ -1,5 +1,6 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -21,7 +22,7 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -29,6 +30,13 @@ public class UserEntity {
     )
     @JsonManagedReference
     private List<Role> roles;
+
+    @OneToOne(mappedBy = "userEntity")
+    @JsonBackReference
+    private Passenger passenger;
+    @OneToOne(mappedBy = "userEntity")
+    @JsonBackReference
+    private Employee employee;
     
     // Constructors, getters, and setters
     public UserEntity() {}
@@ -77,6 +85,22 @@ public class UserEntity {
         }
 
         roles.add(tempRole);
+    }
+
+    public Passenger getPassenger() {
+        return passenger;
+    }
+
+    public void setPassenger(Passenger passenger) {
+        this.passenger = passenger;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }
 

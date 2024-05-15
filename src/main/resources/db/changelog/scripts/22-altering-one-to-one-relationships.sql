@@ -43,3 +43,4 @@ DROP CONSTRAINT flight_crews_ibfk_3;
 -- changeset Florian_Saqipi:24
 ALTER TABLE flight_crews
 DROP CONSTRAINT flight_crews_ibfk_4;
+

@@ -3,11 +3,14 @@ package com.internationalairport.airportmanagementsystem.mappers;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostPassengerDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutPassengerDto;
 import com.internationalairport.airportmanagementsystem.entities.Passenger;
+import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PassengerMapper {
     public Passenger postToPassenger(PostPassengerDto postPassengerDto) {
+
+
         Passenger passenger = new Passenger(
                 postPassengerDto.name(),
                 postPassengerDto.passportNumber(),
@@ -15,6 +18,9 @@ public class PassengerMapper {
                 postPassengerDto.contactDetails()
         );
         passenger.setPassengerId(0);
+        UserEntity user= new UserEntity(postPassengerDto.username(), postPassengerDto.password());
+        passenger.setUserEntity(user);
+
         return passenger;
     }
 
@@ -26,6 +32,10 @@ public class PassengerMapper {
                 putPassengerDto.contactDetails()
         );
         passenger.setPassengerId(putPassengerDto.passengerId());
+
+        UserEntity user= new UserEntity(putPassengerDto.username(), putPassengerDto.password());
+        passenger.setUserEntity(user);
         return passenger;
     }
+
 }

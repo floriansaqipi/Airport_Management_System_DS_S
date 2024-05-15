@@ -21,3 +21,18 @@ CREATE TABLE user_roles (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (role_id) REFERENCES roles(role_id)
 );
+
+-- changeset Ardit_Gjyrevci:28
+ALTER TABLE passengers
+ADD COLUMN p_user_id INT,
+ADD CONSTRAINT fk_passengers_users
+FOREIGN KEY (p_user_id)
+REFERENCES users(user_id);
+
+
+-- changeset Ardit_Gjyrevci:29
+ALTER TABLE employees
+ADD COLUMN e_user_id INT,
+ADD CONSTRAINT fk_employees_users
+FOREIGN KEY (e_user_id)
+REFERENCES users(user_id);
