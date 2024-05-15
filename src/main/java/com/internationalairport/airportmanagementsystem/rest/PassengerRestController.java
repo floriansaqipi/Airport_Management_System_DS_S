@@ -40,7 +40,7 @@ public class PassengerRestController {
     @Autowired
     public PassengerRestController(PassengerService thePassengerService, AuthenticationManager authenticationManager, UserEntityRepository userRepository,
                                    RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator,
-                                   PassengerMapper passengerMapper) {
+                                   PassengerMapper passengerMapper, PassengerRepository passengerRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -48,6 +48,7 @@ public class PassengerRestController {
         this.jwtGenerator=jwtGenerator;
         this.passengerMapper=passengerMapper;
         passengerService = thePassengerService;
+        this.passengerRepository = passengerRepository;
     }
 
     @GetMapping("/passengers")
@@ -76,7 +77,7 @@ public class PassengerRestController {
 
     @PostMapping("/auth/passengers/register")
     public ResponseEntity<String> register(@RequestBody PostPassengerDto postPassengerDto) {
-        if (userRepository.existsByUsername(postPassengerDto.userEntity().getUsername())) {
+        if (userRepository.existsByUsername(postPassengerDto.username())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
 

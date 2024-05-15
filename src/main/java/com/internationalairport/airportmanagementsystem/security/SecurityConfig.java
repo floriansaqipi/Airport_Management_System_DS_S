@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .requestMatchers("api/**").permitAll() // TEMPORARY ALLOW ALL REQUESTS
                 .requestMatchers("/api/auth/**").permitAll() // Allows access without authentication for /api/auth/**
                 .requestMatchers(HttpMethod.GET).authenticated() // Requires authentication for GET requests
                 .anyRequest().authenticated()

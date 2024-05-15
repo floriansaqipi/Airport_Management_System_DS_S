@@ -29,8 +29,8 @@ public class Employee {
     @JsonBackReference
     private List<Flight> flights;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "e_user_id")
     @JsonManagedReference
     private UserEntity userEntity;
 
@@ -103,5 +103,13 @@ public class Employee {
         }
 
         flights.add(tempFlight);
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }

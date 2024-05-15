@@ -18,7 +18,7 @@ public class PassengerMapper {
                 postPassengerDto.contactDetails()
         );
         passenger.setPassengerId(0);
-        UserEntity user=new UserEntity(postPassengerDto.userEntity().getUsername(), postPassengerDto.userEntity().getPassword());
+        UserEntity user= new UserEntity(postPassengerDto.username(), postPassengerDto.password());
         passenger.setUserEntity(user);
 
         return passenger;
@@ -32,6 +32,9 @@ public class PassengerMapper {
                 putPassengerDto.contactDetails()
         );
         passenger.setPassengerId(putPassengerDto.passengerId());
+
+        UserEntity user= new UserEntity(putPassengerDto.username(), putPassengerDto.password());
+        passenger.setUserEntity(user);
         return passenger;
     }
 

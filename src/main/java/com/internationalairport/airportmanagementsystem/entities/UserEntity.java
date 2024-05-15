@@ -31,10 +31,10 @@ public class UserEntity {
     @JsonManagedReference
     private List<Role> roles;
 
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userEntity")
     @JsonBackReference
     private Passenger passenger;
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userEntity")
     @JsonBackReference
     private Employee employee;
     
@@ -85,6 +85,22 @@ public class UserEntity {
         }
 
         roles.add(tempRole);
+    }
+
+    public Passenger getPassenger() {
+        return passenger;
+    }
+
+    public void setPassenger(Passenger passenger) {
+        this.passenger = passenger;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }
 

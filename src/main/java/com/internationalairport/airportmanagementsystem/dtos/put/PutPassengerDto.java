@@ -8,6 +8,7 @@ public record PutPassengerDto(
         String passportNumber,
         String nationality,
         String contactDetails,
-        UserEntity userEntity
+        String username,
+        String password
 ) {
 }
