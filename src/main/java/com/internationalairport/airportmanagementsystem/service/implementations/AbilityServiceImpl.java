@@ -8,60 +8,64 @@ import com.internationalairport.airportmanagementsystem.dtos.put.PutAbilityDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutRoleDto;
 import com.internationalairport.airportmanagementsystem.entities.Ability;
 import com.internationalairport.airportmanagementsystem.entities.Role;
+import com.internationalairport.airportmanagementsystem.mappers.AbilityMapper;
 import com.internationalairport.airportmanagementsystem.mappers.RoleMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AbilityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AbilityServiceImpl implements AbilityService {
     private AbilityRepository abilityRepository;
-    private RoleMapper roleMapper;
+    private AbilityMapper abilityMapper;
 
     @Autowired
-    public RoleServiceImpl(RoleRepository theRoleRepository, RoleMapper theRoleMapper) {
-        roleRepository = theRoleRepository;
-        roleMapper = theRoleMapper;
+    public AbilityServiceImpl(AbilityRepository abilityRepository, AbilityMapper abilityMapper) {
+        this.abilityRepository = abilityRepository;
+        this.abilityMapper = abilityMapper;
     }
     @Override
-    public Role save(PostRoleDto postRoleDto) {
-        Role role = roleMapper.postToRole(postRoleDto);
-        return roleRepository.save(role);
-    }
-
-    @Override
-    public Role save(PutRoleDto putRoleDto) {
-        Role role = roleMapper.putToRole(putRoleDto);
-        return roleRepository.save(role);
+    public Ability save(PostAbilityDto postAbilityDto) {
+        Ability ability = abilityMapper.postToAbility(postAbilityDto);
+        return abilityRepository.save(ability);
     }
 
     @Override
-    public Role findById(Integer RoleId) {
-        Optional<Role> result = roleRepository.findById(RoleId);
-        Role theRole = null;
+    public Ability save(PutAbilityDto putAbilityDto) {
+        Ability ability = abilityMapper.putToAbility(putAbilityDto);
+        return abilityRepository.save(ability);
+    }
+
+
+    @Override
+    public Ability findById(Integer abilityId) {
+        Optional<Ability> result = abilityRepository.findById(abilityId);
+        Ability ability = null;
         if (result.isPresent()) {
-            theRole = result.get();
+            ability = result.get();
         } else {
-            throw new RuntimeException("Role with ID " + RoleId + " not found");
+                throw new RuntimeException("Ability with ID " + abilityId + " not found");
         }
-        return theRole;
+        return ability;
     }
 
     @Override
-    public List<Role> findAll() {
-        return roleRepository.findAll();
+    public List<Ability> findAll() {
+        return abilityRepository.findAll();
     }
 
     @Override
-    public void deleteById(Integer RoleId) {
-        roleRepository.deleteById(RoleId);
+    public void deleteById(Integer abilityId) {
+        abilityRepository.deleteById(abilityId);
     }
 
     @Override
     public String deleteAll() {
-        int numberOfRoles = (int) roleRepository.count();
-        roleRepository.deleteAll();
-        return numberOfRoles + " Roles have been deleted";
+        int numberOfAbilities = (int) abilityRepository.count();
+        abilityRepository.deleteAll();
+        return numberOfAbilities + " Roles have been deleted";
     }
 }

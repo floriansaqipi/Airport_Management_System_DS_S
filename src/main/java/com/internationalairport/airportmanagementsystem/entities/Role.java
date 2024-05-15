@@ -26,7 +26,7 @@ public class Role {
     @JoinTable(
             name = "role_abilities",
             joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "abilities_id")
+            inverseJoinColumns = @JoinColumn(name = "ability_id")
     )
     @JsonManagedReference
     private List<Ability> abilities;
@@ -78,6 +78,14 @@ public class Role {
             this.abilities = new ArrayList<>();
         }
         this.abilities.add(ability);
+    }
+
+    public List<Ability> getAbilities() {
+        return abilities;
+    }
+
+    public void setAbilities(List<Ability> abilities) {
+        this.abilities = abilities;
     }
 }
 
