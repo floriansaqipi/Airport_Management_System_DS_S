@@ -1,8 +1,10 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,6 +21,15 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     @JsonBackReference
     private List<UserEntity> users;
+
+    @ManyToMany
+    @JoinTable(
+            name = "role_abilities",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "ability_id")
+    )
+    @JsonManagedReference
+    private List<Ability> abilities;
 
     // Constructors, getters, and setters
     public Role() {}
@@ -50,6 +61,31 @@ public class Role {
 
     public void setUsers(List<UserEntity> users) {
         this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "roleId=" + roleId +
+                ", roleName='" + roleName + '\'' +
+                ", users=" + users +
+                ", abilities=" + abilities +
+                '}';
+    }
+
+    public void addAbility(Ability ability){
+        if(this.abilities == null){
+            this.abilities = new ArrayList<>();
+        }
+        this.abilities.add(ability);
+    }
+
+    public List<Ability> getAbilities() {
+        return abilities;
+    }
+
+    public void setAbilities(List<Ability> abilities) {
+        this.abilities = abilities;
     }
 }
 
