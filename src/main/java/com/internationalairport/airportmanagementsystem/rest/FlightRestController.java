@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutFlightDto;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,12 @@ public class FlightRestController {
         this.flightService = flightService;
     }
 
-    @GetMapping("/flights")
-    public List<Flight> findAllFlights() {
+    @GetMapping("/public/flights")
+    public List<Flight> findAll() {
         return flightService.findAll();
     }
 
-    @GetMapping("/flights/{flightId}")
+    @GetMapping("/public/flights/{flightId}")
     public Flight getFlightById(@PathVariable Integer flightId) {
         Flight flight = flightService.findById(flightId);
         if (flight == null) {
@@ -32,18 +34,17 @@ public class FlightRestController {
         return flight;
     }
 
-    @PostMapping("/flights")
-    public Flight addFlight(@RequestBody Flight flight) {
-        flight.setFlightId(0);
-        return flightService.save(flight);
+    @PostMapping("/private/flights")
+    public Flight addFlight(@RequestBody PostFlightDto postFlightDto) {
+        return flightService.save(postFlightDto);
     }
 
-    @PutMapping("/flights")
-    public Flight updateFlight(@RequestBody Flight flight) {
-        return flightService.save(flight);
+    @PutMapping("/private/flights")
+    public Flight updateFlight(@RequestBody PutFlightDto putFlightDto) {
+        return flightService.save(putFlightDto);
     }
 
-    @DeleteMapping("/flights/{flightId}")
+    @DeleteMapping("/private/flights/{flightId}")
     public String deleteFlightById(@PathVariable Integer flightId) {
         Flight flight = flightService.findById(flightId);
         if (flight == null) {
@@ -53,7 +54,7 @@ public class FlightRestController {
         return "Deleted flight with id - " + flightId;
     }
 
-    @DeleteMapping("/flights")
+    @DeleteMapping("/private/flights")
     public String deleteAllFlights() {
         return flightService.deleteAll();
     }

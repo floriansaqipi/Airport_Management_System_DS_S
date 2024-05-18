@@ -1,7 +1,8 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostBoardingPassDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutBoardingPassDto;
 import com.internationalairport.airportmanagementsystem.entities.BoardingPass;
-import com.internationalairport.airportmanagementsystem.service.interfaces.BaggageService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.BoardingPassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/private")
 public class BoardingPassRestController {
 
     private BoardingPassService boardingPassService;
@@ -19,12 +20,12 @@ public class BoardingPassRestController {
         boardingPassService = theBoardingPassService;
     }
 
-    @GetMapping("/boarding_pass")
+    @GetMapping("/boarding_passes")
     public List<BoardingPass> findAll(){
         return boardingPassService.findAll();
     }
 
-    @GetMapping("/boarding_pass/{boarding_passId}")
+    @GetMapping("/boarding_passes/{boarding_passId}")
     public BoardingPass getBoardingPass(@PathVariable int boarding_passId){
         BoardingPass theBoardingPass = boardingPassService.findById(boarding_passId);
         if(theBoardingPass == null){
@@ -33,26 +34,23 @@ public class BoardingPassRestController {
         return theBoardingPass;
     }
 
-    @PostMapping("/boarding_pass")
-    public BoardingPass addBoardingPass(@RequestBody BoardingPass theBoardingPass){
-        theBoardingPass.setBoardingPassId(0);
-        BoardingPass boarding_pass = boardingPassService.save(theBoardingPass);
-        return boarding_pass;
+    @PostMapping("/boarding_passes")
+    public BoardingPass addBoardingPass(@RequestBody PostBoardingPassDto postBoardingPassDto){
+        return boardingPassService.save(postBoardingPassDto);
     }
 
-    @PutMapping("/boarding_pass")
-    public BoardingPass updateBoardingPass(@RequestBody BoardingPass theBoardingPass){
-        BoardingPass dbBoardingPass = boardingPassService.save(theBoardingPass);
-        return dbBoardingPass;
+    @PutMapping("/boarding_passes")
+    public BoardingPass updateBoardingPass(@RequestBody PutBoardingPassDto putBoardingPassDto){
+        return boardingPassService.save(putBoardingPassDto);
     }
 
-    @DeleteMapping("/boarding_pass/{boarding_passId}")
+    @DeleteMapping("/boarding_passes/{boarding_passId}")
     public String deleteBoardingPass(@PathVariable int boarding_passId){
         BoardingPass tempBoardingPass = boardingPassService.findById(boarding_passId);
         if(tempBoardingPass == null){
-            throw new RuntimeException("Cargo id not found - " + boarding_passId);
+            throw new RuntimeException("Boarding Pass id not found - " + boarding_passId);
         }
         boardingPassService.deleteById(boarding_passId);
-        return "Deleted Cargo id - " + boarding_passId;
+        return "Deleted Boarding Pass id - " + boarding_passId;
     }
 }

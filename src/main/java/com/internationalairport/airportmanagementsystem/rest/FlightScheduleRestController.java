@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightScheduleDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutFlightScheduleDto;
 import com.internationalairport.airportmanagementsystem.entities.FlightSchedule;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FlightScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,51 +13,41 @@ import java.util.List;
 @RequestMapping("/api")
 public class FlightScheduleRestController {
 
-    private FlightScheduleService flightScheduleService;
+    private final FlightScheduleService flightScheduleService;
 
     @Autowired
-    public FlightScheduleRestController(FlightScheduleService theFlightScheduleService){
-        flightScheduleService = theFlightScheduleService;
+    public FlightScheduleRestController(FlightScheduleService flightScheduleService) {
+        this.flightScheduleService = flightScheduleService;
     }
 
-    @GetMapping("/flight_schedules")
-    public List<FlightSchedule> findAllFlightSchedules(){
+    @GetMapping("/public/flight_schedules")
+    public List<FlightSchedule> findAllFlightSchedules() {
         return flightScheduleService.findAll();
     }
 
-    @GetMapping("/flight_schedules/{flightScheduleId}")
-    public FlightSchedule getFlightScheduleById(@PathVariable int flightScheduleId){
-        FlightSchedule theFlightSchedule = flightScheduleService.findById(flightScheduleId);
-        if(theFlightSchedule == null){
-            throw new RuntimeException("Flight schedule not found - "+flightScheduleId);
-        }
-        return theFlightSchedule;
+    @GetMapping("/public/flight_schedules/{flightScheduleId}")
+    public FlightSchedule getFlightScheduleById(@PathVariable int flightScheduleId) {
+        return flightScheduleService.findById(flightScheduleId);
     }
 
-    @PostMapping("/flight_schedules")
-    public FlightSchedule addFlightSchedule(@RequestBody FlightSchedule theFlightSchedule){
-        theFlightSchedule.setScheduleId(0);
-        return flightScheduleService.save(theFlightSchedule);
+    @PostMapping("/private/flight_schedules")
+    public FlightSchedule addFlightSchedule(@RequestBody PostFlightScheduleDto postFlightScheduleDto) {
+        return flightScheduleService.save(postFlightScheduleDto);
     }
 
-    @PutMapping("/flight_schedules")
-    public FlightSchedule updateFlightSchedule(@RequestBody FlightSchedule theFlightSchedule){
-        return flightScheduleService.save(theFlightSchedule);
+    @PutMapping("/private/flight_schedules")
+    public FlightSchedule updateFlightSchedule(@RequestBody PutFlightScheduleDto putFlightScheduleDto) {
+        return flightScheduleService.save(putFlightScheduleDto);
     }
 
-    @DeleteMapping("/flight_schedules/{flightScheduleId}")
-    public String deleteFlightScheduleById(@PathVariable int flightScheduleId){
-        FlightSchedule tempFlightSchedule = flightScheduleService.findById(flightScheduleId);
-        if(tempFlightSchedule == null){
-            throw new RuntimeException("Flight schedule not found - "+flightScheduleId);
-        }
+    @DeleteMapping("/private/flight_schedules/{flightScheduleId}")
+    public String deleteFlightScheduleById(@PathVariable int flightScheduleId) {
         flightScheduleService.deleteById(flightScheduleId);
-        return "Deleted flight schedule id - "+flightScheduleId;
+        return "Deleted flight schedule id - " + flightScheduleId;
     }
 
-    @DeleteMapping("/flight_schedules")
+    @DeleteMapping("/private/flight_schedules")
     public String deleteAllFlightSchedules() {
         return flightScheduleService.deleteAll();
     }
 }
-

@@ -1,8 +1,10 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.BaggageRepository;
+import com.internationalairport.airportmanagementsystem.daos.BaggageRepository;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostBaggageDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutBaggageDto;
 import com.internationalairport.airportmanagementsystem.entities.Baggage;
-import com.internationalairport.airportmanagementsystem.rest.BaggageRestController;
+import com.internationalairport.airportmanagementsystem.mappers.BaggageMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.BaggageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +17,23 @@ public class BaggageServiceImpl implements BaggageService {
 
     private BaggageRepository baggageRepository;
 
+    private BaggageMapper baggageMapper;
+
     @Autowired
-    public BaggageServiceImpl(BaggageRepository theBaggageRepository){
+    public BaggageServiceImpl(BaggageRepository theBaggageRepository, BaggageMapper theBaggageMapper){
         baggageRepository = theBaggageRepository;
+        baggageMapper = theBaggageMapper;
     }
     @Override
-    public Baggage save(Baggage theBaggage) {
-        return baggageRepository.save(theBaggage);
+    public Baggage save(PostBaggageDto postBaggageDto) {
+        Baggage baggage = baggageMapper.postToBaggage(postBaggageDto);
+        return baggageRepository.save(baggage);
+    }
+
+    @Override
+    public Baggage save(PutBaggageDto putBaggageDto) {
+        Baggage baggage = baggageMapper.putToBaggage(putBaggageDto);
+        return baggageRepository.save(baggage);
     }
 
     @Override

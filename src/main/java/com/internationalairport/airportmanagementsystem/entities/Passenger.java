@@ -1,6 +1,9 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.engine.internal.Cascade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +16,7 @@ public class Passenger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "passenger_id")
-    private Integer id;
+    private Integer passengerId;
 
     @Column(name = "name")
     private String name;
@@ -29,20 +32,28 @@ public class Passenger {
 
     @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonManagedReference
     private List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonManagedReference
     private List<CheckIn> checkIns;
 
     @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonManagedReference
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonManagedReference
     private List<Baggage> baggages;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "p_user_id")
+    @JsonManagedReference
+    private UserEntity userEntity;
 
 
     // Constructors, getters, and setters
@@ -57,12 +68,12 @@ public class Passenger {
     }
 
     // Getters and setters
-    public Integer getId() {
-        return id;
+    public Integer getPassengerId() {
+        return passengerId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPassengerId(Integer passengerId) {
+        this.passengerId = passengerId;
     }
 
     public String getName() {
@@ -100,11 +111,15 @@ public class Passenger {
     @Override
     public String toString() {
         return "Passenger{" +
-                "id=" + id +
+                "passengerId=" + passengerId +
                 ", name='" + name + '\'' +
                 ", passportNumber='" + passportNumber + '\'' +
                 ", nationality='" + nationality + '\'' +
                 ", contactDetails='" + contactDetails + '\'' +
+                ", feedbacks=" + feedbacks +
+                ", checkIns=" + checkIns +
+                ", tickets=" + tickets +
+                ", baggages=" + baggages +
                 '}';
     }
 
@@ -183,6 +198,11 @@ public class Passenger {
         tempCheckIn.setPassenger(this);
     }
 
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
 
-
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
 }

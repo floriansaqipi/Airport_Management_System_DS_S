@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostParkingDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutParkingDto;
 import com.internationalairport.airportmanagementsystem.entities.Parking;
 import com.internationalairport.airportmanagementsystem.service.interfaces.ParkingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,12 @@ public class ParkingRestController {
         parkingService=theParkingService;
     }
 
-    @GetMapping("/parkings")
+    @GetMapping("/public/parkings")
     public List<Parking> findAllParkings(){
         return parkingService.findAll();
     }
 
-    @GetMapping("/parkings/{parkingId}")
+    @GetMapping("/public/parkings/{parkingId}")
     public Parking getParkingServiceById(@PathVariable int parkingId){
         Parking theParking=parkingService.findById(parkingId);
         if(theParking==null){
@@ -32,21 +34,18 @@ public class ParkingRestController {
         return theParking;
     }
 
-    @PostMapping("/parkings")
-    public Parking addParking(@RequestBody Parking theParking){
-        theParking.setParkingId(0);
-        Parking parking= parkingService.save(theParking);
-        return parking;
+    @PostMapping("/private/parkings")
+    public Parking addParking(@RequestBody PostParkingDto postParkingDto){
+        return parkingService.save(postParkingDto);
     }
 
     //add mapping for put
-    @PutMapping("/parkings")
-    public Parking updateParking(@RequestBody Parking theParking){
-        Parking parking = parkingService.save(theParking);
-        return parking;
+    @PutMapping("/private/parkings")
+    public Parking updateParking(@RequestBody PutParkingDto putParkingDto){
+        return parkingService.save(putParkingDto);
     }
 
-    @DeleteMapping("/parkings/{parkingId}")
+    @DeleteMapping("/private/parkings/{parkingId}")
     public String deleteParkingById(@PathVariable int parkingId){
         Parking parking = parkingService.findById(parkingId);
         if(parking==null){
@@ -54,9 +53,9 @@ public class ParkingRestController {
 
         }
         parkingService.deleteById(parkingId);
-        return "Deleted id - "+parkingId;
+        return "Deleted Parking id - "+parkingId;
     }
-    @DeleteMapping("/parkings")
+    @DeleteMapping("/private/parkings")
     public String deleteAllParkings() {
         return parkingService.deleteAll();
     }

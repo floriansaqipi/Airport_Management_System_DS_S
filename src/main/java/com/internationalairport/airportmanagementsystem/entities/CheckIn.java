@@ -1,6 +1,10 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -12,26 +16,26 @@ public class CheckIn {
     private Integer checkInId;
 
     @Column(name = "check_in_time")
-    private Date checkInTime;
+    private LocalDateTime checkInTime;
 
     @Column(name = "desk_number")
     private Integer deskNumber;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "passenger_id")
+    @JsonBackReference
     private Passenger passenger;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "flight_id")
+    @JsonBackReference
     private Flight flight;
 
     // Constructors
     public CheckIn() {
     }
 
-    public CheckIn(Date checkInTime, Integer deskNumber) {
+    public CheckIn(LocalDateTime checkInTime, Integer deskNumber) {
         this.checkInTime = checkInTime;
         this.deskNumber = deskNumber;
     }
@@ -45,11 +49,11 @@ public class CheckIn {
         this.checkInId = checkInId;
     }
 
-    public Date getCheckInTime() {
+    public LocalDateTime getCheckInTime() {
         return checkInTime;
     }
 
-    public void setCheckInTime(Date checkInTime) {
+    public void setCheckInTime(LocalDateTime checkInTime) {
         this.checkInTime = checkInTime;
     }
 

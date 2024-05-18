@@ -1,7 +1,10 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.GateAssignmentRepository;
+import com.internationalairport.airportmanagementsystem.daos.GateAssignmentRepository;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostGateAssignmentDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutGateAssignmentDto;
 import com.internationalairport.airportmanagementsystem.entities.GateAssignment;
+import com.internationalairport.airportmanagementsystem.mappers.GateAssignmentMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.GateAssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,28 +16,31 @@ import java.util.Optional;
 public class GateAssignmentServiceImpl implements GateAssignmentService {
 
     private GateAssignmentRepository gateAssignmentRepository;
+    private GateAssignmentMapper gateAssignmentMapper;
 
     @Autowired
-    public GateAssignmentServiceImpl(GateAssignmentRepository theGateAssignmentRepository){
-        gateAssignmentRepository = theGateAssignmentRepository;
+    public GateAssignmentServiceImpl(GateAssignmentRepository gateAssignmentRepository,
+                                     GateAssignmentMapper gateAssignmentMapper) {
+        this.gateAssignmentRepository = gateAssignmentRepository;
+        this.gateAssignmentMapper = gateAssignmentMapper;
     }
 
     @Override
-    public GateAssignment save(GateAssignment theGateAssignment) {
-        return gateAssignmentRepository.save(theGateAssignment);
+    public GateAssignment save(PostGateAssignmentDto postGateAssignmentDto) {
+        GateAssignment gateAssignment = gateAssignmentMapper.postToGateAssignment(postGateAssignmentDto);
+        return gateAssignmentRepository.save(gateAssignment);
     }
 
     @Override
-    public GateAssignment findById(Integer gateAssignmentId) {
-        Optional<GateAssignment> result = gateAssignmentRepository.findById(gateAssignmentId);
-        GateAssignment theGateAssignment = null;
-        if(result.isPresent()){
-            theGateAssignment = result.get();
-        }
-        else{
-            throw new RuntimeException("Did not find gate assignment id - "+gateAssignmentId);
-        }
-        return theGateAssignment;
+    public GateAssignment save(PutGateAssignmentDto putGateAssignmentDto) {
+        GateAssignment gateAssignment = gateAssignmentMapper.putToGateAssignment(putGateAssignmentDto);
+        return gateAssignmentRepository.save(gateAssignment);
+    }
+
+    @Override
+    public GateAssignment findById(Integer id) {
+        Optional<GateAssignment> result = gateAssignmentRepository.findById(id);
+        return result.orElseThrow(() -> new RuntimeException("Did not find gate assignment id - " + id));
     }
 
     @Override
@@ -43,8 +49,8 @@ public class GateAssignmentServiceImpl implements GateAssignmentService {
     }
 
     @Override
-    public void deleteById(Integer gateAssignmentId) {
-        gateAssignmentRepository.deleteById(gateAssignmentId);
+    public void deleteById(Integer id) {
+        gateAssignmentRepository.deleteById(id);
     }
 
     @Override

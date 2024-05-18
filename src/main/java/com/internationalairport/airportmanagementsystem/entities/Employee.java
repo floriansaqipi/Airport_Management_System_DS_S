@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id")
-    private Integer id;
+    private Integer employeeId;
 
     @Column(name = "name")
     private String name;
@@ -24,16 +25,14 @@ public class Employee {
     @Column(name = "contact_info")
     private String contactInfo;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "airport_id")
+    @ManyToMany(mappedBy = "employees")
     @JsonBackReference
-    private Airport airport;
+    private List<Flight> flights;
 
-    @OneToMany(mappedBy = "employee",
-            cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<FlightCrew> flightCrews;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "e_user_id")
+    @JsonManagedReference
+    private UserEntity userEntity;
 
     // Constructors, getters, and setters
     public Employee() {
@@ -46,12 +45,12 @@ public class Employee {
     }
 
     // Getters and setters
-    public Integer getId() {
-        return id;
+    public Integer getEmployeeId() {
+        return employeeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -78,40 +77,39 @@ public class Employee {
         this.contactInfo = contactInfo;
     }
 
-    public Airport getAirport() {
-        return airport;
-    }
-
-    public void setAirport(Airport airport) {
-        this.airport = airport;
-    }
-
     @Override
     public String toString() {
         return "Employee{" +
-                "id=" + id +
+                "employeeId=" + employeeId +
                 ", name='" + name + '\'' +
                 ", role='" + role + '\'' +
                 ", contactInfo='" + contactInfo + '\'' +
+                ", flights=" + flights +
                 '}';
     }
 
-    public List<FlightCrew> getFlightCrews() {
-        return flightCrews;
+    public List<Flight> getFlights() {
+        return flights;
     }
 
-    public void setFlightCrews(List<FlightCrew> flightCrews) {
-        this.flightCrews = flightCrews;
+    public void setFlights(List<Flight> flights) {
+        this.flights = flights;
     }
 
     // define convenient methods
-    public void addFlightCrew(FlightCrew tempFlightCrew) {
-        if( flightCrews == null) {
-            flightCrews = new ArrayList<>();
+    public void addFlight(Flight tempFlight) {
+        if( flights == null) {
+            flights = new ArrayList<>();
         }
 
-        flightCrews.add(tempFlightCrew);
+        flights.add(tempFlight);
+    }
 
-        tempFlightCrew.setEmployee(this);
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }

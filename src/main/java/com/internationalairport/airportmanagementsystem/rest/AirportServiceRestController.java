@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostAirportServiceDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutAirportServiceDto;
 import com.internationalairport.airportmanagementsystem.entities.AirportService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AirportServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,12 @@ public class AirportServiceRestController {
         airportServiceService=theAirportServiceService;
     }
 
-    @GetMapping("/airport_services")
+    @GetMapping("/public/airport_services")
     public List<AirportService> findAllAirportServices(){
         return airportServiceService.findAll();
     }
 
-    @GetMapping("/airport_services/{airportServiceId}")
+    @GetMapping("/public/airport_services/{airportServiceId}")
     public AirportService getAirportServiceById(@PathVariable int airportServiceId){
         AirportService theAirportService=airportServiceService.findById(airportServiceId);
         if(theAirportService==null){
@@ -32,20 +34,17 @@ public class AirportServiceRestController {
         return theAirportService;
     }
 
-    @PostMapping("/airport_services")
-    public AirportService addAirportService(@RequestBody AirportService theAirportService){
-        theAirportService.setServiceId(0);
-        AirportService dbAirportService = airportServiceService.save(theAirportService);
-        return dbAirportService;
+    @PostMapping("/private/airport_services")
+    public AirportService addAirportService(@RequestBody PostAirportServiceDto postAirportServiceDto){
+        return airportServiceService.save(postAirportServiceDto);
     }
 
-    @PutMapping("/airport_services")
-    public AirportService updateAirportService(@RequestBody AirportService theAirportService){
-        AirportService airportService = airportServiceService.save(theAirportService);
-        return airportService;
+    @PutMapping("/private/airport_services")
+    public AirportService updateAirportService(@RequestBody PutAirportServiceDto putAirportServiceDto){
+        return airportServiceService.save(putAirportServiceDto);
     }
 
-    @DeleteMapping("/airport_services/{airportServiceId}")
+    @DeleteMapping("/private/airport_services/{airportServiceId}")
     public String deleteAirportServiceById(@PathVariable int airportServiceId){
         AirportService tempAirportService = airportServiceService.findById(airportServiceId);
         if(tempAirportService==null){
@@ -53,9 +52,9 @@ public class AirportServiceRestController {
 
         }
         airportServiceService.deleteById(airportServiceId);
-        return "Deleted  id - "+airportServiceId;
+        return "Deleted Airport Service id - "+airportServiceId;
     }
-    @DeleteMapping("/airport_services")
+    @DeleteMapping("/private/airport_services")
     public String deleteAllAirportServices() {
         return airportServiceService.deleteAll();
     }

@@ -1,7 +1,10 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.PassengerRepository;
+import com.internationalairport.airportmanagementsystem.daos.PassengerRepository;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostPassengerDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutPassengerDto;
 import com.internationalairport.airportmanagementsystem.entities.Passenger;
+import com.internationalairport.airportmanagementsystem.mappers.PassengerMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +16,12 @@ import java.util.Optional;
 public class PassengerServiceImpl implements PassengerService {
 
     private PassengerRepository passengerRepository;
+    private PassengerMapper passengerMapper;
 
     @Autowired
-    public PassengerServiceImpl(PassengerRepository thePassangerRepository) {
+    public PassengerServiceImpl(PassengerRepository thePassangerRepository, PassengerMapper thePassengerMapper) {
         passengerRepository = thePassangerRepository;
+        passengerMapper = thePassengerMapper;
     }
 
     @Override
@@ -41,10 +46,15 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public Passenger save(Passenger thePassenger) {
-        return passengerRepository.save(thePassenger);
+    public Passenger save(PutPassengerDto putPassengerDto) {
+        Passenger passenger = passengerMapper.putToPassenger(putPassengerDto);
+        return passengerRepository.save(passenger);
     }
-
+    @Override
+    public Passenger save(PostPassengerDto postPassengerDto) {
+        Passenger passenger = passengerMapper.postToPassenger(postPassengerDto);
+        return passengerRepository.save(passenger);
+    }
     @Override
     public void deleteById(int theId) {
         passengerRepository.deleteById(theId);

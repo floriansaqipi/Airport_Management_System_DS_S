@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostRentalServiceDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutRentalServiceDto;
 import com.internationalairport.airportmanagementsystem.entities.RentalService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.RentalServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,12 @@ public class RentalServiceRestController {
         rentalServiceService=theRentalService;
     }
 
-    @GetMapping("/rental_services")
+    @GetMapping("/public/rental_services")
     public List<RentalService> findAllRentalServices(){
         return rentalServiceService.findAll();
     }
 
-    @GetMapping("/rental_services/{rentalServiceId}")
+    @GetMapping("/public/rental_services/{rentalServiceId}")
     public RentalService getRentalServiceById(@PathVariable int rentalServiceId){
         RentalService theRentalService=rentalServiceService.findById(rentalServiceId);
         if(theRentalService==null){
@@ -32,20 +34,17 @@ public class RentalServiceRestController {
         return theRentalService;
     }
 
-    @PostMapping("/rental_services")
-    public RentalService addRentalService(@RequestBody RentalService theRentalService){
-        theRentalService.setRentalId(0);
-        RentalService rentalService=rentalServiceService.save(theRentalService);
-        return rentalService;
+    @PostMapping("/private/rental_services")
+    public RentalService addRentalService(@RequestBody PostRentalServiceDto postRentalServiceDto){
+        return rentalServiceService.save(postRentalServiceDto);
     }
 
-    @PutMapping("/rental_services")
-    public RentalService updateRentalService(@RequestBody RentalService theRentalService){
-        RentalService rentalService = rentalServiceService.save(theRentalService);
-        return rentalService;
+    @PutMapping("/private/rental_services")
+    public RentalService updateRentalService(@RequestBody PutRentalServiceDto putRentalServiceDto){
+        return rentalServiceService.save(putRentalServiceDto);
     }
 
-    @DeleteMapping("/rental_services/{rentalServiceId}")
+    @DeleteMapping("/private/rental_services/{rentalServiceId}")
     public String deleteRentalServiceById(@PathVariable int rentalServiceId){
         RentalService rentalService = rentalServiceService.findById(rentalServiceId);
         if(rentalService==null){
@@ -53,9 +52,9 @@ public class RentalServiceRestController {
 
         }
         rentalServiceService.deleteById(rentalServiceId);
-        return "Deleted  id - "+rentalServiceId;
+        return "Deleted Rental Service id - "+rentalServiceId;
     }
-    @DeleteMapping("/rental_services")
+    @DeleteMapping("/private/rental_services")
     public String deleteAllRentalServices() {
         return rentalServiceService.deleteAll();
     }

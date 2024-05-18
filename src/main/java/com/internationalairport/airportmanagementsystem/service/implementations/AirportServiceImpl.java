@@ -1,7 +1,10 @@
 package com.internationalairport.airportmanagementsystem.service.implementations;
 
-import com.internationalairport.airportmanagementsystem.dao.AirportRepository;
+import com.internationalairport.airportmanagementsystem.daos.AirportRepository;
+import com.internationalairport.airportmanagementsystem.dtos.post.PostAirportDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutAirportDto;
 import com.internationalairport.airportmanagementsystem.entities.Airport;
+import com.internationalairport.airportmanagementsystem.mappers.AirportMapper;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,14 +16,23 @@ import java.util.Optional;
 public class AirportServiceImpl implements AirportService {
 
     private AirportRepository airportRepository;
+    private AirportMapper airportMapper;
 
     @Autowired
-    public AirportServiceImpl(AirportRepository airportRepository) {
-        this.airportRepository = airportRepository;
+    public AirportServiceImpl(AirportRepository theAirportRepository, AirportMapper theAirportMapper) {
+        airportRepository = theAirportRepository;
+        airportMapper = theAirportMapper;
     }
 
     @Override
-    public Airport save(Airport airport) {
+    public Airport save(PostAirportDto postAirportDto) {
+        Airport airport = airportMapper.postToAirport(postAirportDto);
+        return airportRepository.save(airport);
+    }
+
+    @Override
+    public Airport save(PutAirportDto putAirportDto) {
+        Airport airport = airportMapper.putToAirport(putAirportDto);
         return airportRepository.save(airport);
     }
 

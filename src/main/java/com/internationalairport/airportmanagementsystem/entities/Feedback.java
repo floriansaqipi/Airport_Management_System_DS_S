@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,16 +11,16 @@ public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feedback_id")
-    private Integer id;
+    private Integer feedbackId;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "passenger_id")
+    @JsonBackReference
     private Passenger passenger;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "flight_id")
+    @JsonBackReference
     private Flight flight;
 
     @Column(name = "content")
@@ -37,12 +39,12 @@ public class Feedback {
     }
 
     // Getters and setters
-    public Integer getId() {
-        return id;
+    public Integer getFeedbackId() {
+        return feedbackId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFeedbackId(Integer feedbackId) {
+        this.feedbackId = feedbackId;
     }
 
     public Passenger getPassenger() {
@@ -80,7 +82,9 @@ public class Feedback {
     @Override
     public String toString() {
         return "Feedback{" +
-                "id=" + id +
+                "feedbackId=" + feedbackId +
+                ", passenger=" + passenger +
+                ", flight=" + flight +
                 ", content='" + content + '\'' +
                 ", status='" + status + '\'' +
                 '}';

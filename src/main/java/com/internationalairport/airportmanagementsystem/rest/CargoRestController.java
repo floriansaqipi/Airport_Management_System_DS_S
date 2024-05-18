@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostCargoDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutCargoDto;
 import com.internationalairport.airportmanagementsystem.entities.Cargo;
 import com.internationalairport.airportmanagementsystem.service.interfaces.CargoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/private")
 public class CargoRestController {
 
     private CargoService cargoService;
@@ -33,15 +35,15 @@ public class CargoRestController {
     }
 
     @PostMapping("/cargo")
-    public Cargo addCargo(@RequestBody Cargo theCargo){
-        theCargo.setCargoId(0);
-        Cargo cargo = cargoService.save(theCargo);
-        return cargo;
+    public Cargo addCargo(@RequestBody PostCargoDto postCargoDto){
+
+        return cargoService.save(postCargoDto);
     }
 
+
     @PutMapping("/cargo")
-    public Cargo updateCargo(@RequestBody Cargo theCargo){
-        Cargo dbCargo = cargoService.save(theCargo);
+    public Cargo updateCargo(@RequestBody PutCargoDto putCargoDto){
+        Cargo dbCargo = cargoService.save(putCargoDto);
         return dbCargo;
     }
 

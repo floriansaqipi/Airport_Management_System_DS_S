@@ -1,7 +1,8 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostBaggageDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutBaggageDto;
 import com.internationalairport.airportmanagementsystem.entities.Baggage;
-import com.internationalairport.airportmanagementsystem.entities.Cargo;
 import com.internationalairport.airportmanagementsystem.service.interfaces.BaggageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/private")
 public class BaggageRestController{
 
     private BaggageService baggageService;
@@ -34,15 +35,13 @@ public class BaggageRestController{
     }
 
     @PostMapping("/baggage")
-    public Baggage addBaggage(@RequestBody Baggage theBaggage){
-        theBaggage.setBaggageId(0);
-        Baggage baggage = baggageService.save(theBaggage);
-        return baggage;
+    public Baggage addBaggage(@RequestBody PostBaggageDto postBaggageDto){
+        return baggageService.save(postBaggageDto);
     }
 
     @PutMapping("/baggage")
-    public Baggage updateBaggage(@RequestBody Baggage theBaggage){
-        Baggage dbBaggage = baggageService.save(theBaggage);
+    public Baggage updateBaggage(@RequestBody PutBaggageDto putBaggageDto){
+        Baggage dbBaggage = baggageService.save(putBaggageDto);
         return dbBaggage;
     }
 
@@ -53,7 +52,7 @@ public class BaggageRestController{
             throw new RuntimeException("Cargo id not found - " + baggageId);
         }
         baggageService.deleteById(baggageId);
-        return "Deleted Cargo id - " + baggageId;
+        return "Deleted Baggage id - " + baggageId;
     }
 
 }

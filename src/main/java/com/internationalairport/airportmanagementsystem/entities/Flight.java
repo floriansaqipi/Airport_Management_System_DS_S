@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,14 +19,14 @@ public class Flight {
     @Column(name = "flight_number")
     private String flightNumber;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "departure_airport_id")
+    @JsonBackReference
     private Airport departureAirport;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "arrival_airport_id")
+    @JsonBackReference
     private Airport arrivalAirport;
 
     @Column(name = "departure_time")
@@ -33,50 +35,48 @@ public class Flight {
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "aircraft_id")
+    @JsonBackReference
     private Aircraft aircraft;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
+    @JsonManagedReference
     private List<CheckIn> checkIns;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
+    @JsonManagedReference
     private List<Baggage> baggages;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
+    @JsonManagedReference
     private List<Feedback> feedbacks;
 
-    @OneToOne(mappedBy = "flight",
-            cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "flight", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private GateAssignment gateAssignments;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
+    @JsonManagedReference
     private List<Ticket> tickets;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
+    @JsonManagedReference
     private List<FlightSchedule> flightSchedules;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                       CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "flight")
+    @JsonManagedReference
     private List<Cargo> cargos;
 
-    @OneToMany(mappedBy = "flight",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})
-    private List<FlightCrew> flightCrews;
-
+    @ManyToMany
+    @JoinTable(
+            name = "flight_crews",
+            joinColumns = @JoinColumn(name = "flight_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    @JsonManagedReference
+    private List<Employee> employees;
+  
     // Constructors, Getters, and Setters
     public Flight() {
     }
@@ -183,6 +183,22 @@ public class Flight {
         this.tickets = tickets;
     }
 
+    public List<FlightSchedule> getFlightSchedules() {
+        return flightSchedules;
+    }
+
+    public void setFlightSchedules(List<FlightSchedule> flightSchedules) {
+        this.flightSchedules = flightSchedules;
+    }
+
+    public List<Cargo> getCargos() {
+        return cargos;
+    }
+
+    public void setCargos(List<Cargo> cargos) {
+        this.cargos = cargos;
+    }
+
     @Override
     public String toString() {
         return "Flight{" +
@@ -253,14 +269,21 @@ public class Flight {
         tempCargo.setFlight(this);
     }
 
-    public void addFlightCrew(FlightCrew tempFlightCrew) {
-        if (flightCrews == null){
-            flightCrews = new ArrayList<>();
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
+
+    public void addEmployee(Employee tempEmployee) {
+        if (employees == null){
+            employees = new ArrayList<>();
         }
 
-        flightCrews.add(tempFlightCrew);
-
-        tempFlightCrew.setFlight(this);
+        employees.add(tempEmployee);
     }
+
 }
 

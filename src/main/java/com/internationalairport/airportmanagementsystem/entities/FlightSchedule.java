@@ -1,6 +1,10 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,24 +17,25 @@ public class FlightSchedule {
 
     @Column(name = "scheduled_departure_time")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date scheduledDepartureTime;
+    private LocalDateTime scheduledDepartureTime;
 
     @Column(name = "scheduled_arrival_time")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date scheduledArrivalTime;
+    private LocalDateTime scheduledArrivalTime;
 
     @Column(name = "status")
     private String status;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "flight_id")
+    @JsonBackReference
     private Flight flight;
 
     // Constructors
     public FlightSchedule() {
     }
 
-    public FlightSchedule(Date scheduledDepartureTime, Date scheduledArrivalTime, String status) {
+    public FlightSchedule(LocalDateTime scheduledDepartureTime,LocalDateTime scheduledArrivalTime, String status) {
         this.scheduledDepartureTime = scheduledDepartureTime;
         this.scheduledArrivalTime = scheduledArrivalTime;
         this.status = status;
@@ -45,19 +50,19 @@ public class FlightSchedule {
         this.scheduleId = scheduleId;
     }
 
-    public Date getScheduledDepartureTime() {
+    public LocalDateTime getScheduledDepartureTime() {
         return scheduledDepartureTime;
     }
 
-    public void setScheduledDepartureTime(Date scheduledDepartureTime) {
+    public void setScheduledDepartureTime(LocalDateTime scheduledDepartureTime) {
         this.scheduledDepartureTime = scheduledDepartureTime;
     }
 
-    public Date getScheduledArrivalTime() {
+    public LocalDateTime getScheduledArrivalTime() {
         return scheduledArrivalTime;
     }
 
-    public void setScheduledArrivalTime(Date scheduledArrivalTime) {
+    public void setScheduledArrivalTime(LocalDateTime scheduledArrivalTime) {
         this.scheduledArrivalTime = scheduledArrivalTime;
     }
 

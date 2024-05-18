@@ -1,13 +1,14 @@
 package com.internationalairport.airportmanagementsystem.service.interfaces;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostBaggageDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutBaggageDto;
 import com.internationalairport.airportmanagementsystem.entities.Baggage;
-import com.internationalairport.airportmanagementsystem.entities.BoardingPass;
-import com.internationalairport.airportmanagementsystem.entities.Cargo;
 
 import java.util.List;
 
 public interface BaggageService {
-    Baggage save(Baggage theBaggage);
+    Baggage save(PostBaggageDto postBaggageDto);
+    Baggage save(PutBaggageDto putBaggageDto);
     Baggage findById(Integer theId);
     List<Baggage> findAll();
     void deleteById(Integer theId);

@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostAirlineDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutAirlineDto;
 import com.internationalairport.airportmanagementsystem.entities.Airline;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AirlineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,41 +13,40 @@ import java.util.List;
 @RequestMapping("/api")
 public class AirlineRestController {
 
-    private final AirlineService airlineService;
+    private AirlineService airlineService;
 
     @Autowired
     public AirlineRestController(AirlineService airlineService) {
         this.airlineService = airlineService;
     }
 
-    @GetMapping("/airlines")
-    public List<Airline> findAllAirlines() {
+    @GetMapping("/public/airlines")
+    public List<Airline> findAll() {
         return airlineService.findAll();
     }
 
-    @GetMapping("/airlines/{id}")
+    @GetMapping("/public/airlines/{id}")
     public Airline getAirlineById(@PathVariable Integer id) {
         return airlineService.findById(id);
     }
 
-    @PostMapping("/airlines")
-    public Airline addAirline(@RequestBody Airline airline) {
-        airline.setAirlineId(0);
-        return airlineService.save(airline);
+    @PostMapping("/private/airlines")
+    public Airline addAirline(@RequestBody PostAirlineDto postAirlineDto) {
+        return airlineService.save(postAirlineDto);
     }
 
-    @PutMapping("/airlines")
-    public Airline updateAirline(@RequestBody Airline airline) {
-        return airlineService.save(airline);
+    @PutMapping("/private/airlines")
+    public Airline updateAirline(@RequestBody PutAirlineDto putAirlineDto) {
+        return airlineService.save(putAirlineDto);
     }
 
-    @DeleteMapping("/airlines/{id}")
+    @DeleteMapping("/private/airlines/{id}")
     public String deleteAirlineById(@PathVariable Integer id) {
         airlineService.deleteById(id);
         return "Deleted airline with id - " + id;
     }
 
-    @DeleteMapping("/airlines")
+    @DeleteMapping("/private/airlines")
     public String deleteAllAirlines() {
         return airlineService.deleteAll();
     }

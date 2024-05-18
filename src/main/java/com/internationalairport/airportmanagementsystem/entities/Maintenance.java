@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -7,15 +9,14 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "maintenance")
 public class Maintenance {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "maintenance_id")
-    private Integer id;
+    private Integer maintenanceId;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn(name = "aircraft_id")
+    @JsonBackReference
     private Aircraft aircraft;
 
     @Column(name = "date")
@@ -38,12 +39,12 @@ public class Maintenance {
     }
 
     // Getters and setters
-    public Integer getId() {
-        return id;
+    public Integer getMaintenanceId() {
+        return maintenanceId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setMaintenanceId(Integer maintenanceId) {
+        this.maintenanceId = maintenanceId;
     }
 
     public Aircraft getAircraft() {
@@ -81,7 +82,8 @@ public class Maintenance {
     @Override
     public String toString() {
         return "Maintenance{" +
-                "id=" + id +
+                "maintenanceId=" + maintenanceId +
+                ", aircraft=" + aircraft +
                 ", date=" + date +
                 ", type='" + type + '\'' +
                 ", description='" + description + '\'' +

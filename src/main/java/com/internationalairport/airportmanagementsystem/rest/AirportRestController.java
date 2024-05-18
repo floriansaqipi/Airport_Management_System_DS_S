@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostAirportDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutAirportDto;
 import com.internationalairport.airportmanagementsystem.entities.Airport;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,12 @@ public class AirportRestController {
         this.airportService = airportService;
     }
 
-    @GetMapping("/airports")
-    public List<Airport> findAllAirports() {
+    @GetMapping("/public/airports")
+    public List<Airport> findAll() {
         return airportService.findAll();
     }
 
-    @GetMapping("/airports/{airportId}")
+    @GetMapping("/public/airports/{airportId}")
     public Airport getAirportById(@PathVariable int airportId) {
         Airport airport = airportService.findById(airportId);
         if (airport == null) {
@@ -32,18 +34,17 @@ public class AirportRestController {
         return airport;
     }
 
-    @PostMapping("/airports")
-    public Airport addAirport(@RequestBody Airport airport) {
-        airport.setAirportId(0);
-        return airportService.save(airport);
+    @PostMapping("/private/airports")
+    public Airport addAirport(@RequestBody PostAirportDto postAirportDto) {
+        return airportService.save(postAirportDto);
     }
 
-    @PutMapping("/airports")
-    public Airport updateAirport(@RequestBody Airport airport) {
-        return airportService.save(airport);
+    @PutMapping("/private/airports")
+    public Airport updateAirport(@RequestBody PutAirportDto puttAirportDto) {
+        return airportService.save(puttAirportDto);
     }
 
-    @DeleteMapping("/airports/{airportId}")
+    @DeleteMapping("/private/airports/{airportId}")
     public String deleteAirportById(@PathVariable int airportId) {
         Airport airport = airportService.findById(airportId);
         if (airport == null) {
@@ -53,7 +54,7 @@ public class AirportRestController {
         return "Deleted airport with id - " + airportId;
     }
 
-    @DeleteMapping("/airports")
+    @DeleteMapping("/private/airports")
     public String deleteAllAirports() {
         return airportService.deleteAll();
     }

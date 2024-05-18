@@ -1,5 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
+import com.internationalairport.airportmanagementsystem.dtos.post.PostCheckInDto;
+import com.internationalairport.airportmanagementsystem.dtos.put.PutCheckInDto;
 import com.internationalairport.airportmanagementsystem.entities.CheckIn;
 import com.internationalairport.airportmanagementsystem.service.interfaces.CheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/private")
 public class CheckInRestController {
 
     private CheckInService checkInService;
@@ -33,16 +35,15 @@ public class CheckInRestController {
     }
 
     @PostMapping("/check_ins")
-    public CheckIn addCheckIn(@RequestBody CheckIn theCheckIn){
-        theCheckIn.setCheckInId(0);
-        CheckIn dbCheckIn = checkInService.save(theCheckIn);
-        return dbCheckIn;
+    public CheckIn addCheckIn(@RequestBody PostCheckInDto postCheckInDto){
+        CheckIn theCheckIn = checkInService.save(postCheckInDto);
+        return theCheckIn;
     }
 
     @PutMapping("/check_ins")
-    public CheckIn updateCheckIn(@RequestBody CheckIn theCheckIn){
-        CheckIn checkIn = checkInService.save(theCheckIn);
-        return checkIn;
+    public CheckIn updateCheckIn(@RequestBody PutCheckInDto putCheckInDto){
+        CheckIn theCheckIn = checkInService.save(putCheckInDto);
+        return theCheckIn;
     }
 
     @DeleteMapping("/check_ins/{checkInId}")
@@ -52,7 +53,7 @@ public class CheckInRestController {
             throw new RuntimeException("Id not found - " + checkInId);
         }
         checkInService.deleteById(checkInId);
-        return "Deleted id - " + checkInId;
+        return "Deleted Check In id - " + checkInId;
     }
 
     @DeleteMapping("/check_ins")
@@ -60,4 +61,3 @@ public class CheckInRestController {
         return checkInService.deleteAll();
     }
 }
-

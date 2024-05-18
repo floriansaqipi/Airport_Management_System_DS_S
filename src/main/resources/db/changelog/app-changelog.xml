@@ -26,5 +26,9 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <include file="/db/changelog/scripts/18-creating-baggage-table.sql"/>
     <include file="/db/changelog/scripts/19-creating-tickets-table.sql"/>
     <include file="/db/changelog/scripts/20-creating-boarding_passes-table.sql"/>
+    <include file="/db/changelog/scripts/21-altering-table-relationships.sql"/>
+    <include file="/db/changelog/scripts/22-altering-one-to-one-relationships.sql"/>
+    <include file="/db/changelog/scripts/23-creating-users-roles-tables.sql"/>
+    <include file="/db/changelog/scripts/24-creating-abilities-role-abilities-tables.sql"/>
 
 </databaseChangeLog>
