@@ -55,7 +55,7 @@ public class EmployeeRestController {
         employeeService = theEmployeeService;
     }
 
-    @PostMapping("/auth/employees/login")
+    @PostMapping("/public/auth/employees/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody PostLoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -66,7 +66,7 @@ public class EmployeeRestController {
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/employees/register")
+    @PostMapping("/private/auth/employees/register")
     public ResponseEntity<String> register(@RequestBody PostEmployeeDto postEmployeeDto) {
         if (userRepository.existsByUsername(postEmployeeDto.username())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
@@ -76,18 +76,20 @@ public class EmployeeRestController {
         String hashedPassword=passwordEncoder.encode(employee.getUserEntity().getPassword());
         employee.getUserEntity().setPassword(hashedPassword);
 
-        Role userRole = roleRepository.findByRoleName("USER").get();
-        employee.getUserEntity().addRole(userRole);
+        Role passengerRole = roleRepository.findByRoleName("PASSENGER").get();
+        Role employeeRole = roleRepository.findByRoleName("EMPLOYEE").get();
+        employee.getUserEntity().addRole(passengerRole);
+        employee.getUserEntity().addRole(employeeRole);
 
         employeeRepository.save(employee);
 
         return new ResponseEntity<>("Employee registered successfully!", HttpStatus.OK);
     }
-    @GetMapping("/employees")
+    @GetMapping("/private/employees")
     public List<Employee> findAll() {
         return employeeService.findAll();
     }
-    @GetMapping("/employees/{employeeId}")
+    @GetMapping("/private/employees/{employeeId}")
     public Employee getEmployee(@PathVariable int employeeId) {
         Employee theEmployee = employeeService.findById(employeeId);
         if (theEmployee == null) {
@@ -95,15 +97,15 @@ public class EmployeeRestController {
         }
         return theEmployee;
     }
-    @PostMapping("/employees")
+    @PostMapping("/private/employees")
     public Employee addEmployee(@RequestBody PostEmployeeDto postEmployeeDto) {
         return employeeService.save(postEmployeeDto);
     }
-    @PutMapping("/employees")
+    @PutMapping("/private/employees")
     public Employee updateEmployee(@RequestBody PutEmployeeDto putEmployeeDto) {
         return  employeeService.save(putEmployeeDto);
     }
-    @DeleteMapping("/employees/{employeeId}")
+    @DeleteMapping("/private/employees/{employeeId}")
     public String deleteEmployee(@PathVariable int employeeId) {
         Employee tempEmployee = employeeService.findById(employeeId);
         if (tempEmployee == null) {

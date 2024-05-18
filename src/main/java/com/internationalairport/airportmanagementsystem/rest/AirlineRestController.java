@@ -20,33 +20,33 @@ public class AirlineRestController {
         this.airlineService = airlineService;
     }
 
-    @GetMapping("/airlines")
+    @GetMapping("/public/airlines")
     public List<Airline> findAll() {
         return airlineService.findAll();
     }
 
-    @GetMapping("/airlines/{id}")
+    @GetMapping("/public/airlines/{id}")
     public Airline getAirlineById(@PathVariable Integer id) {
         return airlineService.findById(id);
     }
 
-    @PostMapping("/airlines")
+    @PostMapping("/private/airlines")
     public Airline addAirline(@RequestBody PostAirlineDto postAirlineDto) {
         return airlineService.save(postAirlineDto);
     }
 
-    @PutMapping("/airlines")
+    @PutMapping("/private/airlines")
     public Airline updateAirline(@RequestBody PutAirlineDto putAirlineDto) {
         return airlineService.save(putAirlineDto);
     }
 
-    @DeleteMapping("/airlines/{id}")
+    @DeleteMapping("/private/airlines/{id}")
     public String deleteAirlineById(@PathVariable Integer id) {
         airlineService.deleteById(id);
         return "Deleted airline with id - " + id;
     }
 
-    @DeleteMapping("/airlines")
+    @DeleteMapping("/private/airlines")
     public String deleteAllAirlines() {
         return airlineService.deleteAll();
     }

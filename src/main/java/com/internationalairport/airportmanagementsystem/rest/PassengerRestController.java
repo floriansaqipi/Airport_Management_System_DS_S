@@ -51,12 +51,12 @@ public class PassengerRestController {
         this.passengerRepository = passengerRepository;
     }
 
-    @GetMapping("/passengers")
+    @GetMapping("/private/passengers")
     public List<Passenger> findAll() {
         return passengerService.findAll();
     }
 
-    @GetMapping("/passengers/{passengerId}")
+    @GetMapping("/private/passengers/{passengerId}")
     public Passenger getPassenger(@PathVariable int passengerId) {
         Passenger thePassenger = passengerService.findById(passengerId);
         if (thePassenger == null) {
@@ -64,7 +64,7 @@ public class PassengerRestController {
         }
         return thePassenger;
     }
-    @PostMapping("/auth/passengers/login")
+    @PostMapping("/public/auth/passengers/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody PostLoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -75,7 +75,7 @@ public class PassengerRestController {
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/passengers/register")
+    @PostMapping("/public/auth/passengers/register")
     public ResponseEntity<String> register(@RequestBody PostPassengerDto postPassengerDto) {
         if (userRepository.existsByUsername(postPassengerDto.username())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
@@ -85,22 +85,22 @@ public class PassengerRestController {
         String hashedPassword=passwordEncoder.encode(passenger.getUserEntity().getPassword());
         passenger.getUserEntity().setPassword(hashedPassword);
 
-        Role userRole = roleRepository.findByRoleName("USER").get();
+        Role userRole = roleRepository.findByRoleName("PASSENGER").get();
         passenger.getUserEntity().addRole(userRole);
 
         passengerRepository.save(passenger);
 
         return new ResponseEntity<>("Passenger registered successfully!", HttpStatus.OK);
     }
-    @PostMapping("/passengers")
+    @PostMapping("/private/passengers")
     public Passenger addPassenger(@RequestBody PostPassengerDto postPassengerDto) {
         return passengerService.save(postPassengerDto);
     }
-    @PutMapping("/passengers")
+    @PutMapping("/private/passengers")
     public Passenger updatePassenger(@RequestBody PutPassengerDto putPassengerDto) {
         return passengerService.save(putPassengerDto);
     }
-    @DeleteMapping("/passengers/{passengerId}")
+    @DeleteMapping("/private/passengers/{passengerId}")
     public String deletePassenger(@PathVariable int passengerId) {
         Passenger tempPassenger = passengerService.findById(passengerId);
         if (tempPassenger == null) {

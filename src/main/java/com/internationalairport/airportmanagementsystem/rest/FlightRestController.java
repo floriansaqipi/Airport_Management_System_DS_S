@@ -20,12 +20,12 @@ public class FlightRestController {
         this.flightService = flightService;
     }
 
-    @GetMapping("/flights")
+    @GetMapping("/public/flights")
     public List<Flight> findAll() {
         return flightService.findAll();
     }
 
-    @GetMapping("/flights/{flightId}")
+    @GetMapping("/public/flights/{flightId}")
     public Flight getFlightById(@PathVariable Integer flightId) {
         Flight flight = flightService.findById(flightId);
         if (flight == null) {
@@ -34,17 +34,17 @@ public class FlightRestController {
         return flight;
     }
 
-    @PostMapping("/flights")
+    @PostMapping("/private/flights")
     public Flight addFlight(@RequestBody PostFlightDto postFlightDto) {
         return flightService.save(postFlightDto);
     }
 
-    @PutMapping("/flights")
+    @PutMapping("/private/flights")
     public Flight updateFlight(@RequestBody PutFlightDto putFlightDto) {
         return flightService.save(putFlightDto);
     }
 
-    @DeleteMapping("/flights/{flightId}")
+    @DeleteMapping("/private/flights/{flightId}")
     public String deleteFlightById(@PathVariable Integer flightId) {
         Flight flight = flightService.findById(flightId);
         if (flight == null) {
@@ -54,7 +54,7 @@ public class FlightRestController {
         return "Deleted flight with id - " + flightId;
     }
 
-    @DeleteMapping("/flights")
+    @DeleteMapping("/private/flights")
     public String deleteAllFlights() {
         return flightService.deleteAll();
     }

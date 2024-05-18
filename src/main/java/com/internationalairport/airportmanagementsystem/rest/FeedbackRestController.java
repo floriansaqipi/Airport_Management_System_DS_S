@@ -17,11 +17,11 @@ public class FeedbackRestController {
     public FeedbackRestController(FeedbackService theFeedbackService) {
         feedbackService = theFeedbackService;
     }
-    @GetMapping("/feedbacks")
+    @GetMapping("/public/feedbacks")
     public List<Feedback> findAll() {
         return feedbackService.findAll();
     }
-    @GetMapping("/feedbacks/{feedbackId}")
+    @GetMapping("/public/feedbacks/{feedbackId}")
     public Feedback getFeedback(@PathVariable int feedbackId) {
         Feedback theFeedback = feedbackService.findById(feedbackId);
         if (theFeedback == null) {
@@ -29,15 +29,15 @@ public class FeedbackRestController {
         }
         return theFeedback;
     }
-    @PostMapping("/feedbacks")
+    @PostMapping("/private/feedbacks")
     public Feedback addFeedback(@RequestBody PostFeedbackDto postFeedbackDto) {
         return feedbackService.save(postFeedbackDto);
     }
-    @PutMapping("/feedbacks")
+    @PutMapping("/private/feedbacks")
     public Feedback updateFeedback(@RequestBody PutFeedbackDto putFeedbackDto) {
         return feedbackService.save(putFeedbackDto);
     }
-    @DeleteMapping("/feedbacks/{feedbackId}")
+    @DeleteMapping("/private/feedbacks/{feedbackId}")
     public String deleteFeedback(@PathVariable int feedbackId) {
         Feedback tempFeedback = feedbackService.findById(feedbackId);
         if (tempFeedback == null) {
