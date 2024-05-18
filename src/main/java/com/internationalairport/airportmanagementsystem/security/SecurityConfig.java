@@ -24,10 +24,13 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationEn
 public class SecurityConfig {
     private JwtAuthEntryPoint authEntryPoint;
     private CustomUserDetailsService userDetailsService;
+
+    private CustomAuthorizationManager customAuthorizationManager;
     @Autowired
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthEntryPoint authEntryPoint) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthEntryPoint authEntryPoint, CustomAuthorizationManager customAuthorizationManager) {
         this.userDetailsService = userDetailsService;
         this.authEntryPoint=authEntryPoint;
+        this.customAuthorizationManager = customAuthorizationManager;
     }
 
     @Bean
@@ -40,12 +43,13 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests()
-                .requestMatchers("api/**").permitAll() // TEMPORARY ALLOW ALL REQUESTS
-                .requestMatchers("/api/auth/**").permitAll() // Allows access without authentication for /api/auth/**
-                .requestMatchers(HttpMethod.GET).authenticated() // Requires authentication for GET requests
-                .anyRequest().authenticated()
-                .and()
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/api/private/**").authenticated()
+                                .requestMatchers("/api/private/**").access(customAuthorizationManager)
+                                .requestMatchers("/api/public/**").permitAll()
+                                .anyRequest().permitAll()
+                )
                 .httpBasic();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

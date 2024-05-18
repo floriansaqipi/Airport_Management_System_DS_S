@@ -20,12 +20,12 @@ public class AirportServiceRestController {
         airportServiceService=theAirportServiceService;
     }
 
-    @GetMapping("/airport_services")
+    @GetMapping("/public/airport_services")
     public List<AirportService> findAllAirportServices(){
         return airportServiceService.findAll();
     }
 
-    @GetMapping("/airport_services/{airportServiceId}")
+    @GetMapping("/public/airport_services/{airportServiceId}")
     public AirportService getAirportServiceById(@PathVariable int airportServiceId){
         AirportService theAirportService=airportServiceService.findById(airportServiceId);
         if(theAirportService==null){
@@ -34,17 +34,17 @@ public class AirportServiceRestController {
         return theAirportService;
     }
 
-    @PostMapping("/airport_services")
+    @PostMapping("/private/airport_services")
     public AirportService addAirportService(@RequestBody PostAirportServiceDto postAirportServiceDto){
         return airportServiceService.save(postAirportServiceDto);
     }
 
-    @PutMapping("/airport_services")
+    @PutMapping("/private/airport_services")
     public AirportService updateAirportService(@RequestBody PutAirportServiceDto putAirportServiceDto){
         return airportServiceService.save(putAirportServiceDto);
     }
 
-    @DeleteMapping("/airport_services/{airportServiceId}")
+    @DeleteMapping("/private/airport_services/{airportServiceId}")
     public String deleteAirportServiceById(@PathVariable int airportServiceId){
         AirportService tempAirportService = airportServiceService.findById(airportServiceId);
         if(tempAirportService==null){
@@ -54,7 +54,7 @@ public class AirportServiceRestController {
         airportServiceService.deleteById(airportServiceId);
         return "Deleted Airport Service id - "+airportServiceId;
     }
-    @DeleteMapping("/airport_services")
+    @DeleteMapping("/private/airport_services")
     public String deleteAllAirportServices() {
         return airportServiceService.deleteAll();
     }

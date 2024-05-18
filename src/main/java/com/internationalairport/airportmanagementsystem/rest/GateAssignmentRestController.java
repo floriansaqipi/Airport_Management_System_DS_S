@@ -20,33 +20,33 @@ public class GateAssignmentRestController {
         this.gateAssignmentService = gateAssignmentService;
     }
 
-    @GetMapping("/gate_assignments")
+    @GetMapping("/public/gate_assignments")
     public List<GateAssignment> findAllGateAssignments() {
         return gateAssignmentService.findAll();
     }
 
-    @GetMapping("/gate_assignments/{gateAssignmentId}")
+    @GetMapping("/public/gate_assignments/{gateAssignmentId}")
     public GateAssignment getGateAssignmentById(@PathVariable int gateAssignmentId) {
         return gateAssignmentService.findById(gateAssignmentId);
     }
 
-    @PostMapping("/gate_assignments")
+    @PostMapping("/private/gate_assignments")
     public GateAssignment addGateAssignment(@RequestBody PostGateAssignmentDto postGateAssignmentDto) {
         return gateAssignmentService.save(postGateAssignmentDto);
     }
 
-    @PutMapping("/gate_assignments")
+    @PutMapping("/private/gate_assignments")
     public GateAssignment updateGateAssignment(@RequestBody PutGateAssignmentDto putGateAssignmentDto) {
         return gateAssignmentService.save(putGateAssignmentDto);
     }
 
-    @DeleteMapping("/gate_assignments/{gateAssignmentId}")
+    @DeleteMapping("/private/gate_assignments/{gateAssignmentId}")
     public String deleteGateAssignmentById(@PathVariable int gateAssignmentId) {
         gateAssignmentService.deleteById(gateAssignmentId);
         return "Deleted gate assignment id - " + gateAssignmentId;
     }
 
-    @DeleteMapping("/gate_assignments")
+    @DeleteMapping("/private/gate_assignments")
     public String deleteAllGateAssignments() {
         return gateAssignmentService.deleteAll();
     }

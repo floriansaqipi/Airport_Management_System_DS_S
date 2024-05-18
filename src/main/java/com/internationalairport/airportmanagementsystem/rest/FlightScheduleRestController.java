@@ -20,33 +20,33 @@ public class FlightScheduleRestController {
         this.flightScheduleService = flightScheduleService;
     }
 
-    @GetMapping("/flight_schedules")
+    @GetMapping("/public/flight_schedules")
     public List<FlightSchedule> findAllFlightSchedules() {
         return flightScheduleService.findAll();
     }
 
-    @GetMapping("/flight_schedules/{flightScheduleId}")
+    @GetMapping("/public/flight_schedules/{flightScheduleId}")
     public FlightSchedule getFlightScheduleById(@PathVariable int flightScheduleId) {
         return flightScheduleService.findById(flightScheduleId);
     }
 
-    @PostMapping("/flight_schedules")
+    @PostMapping("/private/flight_schedules")
     public FlightSchedule addFlightSchedule(@RequestBody PostFlightScheduleDto postFlightScheduleDto) {
         return flightScheduleService.save(postFlightScheduleDto);
     }
 
-    @PutMapping("/flight_schedules")
+    @PutMapping("/private/flight_schedules")
     public FlightSchedule updateFlightSchedule(@RequestBody PutFlightScheduleDto putFlightScheduleDto) {
         return flightScheduleService.save(putFlightScheduleDto);
     }
 
-    @DeleteMapping("/flight_schedules/{flightScheduleId}")
+    @DeleteMapping("/private/flight_schedules/{flightScheduleId}")
     public String deleteFlightScheduleById(@PathVariable int flightScheduleId) {
         flightScheduleService.deleteById(flightScheduleId);
         return "Deleted flight schedule id - " + flightScheduleId;
     }
 
-    @DeleteMapping("/flight_schedules")
+    @DeleteMapping("/private/flight_schedules")
     public String deleteAllFlightSchedules() {
         return flightScheduleService.deleteAll();
     }

@@ -20,12 +20,12 @@ public class ParkingRestController {
         parkingService=theParkingService;
     }
 
-    @GetMapping("/parkings")
+    @GetMapping("/public/parkings")
     public List<Parking> findAllParkings(){
         return parkingService.findAll();
     }
 
-    @GetMapping("/parkings/{parkingId}")
+    @GetMapping("/public/parkings/{parkingId}")
     public Parking getParkingServiceById(@PathVariable int parkingId){
         Parking theParking=parkingService.findById(parkingId);
         if(theParking==null){
@@ -34,18 +34,18 @@ public class ParkingRestController {
         return theParking;
     }
 
-    @PostMapping("/parkings")
+    @PostMapping("/private/parkings")
     public Parking addParking(@RequestBody PostParkingDto postParkingDto){
         return parkingService.save(postParkingDto);
     }
 
     //add mapping for put
-    @PutMapping("/parkings")
+    @PutMapping("/private/parkings")
     public Parking updateParking(@RequestBody PutParkingDto putParkingDto){
         return parkingService.save(putParkingDto);
     }
 
-    @DeleteMapping("/parkings/{parkingId}")
+    @DeleteMapping("/private/parkings/{parkingId}")
     public String deleteParkingById(@PathVariable int parkingId){
         Parking parking = parkingService.findById(parkingId);
         if(parking==null){
@@ -55,7 +55,7 @@ public class ParkingRestController {
         parkingService.deleteById(parkingId);
         return "Deleted Parking id - "+parkingId;
     }
-    @DeleteMapping("/parkings")
+    @DeleteMapping("/private/parkings")
     public String deleteAllParkings() {
         return parkingService.deleteAll();
     }
