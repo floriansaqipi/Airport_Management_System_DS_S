@@ -47,7 +47,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers("/api/private/**").authenticated()
                                 .requestMatchers("/api/private/**").access(customAuthorizationManager)
-                                .requestMatchers("/api/public/**").permitAll()
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .httpBasic();
