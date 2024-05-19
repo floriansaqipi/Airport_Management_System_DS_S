@@ -7,13 +7,9 @@ import com.internationalairport.airportmanagementsystem.daos.UserEntityRepositor
 import com.internationalairport.airportmanagementsystem.dtos.AuthResponseDTO;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostEmployeeDto;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostLoginDto;
-import com.internationalairport.airportmanagementsystem.dtos.post.PostPassengerDto;
-import com.internationalairport.airportmanagementsystem.dtos.post.PostRegisterDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
-import com.internationalairport.airportmanagementsystem.entities.Passenger;
 import com.internationalairport.airportmanagementsystem.entities.Role;
-import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import com.internationalairport.airportmanagementsystem.mappers.EmployeeMapper;
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.EmployeeService;
@@ -115,17 +111,3 @@ public class EmployeeRestController {
         return "Deleted employee id - " + employeeId;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
