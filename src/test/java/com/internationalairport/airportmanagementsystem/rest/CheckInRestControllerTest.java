@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.internationalairport.airportmanagementsystem.CustomMatchers.LocalDateTimeMatcher.matchesLocalDateTime;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -51,11 +52,11 @@ public class CheckInRestControllerTest {
     public void init() {
         checkIn = new CheckIn();
         checkIn.setCheckInId(1);
-        checkIn.setCheckInTime(LocalDateTime.now());
+        checkIn.setCheckInTime(LocalDateTime.now().withNano(0)); // Ensure consistent precision
         checkIn.setDeskNumber(1);
 
-        postCheckInDto = new PostCheckInDto(1, 1, LocalDateTime.now(), 1);
-        putCheckInDto = new PutCheckInDto(1, 1, 1, LocalDateTime.now(), 1);
+        postCheckInDto = new PostCheckInDto(1, 1, LocalDateTime.now().withNano(0), 1);
+        putCheckInDto = new PutCheckInDto(1, 1, 1, LocalDateTime.now().withNano(0), 1);
     }
 
     @Test
@@ -68,7 +69,7 @@ public class CheckInRestControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.checkInId", CoreMatchers.is(checkIn.getCheckInId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.checkInTime", CoreMatchers.is(checkIn.getCheckInTime().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.checkInTime", matchesLocalDateTime(checkIn.getCheckInTime())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deskNumber", CoreMatchers.is(checkIn.getDeskNumber())));
     }
 
@@ -82,7 +83,7 @@ public class CheckInRestControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].checkInId", CoreMatchers.is(checkIn.getCheckInId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].checkInTime", CoreMatchers.is(checkIn.getCheckInTime().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].checkInTime", matchesLocalDateTime(checkIn.getCheckInTime())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].deskNumber", CoreMatchers.is(checkIn.getDeskNumber())));
     }
 
@@ -96,7 +97,7 @@ public class CheckInRestControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.checkInId", CoreMatchers.is(checkIn.getCheckInId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.checkInTime", CoreMatchers.is(checkIn.getCheckInTime().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.checkInTime", matchesLocalDateTime(checkIn.getCheckInTime())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deskNumber", CoreMatchers.is(checkIn.getDeskNumber())));
     }
 
@@ -110,7 +111,7 @@ public class CheckInRestControllerTest {
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.checkInId", CoreMatchers.is(checkIn.getCheckInId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.checkInTime", CoreMatchers.is(checkIn.getCheckInTime().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.checkInTime", matchesLocalDateTime(checkIn.getCheckInTime())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deskNumber", CoreMatchers.is(checkIn.getDeskNumber())));
     }
 
