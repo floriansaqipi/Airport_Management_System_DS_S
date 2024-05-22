@@ -47,9 +47,10 @@ public class CargoRestControllerTest {
 
     @BeforeEach
     public void init() {
-        cargo = new Cargo(100.0, "10x5x5");
-        postCargoDto = new PostCargoDto(1, 100.0, "10x5x5");
-        putCargoDto = new PutCargoDto(1, 1, 100.0, "10x5x5");
+        cargo = new Cargo(100.0, "10x10x10");
+        cargo.setCargoId(1); // Ensure the cargoId is set
+        postCargoDto = new PostCargoDto(1, 100.0, "10x10x10");
+        putCargoDto = new PutCargoDto(1, 1, 100.0, "10x10x10");
     }
 
     @Test
@@ -66,7 +67,7 @@ public class CargoRestControllerTest {
     }
 
     @Test
-    public void CargoRestController_GetAllCargo_ReturnCargoList() throws Exception {
+    public void CargoRestController_GetAllCargos_ReturnCargoList() throws Exception {
         when(cargoService.findAll()).thenReturn(Arrays.asList(cargo));
 
         ResultActions response = mockMvc.perform(get("/api/private/cargo")
