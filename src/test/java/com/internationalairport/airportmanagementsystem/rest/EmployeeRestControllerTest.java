@@ -7,14 +7,16 @@ import com.internationalairport.airportmanagementsystem.daos.UserEntityRepositor
 import com.internationalairport.airportmanagementsystem.dtos.post.PostEmployeeDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
+import com.internationalairport.airportmanagementsystem.entities.Role;
 import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import com.internationalairport.airportmanagementsystem.mappers.EmployeeMapper;
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.EmployeeService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,13 +29,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @WebMvcTest(controllers = EmployeeRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -65,17 +70,38 @@ public class EmployeeRestControllerTest {
     @MockBean
     private JWTGenerator jwtGenerator;
 
-    @Test
-    public void testRegisterEmployee() throws Exception {
-        PostEmployeeDto postEmployeeDto = new PostEmployeeDto("John Doe", "EMPLOYEE", "1234567890", "johndoe", "password");
-        Employee savedEmployee = new Employee(); // Ensure a valid Employee object is returned
+    @InjectMocks
+    private EmployeeRestController employeeController;
 
-        when(employeeService.save(any(PostEmployeeDto.class))).thenReturn(savedEmployee);
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(employeeController).build();
+        objectMapper = new ObjectMapper();
+    }
+
+    @Test
+    public void testRegisterEmployeeSuccess() throws Exception {
+        PostEmployeeDto postEmployeeDto = new PostEmployeeDto("John Doe", "EMPLOYEE", "1234567890", "johndoe", "password");
+        Employee employee = new Employee();
+        employee.setUserEntity(new UserEntity());
+        String hashedPassword = "hashedPassword";
+        Role passengerRole = new Role("PASSENGER");
+        Role employeeRole = new Role("EMPLOYEE");
+
+        when(userRepository.existsByUsername(postEmployeeDto.username())).thenReturn(false);
+        when(employeeMapper.postToEmployee(any(PostEmployeeDto.class))).thenReturn(employee);
+        when(passwordEncoder.encode(any(String.class))).thenReturn(hashedPassword);
+        when(roleRepository.findByRoleName("PASSENGER")).thenReturn(Optional.of(passengerRole));
+        when(roleRepository.findByRoleName("EMPLOYEE")).thenReturn(Optional.of(employeeRole));
+
+        String expectedResponse = "Employee registered successfully!";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/private/auth/employees/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postEmployeeDto)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string(expectedResponse));
     }
 
     @Test
@@ -124,7 +150,7 @@ public class EmployeeRestControllerTest {
 
     @Test
     public void testUpdateEmployee() throws Exception {
-        PutEmployeeDto putEmployeeDto = new PutEmployeeDto(1, "John Doe", "EMPLOYEE", "1234567890", new UserEntity());
+        PutEmployeeDto putEmployeeDto = new PutEmployeeDto(1,"John Doe", "EMPLOYEE", "1234567890", "johndoe", "password");
 
         when(employeeService.save(any(PutEmployeeDto.class))).thenReturn(new Employee());
 
