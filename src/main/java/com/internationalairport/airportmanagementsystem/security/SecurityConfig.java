@@ -48,6 +48,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/private/**").authenticated()
                                 .requestMatchers("/api/private/**").access(customAuthorizationManager)
                                 .requestMatchers("/**").permitAll()
+                                .requestMatchers("/swagger-ui.html").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .httpBasic();
