@@ -4,7 +4,6 @@ import java.util.List;
 
 public record PostUserDto(
         String username,
-        String password,
-        List<Integer> roleIds
+        String password
 ) {
 }

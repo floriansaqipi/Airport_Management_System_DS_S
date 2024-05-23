@@ -9,6 +9,8 @@ import java.util.List;
 public interface PassengerService {
     List<Passenger> findAll();
     Passenger findById(int theId);
+
+    Passenger findByUserEntityId(Integer userId);
     Passenger save(PutPassengerDto putPassengerDto);
     Passenger save(PostPassengerDto postPassengerDto);
     void deleteById(int theId);

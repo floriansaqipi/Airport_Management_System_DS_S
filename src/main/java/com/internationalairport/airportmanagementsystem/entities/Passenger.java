@@ -30,23 +30,19 @@ public class Passenger {
     @Column(name = "contact_details")
     private String contactDetails;
 
-    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "passenger")
     @JsonManagedReference
     private List<Feedback> feedbacks;
 
-    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "passenger")
     @JsonManagedReference
     private List<CheckIn> checkIns;
 
-    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "passenger")
     @JsonManagedReference
     private List<Ticket> tickets;
 
-    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "passenger")
     @JsonManagedReference
     private List<Baggage> baggages;
 

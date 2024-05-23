@@ -14,6 +14,7 @@ import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import com.internationalairport.airportmanagementsystem.mappers.PassengerMapper;
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.PassengerService;
+import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +38,12 @@ public class PassengerRestController {
     private JWTGenerator jwtGenerator;
     private PassengerMapper passengerMapper;
     private PassengerRepository passengerRepository;
+
+    private UserEntityService userEntityService;
     @Autowired
     public PassengerRestController(PassengerService thePassengerService, AuthenticationManager authenticationManager, UserEntityRepository userRepository,
                                    RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator,
-                                   PassengerMapper passengerMapper, PassengerRepository passengerRepository) {
+                                   PassengerMapper passengerMapper, PassengerRepository passengerRepository, UserEntityService userEntityService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -49,6 +52,7 @@ public class PassengerRestController {
         this.passengerMapper=passengerMapper;
         passengerService = thePassengerService;
         this.passengerRepository = passengerRepository;
+        this.userEntityService = userEntityService;
     }
 
     @GetMapping("/private/passengers")
@@ -81,24 +85,24 @@ public class PassengerRestController {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
 
-        Passenger passenger = passengerMapper.postToPassenger(postPassengerDto);
-        String hashedPassword=passwordEncoder.encode(passenger.getUserEntity().getPassword());
-        passenger.getUserEntity().setPassword(hashedPassword);
-
-        Role userRole = roleRepository.findByRoleName("PASSENGER").get();
-        passenger.getUserEntity().addRole(userRole);
-
-        passengerRepository.save(passenger);
+        passengerService.save(postPassengerDto);
 
         return new ResponseEntity<>("Passenger registered successfully!", HttpStatus.OK);
     }
-    @PostMapping("/private/passengers")
-    public Passenger addPassenger(@RequestBody PostPassengerDto postPassengerDto) {
-        return passengerService.save(postPassengerDto);
-    }
     @PutMapping("/private/passengers")
-    public Passenger updatePassenger(@RequestBody PutPassengerDto putPassengerDto) {
-        return passengerService.save(putPassengerDto);
+    public ResponseEntity<String> updatePassenger(@RequestBody PutPassengerDto putPassengerDto) {
+        UserEntity user = userEntityService.findByUsername(putPassengerDto.username());
+        if (user == null) {
+            throw new RuntimeException("User not found for username - " + putPassengerDto.username());
+        }
+        if (userEntityService.existsByUsername(putPassengerDto.username()) &&
+                !putPassengerDto.username().equals(user.getUsername())) {
+            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
+        }
+
+        passengerService.save(putPassengerDto);
+
+        return new ResponseEntity<>("Passenger updated successfully!", HttpStatus.OK);
     }
     @DeleteMapping("/private/passengers/{passengerId}")
     public String deletePassenger(@PathVariable int passengerId) {

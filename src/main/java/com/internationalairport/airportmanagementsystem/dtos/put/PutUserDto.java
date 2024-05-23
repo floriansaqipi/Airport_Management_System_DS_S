@@ -6,6 +6,6 @@ public record PutUserDto(
         Integer userId,
         String username,
         String password,
-        List<Integer> roleIds
+        Integer roleId
 ) {
 }

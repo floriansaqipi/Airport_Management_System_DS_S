@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutFlightDto;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
@@ -16,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +42,9 @@ class FlightRestControllerTest {
 
     @Test
     void testAddFlight() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
         PostFlightDto postFlightDto = new PostFlightDto(
                 "FL123",
                 1,
@@ -58,7 +61,7 @@ class FlightRestControllerTest {
 
         mockMvc.perform(post("/api/private/flights")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(postFlightDto)))
+                        .content(objectMapper.writeValueAsString(postFlightDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.flightNumber").value("FL123"));
 
@@ -66,23 +69,10 @@ class FlightRestControllerTest {
     }
 
     @Test
-    void testGetFlightById() throws Exception {
-        int flightId = 1;
-        Flight flight = new Flight("FL123", LocalDateTime.now(), LocalDateTime.now());
-        flight.setFlightId(flightId);
-
-        when(flightService.findById(flightId)).thenReturn(flight);
-
-        mockMvc.perform(get("/api/public/flights/{flightId}", flightId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.flightId").value(flightId))
-                .andExpect(jsonPath("$.flightNumber").value("FL123"));
-
-        verify(flightService, times(1)).findById(flightId);
-    }
-
-    @Test
     void testUpdateFlight() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
         PutFlightDto putFlightDto = new PutFlightDto(
                 1,
                 "FL123",
@@ -101,12 +91,28 @@ class FlightRestControllerTest {
 
         mockMvc.perform(put("/api/private/flights")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(putFlightDto)))
+                        .content(objectMapper.writeValueAsString(putFlightDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.flightId").value(1))
                 .andExpect(jsonPath("$.flightNumber").value("FL123"));
 
         verify(flightService, times(1)).save(any(PutFlightDto.class));
+    }
+
+    @Test
+    void testGetFlightById() throws Exception {
+        int flightId = 1;
+        Flight flight = new Flight("FL123", LocalDateTime.now(), LocalDateTime.now());
+        flight.setFlightId(flightId);
+
+        when(flightService.findById(flightId)).thenReturn(flight);
+
+        mockMvc.perform(get("/api/public/flights/{flightId}", flightId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.flightId").value(flightId))
+                .andExpect(jsonPath("$.flightNumber").value("FL123"));
+
+        verify(flightService, times(1)).findById(flightId);
     }
 
     @Test
