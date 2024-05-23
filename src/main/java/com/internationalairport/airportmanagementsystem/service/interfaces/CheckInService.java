@@ -11,6 +11,8 @@ public interface CheckInService {
     CheckIn save(PutCheckInDto putCheckInDto);
     CheckIn findById(Integer id);
     List<CheckIn> findAll();
+    List<CheckIn> findByPassengerId(Integer passengerId);
     void deleteById(Integer theId);
     String deleteAll();
+
 }

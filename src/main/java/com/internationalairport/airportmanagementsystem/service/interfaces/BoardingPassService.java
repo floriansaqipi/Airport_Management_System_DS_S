@@ -10,6 +10,8 @@ public interface BoardingPassService {
     BoardingPass save(PostBoardingPassDto postBoardingPassDto);
     BoardingPass save(PutBoardingPassDto putBoardingPassDto);
     BoardingPass findById(Integer theId);
+    List<BoardingPass> findByPassengerId(Integer passengerId);
     List<BoardingPass> findAll();
     void deleteById(Integer theId);
+
 }
