@@ -48,6 +48,11 @@ public class CheckInServiceImpl implements CheckInService {
     }
 
     @Override
+    public List<CheckIn> findByPassengerId(Integer passengerId) {
+        return checkInRepository.findByPassengerId(passengerId);
+    }
+
+    @Override
     public void deleteById(Integer theId) {
         checkInRepository.deleteById(theId);
     }
