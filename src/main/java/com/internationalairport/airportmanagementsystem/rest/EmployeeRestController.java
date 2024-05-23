@@ -9,6 +9,7 @@ import com.internationalairport.airportmanagementsystem.dtos.post.PostLoginDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
 import com.internationalairport.airportmanagementsystem.entities.UserEntity;
+import com.internationalairport.airportmanagementsystem.entities.Role;
 import com.internationalairport.airportmanagementsystem.mappers.EmployeeMapper;
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.EmployeeService;
@@ -103,17 +104,3 @@ public class EmployeeRestController {
         return "Deleted employee id - " + employeeId;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

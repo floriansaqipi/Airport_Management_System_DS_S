@@ -1,13 +1,9 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
 import com.internationalairport.airportmanagementsystem.dtos.post.PostAbilityDto;
-import com.internationalairport.airportmanagementsystem.dtos.post.PostAircraftDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutAbilityDto;
-import com.internationalairport.airportmanagementsystem.dtos.put.PutAircraftDto;
 import com.internationalairport.airportmanagementsystem.entities.Ability;
-import com.internationalairport.airportmanagementsystem.entities.Aircraft;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AbilityService;
-import com.internationalairport.airportmanagementsystem.service.interfaces.AircraftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

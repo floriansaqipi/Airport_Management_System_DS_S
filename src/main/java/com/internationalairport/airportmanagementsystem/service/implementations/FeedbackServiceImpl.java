@@ -60,7 +60,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void deleteById(int theId) {
-        feedbackRepository.deleteById(theId);
+        Optional<Feedback> feedbackOptional = feedbackRepository.findById(theId);
+        if (feedbackOptional.isPresent()) {
+            feedbackRepository.deleteById(theId);
+        } else {
+            throw new RuntimeException("Feedback id not found - " + theId);
+        }
     }
-
 }
