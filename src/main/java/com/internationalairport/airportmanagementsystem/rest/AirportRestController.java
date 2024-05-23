@@ -4,6 +4,9 @@ import com.internationalairport.airportmanagementsystem.dtos.post.PostAirportDto
 import com.internationalairport.airportmanagementsystem.dtos.put.PutAirportDto;
 import com.internationalairport.airportmanagementsystem.entities.Airport;
 import com.internationalairport.airportmanagementsystem.service.interfaces.AirportService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name="Airport")
 public class AirportRestController {
-
     private AirportService airportService;
 
     @Autowired
@@ -20,6 +23,20 @@ public class AirportRestController {
         this.airportService = airportService;
     }
 
+    @Operation(
+            description = "Get endpoint for airport",
+            summary = "This is a summary for airport ",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Error",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/public/airports")
     public List<Airport> findAll() {
         return airportService.findAll();
@@ -34,6 +51,20 @@ public class AirportRestController {
         return airport;
     }
 
+    @Operation(
+            description = "Post endpoint for airport",
+            summary = "This is a summary for airport ",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Error",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PostMapping("/private/airports")
     public Airport addAirport(@RequestBody PostAirportDto postAirportDto) {
         return airportService.save(postAirportDto);
