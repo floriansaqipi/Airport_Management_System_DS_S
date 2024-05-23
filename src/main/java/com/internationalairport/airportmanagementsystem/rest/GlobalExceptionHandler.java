@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
 import com.internationalairport.airportmanagementsystem.entities.ErrorResponse;
+import com.internationalairport.airportmanagementsystem.exceptions.AuthorizationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -45,5 +46,17 @@ public class GlobalExceptionHandler {
 
         // Return the custom error response with appropriate status code
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationException(AuthorizationException exc) {
+        // Create a custom error response
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(HttpStatus.FORBIDDEN.value());
+        errorResponse.setMessage(exc.getMessage());
+        errorResponse.setTimeStamp(System.currentTimeMillis());
+
+        // Return the custom error response with appropriate status code
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 }

@@ -59,6 +59,23 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
+    public Passenger findByUserEntityId(Integer userId) {
+        Optional<Passenger> result = passengerRepository.findByUserEntityId(userId);
+
+        Passenger thePassenger = null;
+
+        if (result.isPresent()) {
+            thePassenger = result.get();
+        }
+        else {
+            throw new RuntimeException("Did not find passenger by user id - " + userId);
+        }
+
+        return thePassenger;
+    }
+
+
+    @Override
     public Passenger save(PutPassengerDto putPassengerDto) {
         Passenger passenger = passengerMapper.putToPassenger(putPassengerDto);
         UserEntity user = userEntityService.findByUsername(putPassengerDto.username());
