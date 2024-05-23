@@ -3,7 +3,9 @@ package com.internationalairport.airportmanagementsystem.rest;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostTicketDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutTicketDto;
 import com.internationalairport.airportmanagementsystem.entities.Ticket;
+import com.internationalairport.airportmanagementsystem.service.interfaces.PassengerService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.TicketService;
+import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,9 +34,15 @@ public class TicketRestControllerTest {
     @MockBean
     private TicketService ticketService;
 
+    @MockBean
+    private UserEntityService userEntityService;
+
+    @MockBean
+    private PassengerService passengerService;
+
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new TicketRestController(ticketService)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new TicketRestController(ticketService,userEntityService,passengerService)).build();
     }
 
     @Test

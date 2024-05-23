@@ -19,39 +19,38 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/private")
-public class BaggageRestController{
+public class BaggageRestController {
 
     private BaggageService baggageService;
-
     private UserEntityService userEntityService;
     private PassengerService passengerService;
 
     @Autowired
-    public BaggageRestController(BaggageService theBaggageService, UserEntityService userEntityService, PassengerService passengerService){
+    public BaggageRestController(BaggageService theBaggageService, UserEntityService userEntityService, PassengerService passengerService) {
         baggageService = theBaggageService;
         this.userEntityService = userEntityService;
         this.passengerService = passengerService;
     }
 
-        @GetMapping("/baggage")
-        public List<Baggage> findAll() {
-            UserEntity user = getAuthenticatedUser();
+    @GetMapping("/baggage")
+    public List<Baggage> findAll() {
+        UserEntity user = getAuthenticatedUser();
 
-            if (isPassenger(user)) {
-                Passenger passenger = user.getPassenger();
-                return baggageService.findByPassengerId(passenger.getPassengerId());
-            }
-
-            return baggageService.findAll();
+        if (isPassenger(user)) {
+            Passenger passenger = user.getPassenger();
+            return baggageService.findByPassengerId(passenger.getPassengerId());
         }
+
+        return baggageService.findAll();
+    }
 
 
     @GetMapping("/baggage/{baggageId}")
-    public Baggage getBaggage(@PathVariable int baggageId){
+    public Baggage getBaggage(@PathVariable int baggageId) {
 
         Baggage theBaggage = baggageService.findById(baggageId);
-        if(theBaggage == null){
-            throw new RuntimeException("Baggage id not found - " + theBaggage);
+        if (theBaggage == null) {
+            throw new RuntimeException("Baggage id not found - " + baggageId);
         }
         UserEntity user = getAuthenticatedUser();
         authorizeAccess(user, theBaggage);
@@ -60,15 +59,15 @@ public class BaggageRestController{
     }
 
     @PostMapping("/baggage")
-    public Baggage addBaggage(@RequestBody PostBaggageDto postBaggageDto){
+    public Baggage addBaggage(@RequestBody PostBaggageDto postBaggageDto) {
         return baggageService.save(postBaggageDto);
     }
 
     @PutMapping("/baggage")
-    public Baggage updateBaggage(@RequestBody PutBaggageDto putBaggageDto){
+    public Baggage updateBaggage(@RequestBody PutBaggageDto putBaggageDto) {
         Baggage theBaggage = baggageService.findById(putBaggageDto.baggageId());
-        if(theBaggage == null){
-            throw new RuntimeException("Baggage id not found - " + theBaggage);
+        if (theBaggage == null) {
+            throw new RuntimeException("Baggage id not found - " + putBaggageDto.baggageId() );
         }
         UserEntity user = getAuthenticatedUser();
         authorizeAccess(user, theBaggage);
@@ -77,10 +76,10 @@ public class BaggageRestController{
     }
 
     @DeleteMapping("/baggage/{baggageId}")
-    public String deleteBaggage(@PathVariable int baggageId){
+    public String deleteBaggage(@PathVariable int baggageId) {
         Baggage theBaggage = baggageService.findById(baggageId);
-        if(theBaggage == null){
-            throw new RuntimeException("Baggage id not found - " + theBaggage);
+        if (theBaggage == null) {
+            throw new RuntimeException("Baggage id not found - " + baggageId);
         }
         UserEntity user = getAuthenticatedUser();
         authorizeAccess(user, theBaggage);
