@@ -3,6 +3,7 @@ package com.internationalairport.airportmanagementsystem.service.interfaces;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostEmployeeDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
+import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 
 import java.util.List;
 
