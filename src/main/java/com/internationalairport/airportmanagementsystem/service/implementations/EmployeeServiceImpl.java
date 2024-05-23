@@ -3,6 +3,7 @@ package com.internationalairport.airportmanagementsystem.service.implementations
 
 import com.internationalairport.airportmanagementsystem.daos.EmployeeRepository;
 import com.internationalairport.airportmanagementsystem.daos.RoleRepository;
+import com.internationalairport.airportmanagementsystem.daos.UserEntityRepository;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostEmployeeDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
@@ -26,6 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private RoleRepository roleRepository;
 
     private UserEntityService userEntityService;
+    private UserEntityRepository userEntityRepository;
 
     @Autowired
     public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository,
@@ -76,6 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.getUserEntity().setRole(employeeRole);
         return employeeRepository.save(employee);
     }
+
 
     @Override
     public void deleteById(int theId) {
