@@ -33,38 +33,28 @@ public class BaggageRestController{
         this.passengerService = passengerService;
     }
 
-    @GetMapping("/baggage")
-    public List<Baggage> findAll(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        UserEntity user = userEntityService.findByUsername(username);
-        if(user.getRole().getRoleName().equals("PASSENGER")){
-            Passenger passenger = user.getPassenger();
-            return baggageService.findByPassengerId(passenger.getPassengerId());
+        @GetMapping("/baggage")
+        public List<Baggage> findAll() {
+            UserEntity user = getAuthenticatedUser();
+
+            if (isPassenger(user)) {
+                Passenger passenger = user.getPassenger();
+                return baggageService.findByPassengerId(passenger.getPassengerId());
+            }
+
+            return baggageService.findAll();
         }
 
-        return baggageService.findAll();
-    }
 
     @GetMapping("/baggage/{baggageId}")
     public Baggage getBaggage(@PathVariable int baggageId){
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        UserEntity user = userEntityService.findByUsername(username);
-
         Baggage theBaggage = baggageService.findById(baggageId);
-
-
         if(theBaggage == null){
             throw new RuntimeException("Baggage id not found - " + theBaggage);
         }
-        if(user.getRole().getRoleName().equals("PASSENGER")){
-            Passenger passenger = user.getPassenger();
-            if(passenger.getPassengerId() != theBaggage.getPassenger().getPassengerId()){
-                throw new AuthorizationException("You don't have access to this resource");
-            }
-        }
+        UserEntity user = getAuthenticatedUser();
+        authorizeAccess(user, theBaggage);
 
         return theBaggage;
     }
@@ -76,18 +66,46 @@ public class BaggageRestController{
 
     @PutMapping("/baggage")
     public Baggage updateBaggage(@RequestBody PutBaggageDto putBaggageDto){
+        Baggage theBaggage = baggageService.findById(putBaggageDto.baggageId());
+        if(theBaggage == null){
+            throw new RuntimeException("Baggage id not found - " + theBaggage);
+        }
+        UserEntity user = getAuthenticatedUser();
+        authorizeAccess(user, theBaggage);
         Baggage dbBaggage = baggageService.save(putBaggageDto);
         return dbBaggage;
     }
 
     @DeleteMapping("/baggage/{baggageId}")
     public String deleteBaggage(@PathVariable int baggageId){
-        Baggage tempBaggage = baggageService.findById(baggageId);
-        if(tempBaggage == null){
-            throw new RuntimeException("Cargo id not found - " + baggageId);
+        Baggage theBaggage = baggageService.findById(baggageId);
+        if(theBaggage == null){
+            throw new RuntimeException("Baggage id not found - " + theBaggage);
         }
+        UserEntity user = getAuthenticatedUser();
+        authorizeAccess(user, theBaggage);
         baggageService.deleteById(baggageId);
         return "Deleted Baggage id - " + baggageId;
+    }
+
+    private UserEntity getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userEntityService.findByUsername(username);
+    }
+
+    private boolean isPassenger(UserEntity user) {
+        return user.getRole().getRoleName().equals("PASSENGER");
+    }
+
+
+    private void authorizeAccess(UserEntity user, Baggage baggage) {
+        if (isPassenger(user)) {
+            Passenger passenger = user.getPassenger();
+            if (passenger.getPassengerId() != baggage.getPassenger().getPassengerId()) {
+                throw new AuthorizationException("You don't have access to this resource");
+            }
+        }
     }
 
 }
