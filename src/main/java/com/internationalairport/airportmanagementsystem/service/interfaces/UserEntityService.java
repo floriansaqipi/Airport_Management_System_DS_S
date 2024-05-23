@@ -9,7 +9,11 @@ import java.util.List;
 public interface UserEntityService {
     UserEntity save(PostUserDto postUserEntityDto);
     UserEntity save(PutUserDto putUserEntityDto);
+
+    Boolean existsByUsername(String username);
     UserEntity findById(Integer userId);
+
+    UserEntity findByUsername(String username);
     List<UserEntity> findAll();
     void deleteById(Integer theId);
     String deleteAll();

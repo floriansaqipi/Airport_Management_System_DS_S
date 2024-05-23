@@ -1,11 +1,8 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
 import com.internationalairport.airportmanagementsystem.dtos.post.PostRoleAbilityDto;
-import com.internationalairport.airportmanagementsystem.dtos.post.PostUserRoleDto;
 import com.internationalairport.airportmanagementsystem.entities.Role;
-import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import com.internationalairport.airportmanagementsystem.service.interfaces.RoleAbilityService;
-import com.internationalairport.airportmanagementsystem.service.interfaces.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

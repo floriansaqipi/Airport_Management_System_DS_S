@@ -23,6 +23,8 @@ public class Ability {
     @Column(name = "field")
     private String field;
 
+
+
     @ManyToMany(mappedBy = "abilities")
     @JsonBackReference
     private List<Role> roles;
@@ -66,6 +68,15 @@ public class Ability {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     @Override

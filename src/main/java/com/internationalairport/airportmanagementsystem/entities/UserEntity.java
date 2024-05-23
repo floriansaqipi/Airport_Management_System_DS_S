@@ -22,19 +22,15 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
     @JsonManagedReference
-    private List<Role> roles;
+    private Role role;
 
-    @OneToOne(mappedBy = "userEntity")
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
     @JsonBackReference
     private Passenger passenger;
-    @OneToOne(mappedBy = "userEntity")
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
     @JsonBackReference
     private Employee employee;
     
@@ -71,20 +67,12 @@ public class UserEntity {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void addRole(Role tempRole) {
-        if (roles == null){
-            roles = new ArrayList<>();
-        }
-
-        roles.add(tempRole);
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public Passenger getPassenger() {

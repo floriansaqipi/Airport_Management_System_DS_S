@@ -45,7 +45,6 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/private/**").authenticated()
                                 .requestMatchers("/api/private/**").access(customAuthorizationManager)
                                 .requestMatchers("/api/public/**").permitAll()
                                 .anyRequest().permitAll()
