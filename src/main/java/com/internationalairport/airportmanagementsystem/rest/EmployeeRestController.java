@@ -3,16 +3,17 @@ package com.internationalairport.airportmanagementsystem.rest;
 
 import com.internationalairport.airportmanagementsystem.daos.EmployeeRepository;
 import com.internationalairport.airportmanagementsystem.daos.RoleRepository;
-import com.internationalairport.airportmanagementsystem.daos.UserEntityRepository;
 import com.internationalairport.airportmanagementsystem.dtos.AuthResponseDTO;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostEmployeeDto;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostLoginDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
+import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import com.internationalairport.airportmanagementsystem.entities.Role;
 import com.internationalairport.airportmanagementsystem.mappers.EmployeeMapper;
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.EmployeeService;
+import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,25 +31,19 @@ import java.util.List;
 public class EmployeeRestController {
     private EmployeeService employeeService;
     private AuthenticationManager authenticationManager;
-    private UserEntityRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
-    private EmployeeMapper employeeMapper;
-    private EmployeeRepository employeeRepository;
+
     private JWTGenerator jwtGenerator;
+
+    private UserEntityService userEntityService;
     @Autowired
     public EmployeeRestController(EmployeeService theEmployeeService,
-    AuthenticationManager authenticationManager, UserEntityRepository userRepository,
-    RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator,
-                                  EmployeeRepository employeeRepository,EmployeeMapper employeeMapper) {
+                                    AuthenticationManager authenticationManager,
+                                    JWTGenerator jwtGenerator,
+                                    UserEntityService userEntityService) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
         this.jwtGenerator=jwtGenerator;
-        this.employeeMapper=employeeMapper;
-        this.employeeRepository=employeeRepository;
         employeeService = theEmployeeService;
+        this.userEntityService = userEntityService;
     }
 
     @PostMapping("/public/auth/employees/login")
@@ -64,20 +59,11 @@ public class EmployeeRestController {
 
     @PostMapping("/private/auth/employees/register")
     public ResponseEntity<String> register(@RequestBody PostEmployeeDto postEmployeeDto) {
-        if (userRepository.existsByUsername(postEmployeeDto.username())) {
+        if (userEntityService.existsByUsername(postEmployeeDto.username())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
 
-        Employee employee = employeeMapper.postToEmployee(postEmployeeDto);
-        String hashedPassword=passwordEncoder.encode(employee.getUserEntity().getPassword());
-        employee.getUserEntity().setPassword(hashedPassword);
-
-        Role passengerRole = roleRepository.findByRoleName("PASSENGER").get();
-        Role employeeRole = roleRepository.findByRoleName("EMPLOYEE").get();
-        employee.getUserEntity().addRole(passengerRole);
-        employee.getUserEntity().addRole(employeeRole);
-
-        employeeRepository.save(employee);
+        employeeService.save(postEmployeeDto);
 
         return new ResponseEntity<>("Employee registered successfully!", HttpStatus.OK);
     }
@@ -93,13 +79,20 @@ public class EmployeeRestController {
         }
         return theEmployee;
     }
-    @PostMapping("/private/employees")
-    public Employee addEmployee(@RequestBody PostEmployeeDto postEmployeeDto) {
-        return employeeService.save(postEmployeeDto);
-    }
+
     @PutMapping("/private/employees")
-    public Employee updateEmployee(@RequestBody PutEmployeeDto putEmployeeDto) {
-        return  employeeService.save(putEmployeeDto);
+    public ResponseEntity<String> updateEmployee(@RequestBody PutEmployeeDto putEmployeeDto) {
+        UserEntity user = userEntityService.findByUsername(putEmployeeDto.username());
+        if (user == null) {
+            throw new RuntimeException("User not found for username - " + putEmployeeDto.username());
+        }
+        if (userEntityService.existsByUsername(putEmployeeDto.username()) &&
+                !putEmployeeDto.username().equals(user.getUsername())) {
+            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
+        }
+        employeeService.save(putEmployeeDto);
+
+        return new ResponseEntity<>("Employee updated successfully!", HttpStatus.OK);
     }
     @DeleteMapping("/private/employees/{employeeId}")
     public String deleteEmployee(@PathVariable int employeeId) {

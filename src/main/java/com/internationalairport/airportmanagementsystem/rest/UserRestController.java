@@ -30,24 +30,16 @@ import java.util.List;
 public class UserRestController {
 
     private AuthenticationManager authenticationManager;
-    private UserEntityRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
+
     private JWTGenerator jwtGenerator;
 
     private UserEntityService userEntityService;
 
     @Autowired
     public UserRestController(AuthenticationManager authenticationManager,
-                              UserEntityRepository userRepository,
-                              RoleRepository roleRepository,
-                              PasswordEncoder passwordEncoder,
                               JWTGenerator jwtGenerator,
                               UserEntityService userEntityService) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
         this.userEntityService = userEntityService;
     }
@@ -64,24 +56,11 @@ public class UserRestController {
     }
 
     @PostMapping("/public/auth/users/register")
-    public ResponseEntity<String> register(@RequestBody PostRegisterDto registerDto) {
-        if (userRepository.existsByUsername(registerDto.getUsername())) {
+    public ResponseEntity<String> register(@RequestBody PostUserDto postUserDto) {
+        if (userEntityService.existsByUsername(postUserDto.username())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
-
-        UserEntity user = new UserEntity();
-        user.setUsername(registerDto.getUsername());
-        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
-
-        Role userRole = roleRepository.findByRoleName("PASSENGER").get();
-        Role employeeRole = roleRepository.findByRoleName("EMPLOYEE").get();
-        Role adminRole = roleRepository.findByRoleName("ADMIN").get();
-        user.addRole(userRole);
-        user.addRole(employeeRole);
-        user.addRole(adminRole);
-
-        userRepository.save(user);
-
+        userEntityService.save(postUserDto);
         return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 
@@ -99,14 +78,18 @@ public class UserRestController {
         return user;
     }
 
-    @PostMapping("/private/users")
-    public UserEntity addUser(@RequestBody PostUserDto postUserDto) {
-        return userEntityService.save(postUserDto);
-    }
-
     @PutMapping("/private/users")
-    public UserEntity updateUser(@RequestBody PutUserDto putUserDto) {
-        return userEntityService.save(putUserDto);
+    public ResponseEntity<String> updateUser(@RequestBody PutUserDto putUserDto) {
+        UserEntity user = userEntityService.findById(putUserDto.userId());
+        if (user == null) {
+            throw new RuntimeException("User not found for id - " + putUserDto.userId());
+        }
+        if (userEntityService.existsByUsername(putUserDto.username()) &&
+                !putUserDto.username().equals(user.getUsername())) {
+            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
+        }
+        userEntityService.save(putUserDto);
+        return new ResponseEntity<>("User updated success!", HttpStatus.OK);
     }
 
     @DeleteMapping("/private/users/{userId}")

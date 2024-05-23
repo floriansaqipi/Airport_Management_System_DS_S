@@ -10,6 +10,9 @@ public interface BaggageService {
     Baggage save(PostBaggageDto postBaggageDto);
     Baggage save(PutBaggageDto putBaggageDto);
     Baggage findById(Integer theId);
+
     List<Baggage> findAll();
+
+    List<Baggage> findByPassengerId(Integer passengerId);
     void deleteById(Integer theId);
 }
