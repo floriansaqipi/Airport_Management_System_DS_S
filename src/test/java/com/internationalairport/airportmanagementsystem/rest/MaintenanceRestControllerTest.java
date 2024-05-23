@@ -1,36 +1,33 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostMaintenanceDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutMaintenanceDto;
 import com.internationalairport.airportmanagementsystem.entities.Maintenance;
 import com.internationalairport.airportmanagementsystem.service.interfaces.MaintenanceService;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = MaintenanceRestController.class)
-@AutoConfigureMockMvc(addFilters = false)
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(MaintenanceRestController.class)
 public class MaintenanceRestControllerTest {
 
     @Autowired
@@ -39,94 +36,104 @@ public class MaintenanceRestControllerTest {
     @MockBean
     private MaintenanceService maintenanceService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private Maintenance maintenance;
-    private PostMaintenanceDto postMaintenanceDto;
-    private PutMaintenanceDto putMaintenanceDto;
+    @InjectMocks
+    private MaintenanceRestController maintenanceRestController;
 
     @BeforeEach
-    public void init() {
-        maintenance = new Maintenance(LocalDateTime.of(2024, 5, 19, 10, 0, 0),
-                "Type1", "Description1");
-        maintenance.setMaintenanceId(1);
-
-        postMaintenanceDto = new PostMaintenanceDto(LocalDateTime.of(2024, 5, 19, 10, 0, 0),
-                "Type1", "Description1", 1);
-
-        putMaintenanceDto = new PutMaintenanceDto(1, LocalDateTime.of(2024, 5, 19, 10, 0, 0),
-                "Type1", "Description1", 1);
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void MaintenanceRestController_CreateMaintenance_ReturnCreated() throws Exception {
-        given(maintenanceService.save(ArgumentMatchers.any(PostMaintenanceDto.class))).willReturn(maintenance);
+    @WithMockUser(roles = "ADMIN")
+    public void testFindAll() throws Exception {
+        Maintenance maintenance1 = new Maintenance(LocalDateTime.of(2023, 5, 22, 10, 0), "Routine check-up", "Check engines and systems");
+        Maintenance maintenance2 = new Maintenance(LocalDateTime.of(2023, 5, 23, 12, 0), "Engine maintenance", "Inspect and repair engine");
 
-        ResultActions response = mockMvc.perform(post("/api/private/maintenances")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(postMaintenanceDto)));
+        given(maintenanceService.findAll()).willReturn(Arrays.asList(maintenance1, maintenance2));
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.maintenanceId", CoreMatchers.is(maintenance.getMaintenanceId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.date", CoreMatchers.is(maintenance.getDate().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.type", CoreMatchers.is(maintenance.getType())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(maintenance.getDescription())));
+        mockMvc.perform(get("/api/private/maintenances")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].type").value("Routine check-up"))
+                .andExpect(jsonPath("$[1].type").value("Engine maintenance"));
     }
 
     @Test
-    public void MaintenanceRestController_GetAllMaintenances_ReturnMaintenanceList() throws Exception {
-        when(maintenanceService.findAll()).thenReturn(Arrays.asList(maintenance));
+    @WithMockUser(roles = "ADMIN")
+    public void testGetMaintenance() throws Exception {
+        Maintenance maintenance = new Maintenance(LocalDateTime.of(2023, 5, 22, 10, 0), "Routine check-up", "Check engines and systems");
 
-        ResultActions response = mockMvc.perform(get("/api/private/maintenances")
-                .contentType(MediaType.APPLICATION_JSON));
+        given(maintenanceService.findById(1)).willReturn(maintenance);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].maintenanceId", CoreMatchers.is(maintenance.getMaintenanceId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].date", CoreMatchers.is(maintenance.getDate().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].type", CoreMatchers.is(maintenance.getType())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description", CoreMatchers.is(maintenance.getDescription())));
+        mockMvc.perform(get("/api/private/maintenances/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.type").value("Routine check-up"))
+                .andExpect(jsonPath("$.date").value("2023-05-22T10:00:00"));
     }
 
     @Test
-    public void MaintenanceRestController_GetMaintenanceById_ReturnMaintenance() throws Exception {
-        int maintenanceId = 1;
-        when(maintenanceService.findById(maintenanceId)).thenReturn(maintenance);
+    @WithMockUser(roles = "ADMIN")
+    public void testAddMaintenance() throws Exception {
+        PostMaintenanceDto postMaintenanceDto = new PostMaintenanceDto(LocalDateTime.of(2023, 5, 22, 10, 0), "Routine check-up", "Check engines and systems", 1);
+        Maintenance maintenance = new Maintenance(LocalDateTime.of(2023, 5, 22, 10, 0), "Routine check-up", "Check engines and systems");
 
-        ResultActions response = mockMvc.perform(get("/api/private/maintenances/{maintenanceId}", maintenanceId)
-                .contentType(MediaType.APPLICATION_JSON));
+        given(maintenanceService.save(any(PostMaintenanceDto.class))).willReturn(maintenance);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.maintenanceId", CoreMatchers.is(maintenance.getMaintenanceId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.date", CoreMatchers.is(maintenance.getDate().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.type", CoreMatchers.is(maintenance.getType())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(maintenance.getDescription())));
+        mockMvc.perform(post("/api/private/maintenances")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"date\":\"2023-05-22T10:00:00\",\"type\":\"Routine check-up\",\"description\":\"Check engines and systems\",\"aircraftId\":1}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.type").value("Routine check-up"))
+                .andExpect(jsonPath("$.date").value("2023-05-22T10:00:00"));
     }
 
     @Test
-    public void MaintenanceRestController_UpdateMaintenance_ReturnUpdatedMaintenance() throws Exception {
-        when(maintenanceService.save(ArgumentMatchers.any(PutMaintenanceDto.class))).thenReturn(maintenance);
+    @WithMockUser(roles = "ADMIN")
+    public void testUpdateMaintenance() throws Exception {
+        PutMaintenanceDto putMaintenanceDto = new PutMaintenanceDto(1, LocalDateTime.of(2023, 5, 22, 11, 0), "Updated check-up", "Updated description", 1);
+        Maintenance maintenance = new Maintenance(LocalDateTime.of(2023, 5, 22, 11, 0), "Updated check-up", "Updated description");
 
-        ResultActions response = mockMvc.perform(put("/api/private/maintenances")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(putMaintenanceDto)));
+        given(maintenanceService.save(any(PutMaintenanceDto.class))).willReturn(maintenance);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.maintenanceId", CoreMatchers.is(maintenance.getMaintenanceId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.date", CoreMatchers.is(maintenance.getDate().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.type", CoreMatchers.is(maintenance.getType())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description", CoreMatchers.is(maintenance.getDescription())));
+        mockMvc.perform(put("/api/private/maintenances")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"maintenanceId\":1,\"date\":\"2023-05-22T11:00:00\",\"type\":\"Updated check-up\",\"description\":\"Updated description\",\"aircraftId\":1}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.type").value("Updated check-up"))
+                .andExpect(jsonPath("$.date").value("2023-05-22T11:00:00"));
     }
 
     @Test
-    public void MaintenanceRestController_DeleteMaintenanceById_ReturnString() throws Exception {
-        int maintenanceId = 1;
-        doNothing().when(maintenanceService).deleteById(maintenanceId);
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteMaintenance() throws Exception {
+        Maintenance maintenance = new Maintenance(LocalDateTime.of(2023, 5, 22, 10, 0), "Routine check-up", "Check engines and systems");
 
-        ResultActions response = mockMvc.perform(delete("/api/private/maintenances/{maintenanceId}", maintenanceId)
-                .contentType(MediaType.APPLICATION_JSON));
+        given(maintenanceService.findById(1)).willReturn(maintenance);
+        doNothing().when(maintenanceService).deleteById(1);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Deleted maintenance id - " + maintenanceId));
+        mockMvc.perform(delete("/api/private/maintenances/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Deleted maintenance id - 1"));
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void testGetMaintenanceNotFound() throws Exception {
+        given(maintenanceService.findById(1)).willThrow(new RuntimeException("Maintenance id not found - 1"));
+
+        mockMvc.perform(get("/api/private/maintenances/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof RuntimeException))
+                .andExpect(result -> assertEquals("Maintenance id not found - 1", result.getResolvedException().getMessage()));
     }
 }

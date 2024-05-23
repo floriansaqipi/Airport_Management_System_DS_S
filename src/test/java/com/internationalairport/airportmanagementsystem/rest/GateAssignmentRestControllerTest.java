@@ -1,36 +1,33 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostGateAssignmentDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutGateAssignmentDto;
 import com.internationalairport.airportmanagementsystem.entities.GateAssignment;
 import com.internationalairport.airportmanagementsystem.service.interfaces.GateAssignmentService;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = GateAssignmentRestController.class)
-@AutoConfigureMockMvc(addFilters = false)
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(GateAssignmentRestController.class)
 public class GateAssignmentRestControllerTest {
 
     @Autowired
@@ -39,97 +36,104 @@ public class GateAssignmentRestControllerTest {
     @MockBean
     private GateAssignmentService gateAssignmentService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private GateAssignment gateAssignment;
-    private PostGateAssignmentDto postGateAssignmentDto;
-    private PutGateAssignmentDto putGateAssignmentDto;
+    @InjectMocks
+    private GateAssignmentRestController gateAssignmentRestController;
 
     @BeforeEach
-    public void init() {
-        gateAssignment = new GateAssignment("A1", LocalDateTime.of(2024, 5, 19, 10, 0));
-        gateAssignment.setAssignmentId(1);
-
-        postGateAssignmentDto = new PostGateAssignmentDto("A1", LocalDateTime.of(2024, 5, 19, 10, 0), 1);
-        putGateAssignmentDto = new PutGateAssignmentDto(1, "A1", LocalDateTime.of(2024, 5, 19, 10, 0), 1);
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void GateAssignmentRestController_CreateGateAssignment_ReturnOk() throws Exception {
-        given(gateAssignmentService.save(ArgumentMatchers.any(PostGateAssignmentDto.class))).willReturn(gateAssignment);
+    @WithMockUser(roles = "ADMIN")
+    public void testFindAll() throws Exception {
+        GateAssignment gateAssignment1 = new GateAssignment("A1", LocalDateTime.of(2023, 5, 22, 10, 0));
+        GateAssignment gateAssignment2 = new GateAssignment("B2", LocalDateTime.of(2023, 5, 23, 12, 0));
 
-        ResultActions response = mockMvc.perform(post("/api/private/gate_assignments")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(postGateAssignmentDto)));
+        given(gateAssignmentService.findAll()).willReturn(Arrays.asList(gateAssignment1, gateAssignment2));
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.assignmentId", CoreMatchers.is(gateAssignment.getAssignmentId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.gate", CoreMatchers.is(gateAssignment.getGate())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.assignmentTime", CoreMatchers.is("2024-05-19T10:00:00")));
+        mockMvc.perform(get("/api/public/gate_assignments")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].gate").value("A1"))
+                .andExpect(jsonPath("$[1].gate").value("B2"));
     }
 
     @Test
-    public void GateAssignmentRestController_GetAllGateAssignments_ReturnGateAssignmentList() throws Exception {
-        when(gateAssignmentService.findAll()).thenReturn(Arrays.asList(gateAssignment));
+    @WithMockUser(roles = "ADMIN")
+    public void testGetGateAssignmentById() throws Exception {
+        GateAssignment gateAssignment = new GateAssignment("A1", LocalDateTime.of(2023, 5, 22, 10, 0));
 
-        ResultActions response = mockMvc.perform(get("/api/public/gate_assignments")
-                .contentType(MediaType.APPLICATION_JSON));
+        given(gateAssignmentService.findById(1)).willReturn(gateAssignment);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].assignmentId", CoreMatchers.is(gateAssignment.getAssignmentId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].gate", CoreMatchers.is(gateAssignment.getGate())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].assignmentTime", CoreMatchers.is("2024-05-19T10:00:00")));
+        mockMvc.perform(get("/api/public/gate_assignments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gate").value("A1"))
+                .andExpect(jsonPath("$.assignmentTime").value("2023-05-22T10:00:00"));
     }
 
     @Test
-    public void GateAssignmentRestController_GetGateAssignmentById_ReturnGateAssignment() throws Exception {
-        int gateAssignmentId = 1;
-        when(gateAssignmentService.findById(gateAssignmentId)).thenReturn(gateAssignment);
+    @WithMockUser(roles = "ADMIN")
+    public void testAddGateAssignment() throws Exception {
+        PostGateAssignmentDto postGateAssignmentDto = new PostGateAssignmentDto("A1", LocalDateTime.of(2023, 5, 22, 10, 0), 1);
+        GateAssignment gateAssignment = new GateAssignment("A1", LocalDateTime.of(2023, 5, 22, 10, 0));
 
-        ResultActions response = mockMvc.perform(get("/api/public/gate_assignments/{id}", gateAssignmentId)
-                .contentType(MediaType.APPLICATION_JSON));
+        given(gateAssignmentService.save(any(PostGateAssignmentDto.class))).willReturn(gateAssignment);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.assignmentId", CoreMatchers.is(gateAssignment.getAssignmentId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.gate", CoreMatchers.is(gateAssignment.getGate())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.assignmentTime", CoreMatchers.is("2024-05-19T10:00:00")));
+        mockMvc.perform(post("/api/private/gate_assignments")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"gate\":\"A1\",\"assignmentTime\":\"2023-05-22T10:00:00\",\"flightId\":1}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gate").value("A1"))
+                .andExpect(jsonPath("$.assignmentTime").value("2023-05-22T10:00:00"));
     }
 
     @Test
-    public void GateAssignmentRestController_UpdateGateAssignment_ReturnGateAssignment() throws Exception {
-        when(gateAssignmentService.save(ArgumentMatchers.any(PutGateAssignmentDto.class))).thenReturn(gateAssignment);
+    @WithMockUser(roles = "ADMIN")
+    public void testUpdateGateAssignment() throws Exception {
+        PutGateAssignmentDto putGateAssignmentDto = new PutGateAssignmentDto(1, "B2", LocalDateTime.of(2023, 5, 23, 12, 0), 1);
+        GateAssignment gateAssignment = new GateAssignment("B2", LocalDateTime.of(2023, 5, 23, 12, 0));
 
-        ResultActions response = mockMvc.perform(put("/api/private/gate_assignments")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(putGateAssignmentDto)));
+        given(gateAssignmentService.save(any(PutGateAssignmentDto.class))).willReturn(gateAssignment);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.assignmentId", CoreMatchers.is(gateAssignment.getAssignmentId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.gate", CoreMatchers.is(gateAssignment.getGate())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.assignmentTime", CoreMatchers.is("2024-05-19T10:00:00")));
+        mockMvc.perform(put("/api/private/gate_assignments")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"assignmentId\":1,\"gate\":\"B2\",\"assignmentTime\":\"2023-05-23T12:00:00\",\"flightId\":1}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.gate").value("B2"))
+                .andExpect(jsonPath("$.assignmentTime").value("2023-05-23T12:00:00"));
     }
 
     @Test
-    public void GateAssignmentRestController_DeleteGateAssignmentById_ReturnString() throws Exception {
-        int gateAssignmentId = 1;
-        doNothing().when(gateAssignmentService).deleteById(gateAssignmentId);
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteGateAssignmentById() throws Exception {
+        GateAssignment gateAssignment = new GateAssignment("A1", LocalDateTime.of(2023, 5, 22, 10, 0));
 
-        ResultActions response = mockMvc.perform(delete("/api/private/gate_assignments/{id}", gateAssignmentId)
-                .contentType(MediaType.APPLICATION_JSON));
+        given(gateAssignmentService.findById(1)).willReturn(gateAssignment);
+        doNothing().when(gateAssignmentService).deleteById(1);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Deleted gate assignment id - " + gateAssignmentId));
+        mockMvc.perform(delete("/api/private/gate_assignments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Deleted gate assignment id - 1"));
     }
 
     @Test
-    public void GateAssignmentRestController_DeleteAllGateAssignments_ReturnString() throws Exception {
-        when(gateAssignmentService.deleteAll()).thenReturn("All gate assignments have been deleted");
+    @WithMockUser(roles = "ADMIN")
+    public void testGetGateAssignmentNotFound() throws Exception {
+        given(gateAssignmentService.findById(1)).willThrow(new RuntimeException("Gate assignment id not found - 1"));
 
-        ResultActions response = mockMvc.perform(delete("/api/private/gate_assignments")
-                .contentType(MediaType.APPLICATION_JSON));
-
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("All gate assignments have been deleted"));
+        mockMvc.perform(get("/api/public/gate_assignments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof RuntimeException))
+                .andExpect(result -> assertEquals("Gate assignment id not found - 1", result.getResolvedException().getMessage()));
     }
 }

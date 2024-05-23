@@ -1,35 +1,28 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostParkingDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutParkingDto;
 import com.internationalairport.airportmanagementsystem.entities.Parking;
 import com.internationalairport.airportmanagementsystem.service.interfaces.ParkingService;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
-import java.util.Optional;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = ParkingRestController.class)
-@AutoConfigureMockMvc(addFilters = false)
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(ParkingRestController.class)
 public class ParkingRestControllerTest {
 
     @Autowired
@@ -38,104 +31,101 @@ public class ParkingRestControllerTest {
     @MockBean
     private ParkingService parkingService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    private Parking parking;
-    private PostParkingDto postParkingDto;
-    private PutParkingDto putParkingDto;
-
     @BeforeEach
-    public void init() {
-        parking = new Parking("Location1", 100, 20.0);
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new ParkingRestController(parkingService)).build();
+    }
+
+    @Test
+    public void testFindAllParkings() throws Exception {
+        Parking parking1 = new Parking("Location 1", 100, 10.0);
+        Parking parking2 = new Parking("Location 2", 200, 15.0);
+
+        Mockito.when(parkingService.findAll()).thenReturn(Arrays.asList(parking1, parking2));
+
+        mockMvc.perform(get("/api/public/parkings"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].location").value("Location 1"))
+                .andExpect(jsonPath("$[1].location").value("Location 2"));
+    }
+
+    @Test
+    public void testGetParkingServiceById() throws Exception {
+        Parking parking = new Parking("Location 1", 100, 10.0);
         parking.setParkingId(1);
 
-        postParkingDto = new PostParkingDto("Location1", 100, 20.0);
+        Mockito.when(parkingService.findById(anyInt())).thenReturn(parking);
 
-        putParkingDto = new PutParkingDto(1, "Location1", 100, 20.0);
+        mockMvc.perform(get("/api/public/parkings/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.location").value("Location 1"))
+                .andExpect(jsonPath("$.capacity").value(100))
+                .andExpect(jsonPath("$.rate").value(10.0));
     }
 
     @Test
-    public void ParkingRestController_CreateParking_ReturnCreated() throws Exception {
-        given(parkingService.save(ArgumentMatchers.any(PostParkingDto.class))).willReturn(parking);
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void testAddParking() throws Exception {
+        Parking parking = new Parking("Location 1", 100, 10.0);
+        parking.setParkingId(1);
 
-        ResultActions response = mockMvc.perform(post("/api/private/parkings")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(postParkingDto)));
+        PostParkingDto postParkingDto = new PostParkingDto("Location 1", 100, 10.0);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.parkingId", CoreMatchers.is(parking.getParkingId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.location", CoreMatchers.is(parking.getLocation())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.capacity", CoreMatchers.is(parking.getCapacity())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.rate", CoreMatchers.is(parking.getRate())));
+        Mockito.when(parkingService.save(any(PostParkingDto.class))).thenReturn(parking);
+
+        mockMvc.perform(post("/api/private/parkings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ \"location\": \"Location 1\", \"capacity\": 100, \"rate\": 10.0 }"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.location").value("Location 1"))
+                .andExpect(jsonPath("$.capacity").value(100))
+                .andExpect(jsonPath("$.rate").value(10.0));
     }
 
     @Test
-    public void ParkingRestController_GetAllParkings_ReturnParkingList() throws Exception {
-        given(parkingService.findAll()).willReturn(Arrays.asList(parking));
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void testUpdateParking() throws Exception {
+        Parking parking = new Parking("Location 1", 100, 10.0);
+        parking.setParkingId(1);
 
-        ResultActions response = mockMvc.perform(get("/api/public/parkings")
-                .contentType(MediaType.APPLICATION_JSON));
+        PutParkingDto putParkingDto = new PutParkingDto(1, "Location 1", 100, 10.0);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].parkingId", CoreMatchers.is(parking.getParkingId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].location", CoreMatchers.is(parking.getLocation())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].capacity", CoreMatchers.is(parking.getCapacity())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].rate", CoreMatchers.is(parking.getRate())));
+        Mockito.when(parkingService.save(any(PutParkingDto.class))).thenReturn(parking);
+
+        mockMvc.perform(put("/api/private/parkings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{ \"parkingId\": 1, \"location\": \"Location 1\", \"capacity\": 100, \"rate\": 10.0 }"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.location").value("Location 1"))
+                .andExpect(jsonPath("$.capacity").value(100))
+                .andExpect(jsonPath("$.rate").value(10.0));
     }
 
     @Test
-    public void ParkingRestController_GetParkingById_ReturnParking() throws Exception {
-        int parkingId = 1;
-        given(parkingService.findById(parkingId)).willReturn(parking);
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void testDeleteParkingById() throws Exception {
+        Parking parking = new Parking("Location 1", 100, 10.0);
+        parking.setParkingId(1);
 
-        ResultActions response = mockMvc.perform(get("/api/public/parkings/{parkingId}", parkingId)
-                .contentType(MediaType.APPLICATION_JSON));
+        Mockito.when(parkingService.findById(1)).thenReturn(parking);
+        Mockito.doNothing().when(parkingService).deleteById(1);
 
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.parkingId", CoreMatchers.is(parking.getParkingId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.location", CoreMatchers.is(parking.getLocation())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.capacity", CoreMatchers.is(parking.getCapacity())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.rate", CoreMatchers.is(parking.getRate())));
+        mockMvc.perform(delete("/api/private/parkings/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Deleted Parking id - 1"));
     }
 
     @Test
-    public void ParkingRestController_UpdateParking_ReturnUpdatedParking() throws Exception {
-        given(parkingService.save(ArgumentMatchers.any(PutParkingDto.class))).willReturn(parking);
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void testDeleteAllParkings() throws Exception {
+        Mockito.when(parkingService.deleteAll()).thenReturn("2 rows have been deleted");
 
-        ResultActions response = mockMvc.perform(put("/api/private/parkings")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(putParkingDto)));
-
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.parkingId", CoreMatchers.is(parking.getParkingId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.location", CoreMatchers.is(parking.getLocation())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.capacity", CoreMatchers.is(parking.getCapacity())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.rate", CoreMatchers.is(parking.getRate())));
-    }
-
-    @Test
-    public void ParkingRestController_DeleteParkingById_ReturnString() throws Exception {
-        int parkingId = 1;
-        given(parkingService.findById(parkingId)).willReturn(parking);
-        doNothing().when(parkingService).deleteById(parkingId);
-
-        ResultActions response = mockMvc.perform(delete("/api/private/parkings/{parkingId}", parkingId)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Deleted Parking id - " + parkingId));
-    }
-
-    @Test
-    public void ParkingRestController_DeleteAllParkings_ReturnString() throws Exception {
-        String expectedResponse = "10 rows have been deleted";
-        given(parkingService.deleteAll()).willReturn(expectedResponse);
-
-        ResultActions response = mockMvc.perform(delete("/api/private/parkings")
-                .contentType(MediaType.APPLICATION_JSON));
-
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(expectedResponse));
+        mockMvc.perform(delete("/api/private/parkings"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("2 rows have been deleted"));
     }
 }
