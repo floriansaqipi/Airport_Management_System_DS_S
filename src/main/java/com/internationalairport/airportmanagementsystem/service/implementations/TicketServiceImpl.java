@@ -3,6 +3,7 @@ package com.internationalairport.airportmanagementsystem.service.implementations
 import com.internationalairport.airportmanagementsystem.daos.TicketRepository;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostTicketDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutTicketDto;
+import com.internationalairport.airportmanagementsystem.entities.Baggage;
 import com.internationalairport.airportmanagementsystem.entities.BoardingPass;
 import com.internationalairport.airportmanagementsystem.entities.Ticket;
 import com.internationalairport.airportmanagementsystem.mappers.TicketMapper;
@@ -55,6 +56,11 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<Ticket> findAll() {
         return ticketRepository.findAll();
+    }
+
+    @Override
+    public List<Ticket> findByPassengerId(Integer passengerId) {
+        return ticketRepository.findByPassengerId(passengerId);
     }
 
     @Override

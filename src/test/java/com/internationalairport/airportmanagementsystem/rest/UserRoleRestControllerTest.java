@@ -1,7 +1,6 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
 import com.internationalairport.airportmanagementsystem.dtos.post.PostUserRoleDto;
-import com.internationalairport.airportmanagementsystem.entities.Role;
 import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import com.internationalairport.airportmanagementsystem.service.interfaces.UserRoleService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserRoleRestController.class)
