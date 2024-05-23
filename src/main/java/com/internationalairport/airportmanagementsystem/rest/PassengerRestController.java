@@ -63,7 +63,7 @@ public class PassengerRestController {
         UserEntity user = getAuthenticatedUser();
 
         if (isPassenger(user)) {
-            Passenger passenger = passengerService.findById(user.getUserId());
+            Passenger passenger = passengerService.findById(user.getPassenger().getPassengerId());
             return Collections.singletonList(passenger);
         }
         return passengerService.findAll();
