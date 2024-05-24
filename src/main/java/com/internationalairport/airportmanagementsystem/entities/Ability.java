@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -23,10 +24,8 @@ public class Ability {
     @Column(name = "field")
     private String field;
 
-
-
     @ManyToMany(mappedBy = "abilities")
-    @JsonBackReference
+    @JsonIgnoreProperties({"abilities", "users"})
     private List<Role> roles;
 
     public Ability() {

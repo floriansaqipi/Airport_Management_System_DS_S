@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.engine.internal.Cascade;
@@ -31,24 +32,24 @@ public class Passenger {
     private String contactDetails;
 
     @OneToMany(mappedBy = "passenger")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "passenger")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<CheckIn> checkIns;
 
     @OneToMany(mappedBy = "passenger")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight", "passenger", "boardingPass"})
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "passenger")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<Baggage> baggages;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "p_user_id")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"role", "passenger", "employee"})
     private UserEntity userEntity;
 
 

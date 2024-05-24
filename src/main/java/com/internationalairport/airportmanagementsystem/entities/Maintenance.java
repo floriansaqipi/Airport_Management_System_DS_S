@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -16,7 +17,7 @@ public class Maintenance {
 
     @ManyToOne
     @JoinColumn(name = "aircraft_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"airline", "flights", "maintenances"})
     private Aircraft aircraft;
 
     @Column(name = "date")
