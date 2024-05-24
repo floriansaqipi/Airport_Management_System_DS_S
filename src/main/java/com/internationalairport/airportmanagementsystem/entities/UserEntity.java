@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -24,14 +25,15 @@ public class UserEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"abilities", "users"})
     private Role role;
 
     @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-    @JsonBackReference
+    @JsonIgnoreProperties({"baggages", "feedbacks", "checkIns", "tickets", "userEntity"})
     private Passenger passenger;
+
     @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-    @JsonBackReference
+    @JsonIgnoreProperties({"flights", "userEntity"})
     private Employee employee;
     
     // Constructors, getters, and setters

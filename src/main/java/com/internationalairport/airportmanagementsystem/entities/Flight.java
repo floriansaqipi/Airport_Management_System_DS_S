@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -21,12 +22,12 @@ public class Flight {
 
     @ManyToOne
     @JoinColumn(name = "departure_airport_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"departures", "arrivals"})
     private Airport departureAirport;
 
     @ManyToOne
     @JoinColumn(name = "arrival_airport_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"departures", "arrivals"})
     private Airport arrivalAirport;
 
     @Column(name = "departure_time")
@@ -37,35 +38,35 @@ public class Flight {
 
     @ManyToOne
     @JoinColumn(name = "aircraft_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"airline", "flights", "maintenances"})
     private Aircraft aircraft;
 
     @OneToMany(mappedBy = "flight")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<CheckIn> checkIns;
 
     @OneToMany(mappedBy = "flight")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<Baggage> baggages;
 
     @OneToMany(mappedBy = "flight")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<Feedback> feedbacks;
 
     @OneToOne(mappedBy = "flight", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
+    @JsonIgnoreProperties("flight")
     private GateAssignment gateAssignments;
 
     @OneToMany(mappedBy = "flight")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight", "passenger", "boardingPass"})
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "flight")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight"})
     private List<FlightSchedule> flightSchedules;
 
     @OneToMany(mappedBy = "flight")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flight"})
     private List<Cargo> cargos;
 
     @ManyToMany
@@ -74,7 +75,7 @@ public class Flight {
             joinColumns = @JoinColumn(name = "flight_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id")
     )
-    @JsonManagedReference
+    @JsonIgnoreProperties({"flights", "userEntity"})
     private List<Employee> employees;
   
     // Constructors, Getters, and Setters
