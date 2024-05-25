@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,14 +28,21 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = getJWTFromRequest(request);
-        if(StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
-            String username = tokenGenerator.getUsernameFromJWT(token);
+        try{
+            if(StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
+                String username = tokenGenerator.getUsernameFromJWT(token);
 
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
-                    userDetails.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
+                        userDetails.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        }catch (AuthenticationCredentialsNotFoundException ex) {
+            // Handle the exception
+            // You can log it or send an appropriate response to the client
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT was expired or incorrect");
+            return;
         }
         filterChain.doFilter(request, response);
     }

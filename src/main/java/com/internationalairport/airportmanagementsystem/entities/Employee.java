@@ -35,6 +35,13 @@ public class Employee {
     @JsonIgnoreProperties({"role", "passenger", "employee"})
     private UserEntity userEntity;
 
+    @PreRemove
+    public void preRemove(){
+        for(Flight flight : flights) {
+            flight.getEmployees().remove(this);
+        }
+    }
+
     // Constructors, getters, and setters
     public Employee() {
     }

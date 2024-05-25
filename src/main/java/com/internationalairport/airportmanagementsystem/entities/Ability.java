@@ -28,6 +28,13 @@ public class Ability {
     @JsonIgnoreProperties({"abilities", "users"})
     private List<Role> roles;
 
+    @PreRemove
+    public void preRemove(){
+        for(Role role : roles) {
+            role.getAbilities().remove(this);
+        }
+    }
+
     public Ability() {
     }
 

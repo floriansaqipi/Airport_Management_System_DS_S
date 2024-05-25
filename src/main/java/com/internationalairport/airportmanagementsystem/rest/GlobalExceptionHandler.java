@@ -5,6 +5,7 @@ import com.internationalairport.airportmanagementsystem.exceptions.Authorization
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,5 +59,11 @@ public class GlobalExceptionHandler {
 
         // Return the custom error response with appropriate status code
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+    public ResponseEntity<String> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException ex) {
+        // Log the exception or handle it in any other way
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("JWT was expired or incorrect");
     }
 }

@@ -37,6 +37,11 @@ public class Ticket {
     @JsonIgnoreProperties({"ticket"})
     private BoardingPass boardingPass;
 
+    @PreRemove
+    private void preRemove(){
+        boardingPass.setTicket(null);
+    }
+
     public Ticket() {
     }
 

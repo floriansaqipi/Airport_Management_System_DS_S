@@ -77,6 +77,28 @@ public class Flight {
     )
     @JsonIgnoreProperties({"flights", "userEntity"})
     private List<Employee> employees;
+
+    @PreRemove
+    public void preRemove(){
+        for(CheckIn checkIn : checkIns) {
+            checkIn.setFlight(null);
+        }
+        for(Baggage baggage : baggages) {
+            baggage.setFlight(null);
+        }
+        for(Feedback feedback : feedbacks) {
+            feedback.setFlight(null);
+        }
+        for(Ticket ticket : tickets) {
+            ticket.setFlight(null);
+        }
+        for(FlightSchedule flightSchedule : flightSchedules) {
+            flightSchedule.setFlight(null);
+        }
+        for(Cargo cargo : cargos) {
+            cargo.setFlight(null);
+        }
+    }
   
     // Constructors, Getters, and Setters
     public Flight() {
