@@ -39,6 +39,18 @@ public class Aircraft {
     @JsonIgnoreProperties({"aircraft"})
     private List<Maintenance> maintenances;
 
+    @PreRemove
+    public void preRemove(){
+        for(Flight flight : flights) {
+            flight.setAircraft(null);
+        }
+        for(Maintenance maintenance : maintenances) {
+            maintenance.setAircraft(null);
+        }
+    }
+
+
+
     // Constructors, Getters, and Setters
     public Aircraft() {
     }

@@ -52,6 +52,22 @@ public class Passenger {
     @JsonIgnoreProperties({"role", "passenger", "employee"})
     private UserEntity userEntity;
 
+    @PreRemove
+    public void preRemove(){
+        for(Feedback feedback : feedbacks) {
+            feedback.setPassenger(null);
+        }
+        for(CheckIn checkIn : checkIns) {
+            checkIn.setPassenger(null);
+        }
+        for(Ticket ticket : tickets) {
+            ticket.setPassenger(null);
+        }
+        for(Baggage baggage : baggages) {
+            baggage.setPassenger(null);
+        }
+    }
+
 
     // Constructors, getters, and setters
     public Passenger() {

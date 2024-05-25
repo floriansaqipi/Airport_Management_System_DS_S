@@ -32,6 +32,14 @@ public class Role {
     @JsonIgnoreProperties({"roles"})
     private List<Ability> abilities;
 
+    @PreRemove
+    public void preRemove(){
+        for(UserEntity userEntity : users) {
+            userEntity.setRole(null);
+        }
+
+    }
+
     // Constructors, getters, and setters
     public Role() {}
 
