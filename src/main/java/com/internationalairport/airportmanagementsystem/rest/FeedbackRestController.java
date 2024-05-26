@@ -9,6 +9,8 @@ import com.internationalairport.airportmanagementsystem.exceptions.Authorization
 import com.internationalairport.airportmanagementsystem.service.interfaces.FeedbackService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.PassengerService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,10 +33,39 @@ public class FeedbackRestController {
         passengerService = thePassengerService;
         userEntityService = theuserEntityService;
     }
+    @Operation(
+            description = "Endpoint to get all feedbacks",
+            summary = "Endpoint for feedbacks retrieval",
+            responses = {
+                    @ApiResponse(
+                            description = "Successful login",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/public/feedbacks")
     public List<Feedback> findAll() {
         return feedbackService.findAll();
     }
+
+    @Operation(
+            description = "Endpoint to get a specific feedback by ID",
+            summary = "Retrieve a specific feedback by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully retrieved the feedback",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Feedback ID does not exist",
+                            responseCode = "404"
+                    )
+            }
+    )
     @GetMapping("/public/feedbacks/{feedbackId}")
     public Feedback getFeedback(@PathVariable int feedbackId) {
         Feedback theFeedback = feedbackService.findById(feedbackId);
@@ -43,10 +74,44 @@ public class FeedbackRestController {
         }
         return theFeedback;
     }
+
+    @Operation(
+            description = "Endpoint to add a new feedback",
+            summary = "Add a new feedback",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully added the feedback",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PostMapping("/private/feedbacks")
     public Feedback addFeedback(@RequestBody PostFeedbackDto postFeedbackDto) {
         return feedbackService.save(postFeedbackDto);
     }
+
+    @Operation(
+            description = "Endpoint to update an existing feedback",
+            summary = "Update an existing feedback",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully updated the feedback",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    ),
+                    @ApiResponse(
+                            description = "Feedback ID does not exist",
+                            responseCode = "404"
+                    )
+            }
+    )
     @PutMapping("/private/feedbacks")
     public Feedback updateFeedback(@RequestBody PutFeedbackDto putFeedbackDto) {
         Feedback tempFeedback = feedbackService.findById(putFeedbackDto.feedbackId());
@@ -59,6 +124,24 @@ public class FeedbackRestController {
         Feedback dbFeedback = feedbackService.save(putFeedbackDto);
         return dbFeedback;
     }
+    @Operation(
+            description = "Endpoint to delete a feedback by ID",
+            summary = "Delete a feedback by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully deleted the feedback",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    ),
+                    @ApiResponse(
+                            description = "Feedback ID does not exist",
+                            responseCode = "404"
+                    )
+            }
+    )
     @DeleteMapping("/private/feedbacks/{feedbackId}")
     public String deleteFeedback(@PathVariable int feedbackId) {
         Feedback tempFeedback = feedbackService.findById(feedbackId);
