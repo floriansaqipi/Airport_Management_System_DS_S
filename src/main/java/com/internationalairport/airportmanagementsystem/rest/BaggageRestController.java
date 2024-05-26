@@ -9,6 +9,8 @@ import com.internationalairport.airportmanagementsystem.exceptions.Authorization
 import com.internationalairport.airportmanagementsystem.service.interfaces.BaggageService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.PassengerService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.Authentication;
@@ -32,6 +34,21 @@ public class BaggageRestController {
         this.passengerService = passengerService;
     }
 
+
+    @Operation(
+            description = "Get endpoint to retrieve all baggage records. If the user is a passenger, it returns only their baggage records.",
+            summary = "Retrieve all baggage records",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/baggage")
     public List<Baggage> findAll() {
         UserEntity user = getAuthenticatedUser();
@@ -45,6 +62,24 @@ public class BaggageRestController {
     }
 
 
+    @Operation(
+            description = "Get endpoint to retrieve a baggage record by its ID. Only the owner of the baggage (if a passenger) or an authorized user can access it.",
+            summary = "Retrieve a baggage record by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Baggage not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/baggage/{baggageId}")
     public Baggage getBaggage(@PathVariable int baggageId) {
 
@@ -58,11 +93,44 @@ public class BaggageRestController {
         return theBaggage;
     }
 
+
+    @Operation(
+            description = "Post endpoint to add a new baggage record. This allows for the creation of a new baggage record.",
+            summary = "Add a new baggage record",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PostMapping("/baggage")
     public Baggage addBaggage(@RequestBody PostBaggageDto postBaggageDto) {
         return baggageService.save(postBaggageDto);
     }
 
+    @Operation(
+            description = "Put endpoint to update an existing baggage record. Only the owner of the baggage (if a passenger) or an authorized user can update it.",
+            summary = "Update a baggage record",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Baggage not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PutMapping("/baggage")
     public Baggage updateBaggage(@RequestBody PutBaggageDto putBaggageDto) {
         Baggage theBaggage = baggageService.findById(putBaggageDto.baggageId());
@@ -75,6 +143,24 @@ public class BaggageRestController {
         return dbBaggage;
     }
 
+    @Operation(
+            description = "Delete endpoint to remove a baggage record by its ID. Only the owner of the baggage (if a passenger) or an authorized user can delete it.",
+            summary = "Delete a baggage record by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Baggage not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @DeleteMapping("/baggage/{baggageId}")
     public String deleteBaggage(@PathVariable int baggageId) {
         Baggage theBaggage = baggageService.findById(baggageId);

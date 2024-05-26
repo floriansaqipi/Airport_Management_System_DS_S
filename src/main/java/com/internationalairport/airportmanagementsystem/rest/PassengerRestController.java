@@ -17,6 +17,8 @@ import com.internationalairport.airportmanagementsystem.mappers.PassengerMapper;
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.PassengerService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +60,20 @@ public class PassengerRestController {
         this.userEntityService = userEntityService;
     }
 
+    @Operation(
+            description = "Endpoint to get all passengers",
+            summary = "Retrieve all passengers",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully retrieved all passengers",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/private/passengers")
     public List<Passenger> findAll() {
         UserEntity user = getAuthenticatedUser();
@@ -69,6 +85,20 @@ public class PassengerRestController {
         return passengerService.findAll();
     }
 
+    @Operation(
+            description = "Endpoint to get a passenger by ID",
+            summary = "Retrieve a passenger by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully retrieved the passenger",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Passenger ID not found or unauthorized access",
+                            responseCode = "404"
+                    )
+            }
+    )
     @GetMapping("/private/passengers/{passengerId}")
     public Passenger getPassenger(@PathVariable int passengerId) {
         Passenger thePassenger = passengerService.findById(passengerId);
@@ -80,6 +110,20 @@ public class PassengerRestController {
         return thePassenger;
     }
 
+    @Operation(
+            description = "Endpoint to log in a passenger",
+            summary = "Login a passenger",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully logged in",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid credentials",
+                            responseCode = "400"
+                    )
+            }
+    )
     @PostMapping("/public/auth/passengers/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody PostLoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
@@ -91,6 +135,20 @@ public class PassengerRestController {
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
+    @Operation(
+            description = "Endpoint to register a new passenger",
+            summary = "Register a new passenger",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully registered the passenger",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Username already taken",
+                            responseCode = "400"
+                    )
+            }
+    )
     @PostMapping("/public/auth/passengers/register")
     public ResponseEntity<String> register(@RequestBody PostPassengerDto postPassengerDto) {
         if (userRepository.existsByUsername(postPassengerDto.username())) {
@@ -101,6 +159,22 @@ public class PassengerRestController {
 
         return new ResponseEntity<>("Passenger registered successfully!", HttpStatus.OK);
     }
+
+
+    @Operation(
+            description = "Endpoint to update a passenger",
+            summary = "Update a passenger",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully updated the passenger",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized access or invalid request",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PutMapping("/private/passengers")
     public ResponseEntity<String> updatePassenger(@RequestBody PutPassengerDto putPassengerDto) {
         UserEntity user = userEntityService.findByUsername(putPassengerDto.username());
@@ -123,6 +197,24 @@ public class PassengerRestController {
         return new ResponseEntity<>("Passenger updated successfully!", HttpStatus.OK);
     }
 
+    @Operation(
+            description = "Endpoint to delete a passenger by ID",
+            summary = "Delete a passenger by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully deleted the passenger",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized access or invalid request",
+                            responseCode = "401"
+                    ),
+                    @ApiResponse(
+                            description = "Passenger ID not found",
+                            responseCode = "404"
+                    )
+            }
+    )
     @DeleteMapping("/private/passengers/{passengerId}")
     public String deletePassenger(@PathVariable int passengerId) {
         Passenger tempPassenger = passengerService.findById(passengerId);

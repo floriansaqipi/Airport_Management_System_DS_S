@@ -24,8 +24,8 @@ public class AirportRestController {
     }
 
     @Operation(
-            description = "Get endpoint for airport",
-            summary = "This is a summary for airport ",
+            description = "Get endpoint for retrieving all airports",
+            summary = "This is an endpoint used to get all the airports",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -42,6 +42,24 @@ public class AirportRestController {
         return airportService.findAll();
     }
 
+    @Operation(
+            description = "Get endpoint to retrieve an airport by its ID",
+            summary = "This endpoint is used to retrieve an airport by its ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Airport not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/public/airports/{airportId}")
     public Airport getAirportById(@PathVariable int airportId) {
         Airport airport = airportService.findById(airportId);
@@ -51,16 +69,21 @@ public class AirportRestController {
         return airport;
     }
 
+
     @Operation(
-            description = "Post endpoint for airport",
-            summary = "This is a summary for airport ",
+            description = "Post endpoint to add a new airport",
+            summary = "This endpoint is used to add a new airport",
             responses = {
                     @ApiResponse(
                             description = "Success",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Error",
+                            description = "Invalid input",
+                            responseCode = "400"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
                             responseCode = "401"
                     )
             }
@@ -70,11 +93,52 @@ public class AirportRestController {
         return airportService.save(postAirportDto);
     }
 
+    @Operation(
+            description = "Put endpoint to update an existing airport",
+            summary = "This enpoint is used to update an airport",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Airport not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid input",
+                            responseCode = "400"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PutMapping("/private/airports")
     public Airport updateAirport(@RequestBody PutAirportDto puttAirportDto) {
         return airportService.save(puttAirportDto);
     }
 
+
+    @Operation(
+            description = "Delete endpoint to remove an airport by its ID",
+            summary = "This endpoint is used to delete an airport by its ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Airport not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @DeleteMapping("/private/airports/{airportId}")
     public String deleteAirportById(@PathVariable int airportId) {
         Airport airport = airportService.findById(airportId);
@@ -85,6 +149,20 @@ public class AirportRestController {
         return "Deleted airport with id - " + airportId;
     }
 
+    @Operation(
+            description = "Delete endpoint to remove all airports",
+            summary = "This endpoint is used to delete all airports",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @DeleteMapping("/private/airports")
     public String deleteAllAirports() {
         return airportService.deleteAll();

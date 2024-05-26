@@ -10,6 +10,8 @@ import com.internationalairport.airportmanagementsystem.exceptions.Authorization
 import com.internationalairport.airportmanagementsystem.service.interfaces.PassengerService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.TicketService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +36,20 @@ public class TicketRestController {
         this.passengerService = passengerService;
     }
 
+    @Operation(
+            description = "Endpoint to get all tickets",
+            summary = "Get all tickets",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully retrieved all tickets",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/tickets")
     public List<Ticket> findAll(){
         UserEntity user = getAuthenticatedUser();
@@ -46,6 +62,24 @@ public class TicketRestController {
         return ticketService.findAll();
     }
 
+    @Operation(
+            description = "Endpoint to get a ticket by ID",
+            summary = "Get a ticket by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully retrieved the ticket",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Ticket ID not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/tickets/{ticketId}")
     public Ticket getTicket(@PathVariable int ticketId){
 
@@ -59,6 +93,20 @@ public class TicketRestController {
         return theTicket;
     }
 
+    @Operation(
+            description = "Endpoint to add a new ticket",
+            summary = "Add a new ticket",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully added the ticket",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PostMapping("/tickets")
     public Ticket addTicket(@RequestBody PostTicketDto postTicketDto){
 
@@ -66,11 +114,43 @@ public class TicketRestController {
 
     }
 
+    @Operation(
+            description = "Endpoint to update a ticket",
+            summary = "Update a ticket",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully updated the ticket",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PutMapping("/tickets")
     public Ticket updateTicket(@RequestBody PutTicketDto putTicketDto){
         return ticketService.save(putTicketDto);
     }
 
+    @Operation(
+            description = "Endpoint to delete a ticket by ID",
+            summary = "Delete a ticket by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully deleted the ticket",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Ticket ID not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @DeleteMapping("/tickets/{ticketId}")
     public String deleteTicket(@PathVariable int ticketId){
         Ticket tempTicket = ticketService.findById(ticketId);

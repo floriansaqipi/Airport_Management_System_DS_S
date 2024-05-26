@@ -13,6 +13,8 @@ import com.internationalairport.airportmanagementsystem.entities.Role;
 import com.internationalairport.airportmanagementsystem.entities.UserEntity;
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +46,20 @@ public class UserRestController {
         this.userEntityService = userEntityService;
     }
 
+    @Operation(
+            description = "Login to the system",
+            summary = "Endpoint to login",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully logged in and received authentication token",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid credentials",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PostMapping("/public/auth/users/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody PostLoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
@@ -55,6 +71,24 @@ public class UserRestController {
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
+    @Operation(
+            description = "Register a new user",
+            summary = "Endpoint to register a new user",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully registered a new user",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Username is already taken",
+                            responseCode = "400"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PostMapping("/public/auth/users/register")
     public ResponseEntity<String> register(@RequestBody PostUserDto postUserDto) {
         if (userEntityService.existsByUsername(postUserDto.username())) {
@@ -64,11 +98,43 @@ public class UserRestController {
         return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 
+    @Operation(
+            description = "Get all users (private endpoint)",
+            summary = "Get all users endpoint",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully retrieved all users",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/private/users")
     public List<UserEntity> findAllUsers() {
         return userEntityService.findAll();
     }
 
+    @Operation(
+            description = "Get a user by ID (private endpoint)",
+            summary = "Endpoint to get user by ID ",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully retrieved the user",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "User ID not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/private/users/{userId}")
     public UserEntity getUserById(@PathVariable Integer userId) {
         UserEntity user = userEntityService.findById(userId);
@@ -78,6 +144,24 @@ public class UserRestController {
         return user;
     }
 
+    @Operation(
+            description = "Update a user (private endpoint)",
+            summary = "Endpoint to update user",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully updated the user",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "User ID not found or Username is taken",
+                            responseCode = "404 or 400"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PutMapping("/private/users")
     public ResponseEntity<String> updateUser(@RequestBody PutUserDto putUserDto) {
         UserEntity user = userEntityService.findById(putUserDto.userId());
@@ -92,6 +176,25 @@ public class UserRestController {
         return new ResponseEntity<>("User updated success!", HttpStatus.OK);
     }
 
+
+    @Operation(
+            description = "Delete a user by ID (private endpoint)",
+            summary = "Endpoint to delete user by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully deleted the user",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "User ID not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @DeleteMapping("/private/users/{userId}")
     public String deleteUserById(@PathVariable Integer userId) {
         UserEntity user = userEntityService.findById(userId);
@@ -102,6 +205,20 @@ public class UserRestController {
         return "Deleted user with id - " + userId;
     }
 
+    @Operation(
+            description = "Delete all users (private endpoint)",
+            summary = "Endpoint to delete all users",
+            responses = {
+                    @ApiResponse(
+                            description = "Successfully deleted all users",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Access unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @DeleteMapping("/private/users")
     public String deleteAllUsers() {
         return userEntityService.deleteAll();

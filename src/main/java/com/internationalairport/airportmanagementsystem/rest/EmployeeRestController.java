@@ -10,6 +10,8 @@ import com.internationalairport.airportmanagementsystem.exceptions.Authorization
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.EmployeeService;
 import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +44,20 @@ public class EmployeeRestController {
         this.userEntityService = userEntityService;
     }
 
+    @Operation(
+            description = "Endpoint to log in an employee",
+            summary = "Login for employees",
+            responses = {
+                    @ApiResponse(
+                            description = "Successful login",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PostMapping("/public/auth/employees/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody PostLoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
@@ -53,6 +69,20 @@ public class EmployeeRestController {
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
+    @Operation(
+            description = "Endpoint to register a new employee",
+            summary = "Register new employee",
+            responses = {
+                    @ApiResponse(
+                            description = "Successful registration",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Username is taken",
+                            responseCode = "400"
+                    )
+            }
+    )
     @PostMapping("/private/auth/employees/register")
     public ResponseEntity<String> register(@RequestBody PostEmployeeDto postEmployeeDto) {
         if (userEntityService.existsByUsername(postEmployeeDto.username())) {
@@ -63,6 +93,20 @@ public class EmployeeRestController {
 
         return new ResponseEntity<>("Employee registered successfully!", HttpStatus.OK);
     }
+    @Operation(
+            description = "Endpoint to retrieve all employees",
+            summary = "Retrieve all employees",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/private/employees")
     public List<Employee> findAll() {
         UserEntity user = getAuthenticatedUser();
@@ -73,6 +117,24 @@ public class EmployeeRestController {
 
         return employeeService.findAll();
     }
+    @Operation(
+            description = "Endpoint to retrieve an employee by ID",
+            summary = "Retrieve an employee by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Employee not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/private/employees/{employeeId}")
     public Employee getEmployee(@PathVariable int employeeId) {
         Employee theEmployee = employeeService.findById(employeeId);
@@ -85,6 +147,24 @@ public class EmployeeRestController {
         return theEmployee;
     }
 
+    @Operation(
+            description = "Endpoint to update an employee",
+            summary = "Update an employee",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Employee not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PutMapping("/private/employees")
     public ResponseEntity<String> updateEmployee(@RequestBody PutEmployeeDto putEmployeeDto) {
         Employee theEmployee = employeeService.findById(putEmployeeDto.employeeId());
@@ -97,6 +177,24 @@ public class EmployeeRestController {
         return new ResponseEntity<>("Employee updated successfully!", HttpStatus.OK);
     }
 
+    @Operation(
+            description = "Endpoint to delete an employee by ID",
+            summary = "Delete an employee by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Employee not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @DeleteMapping("/private/employees/{employeeId}")
     public String deleteEmployee(@PathVariable int employeeId) {
         Employee theEmployee = employeeService.findById(employeeId);
