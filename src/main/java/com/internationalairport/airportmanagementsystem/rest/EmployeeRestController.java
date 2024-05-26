@@ -1,22 +1,17 @@
 package com.internationalairport.airportmanagementsystem.rest;
 
-
-import com.internationalairport.airportmanagementsystem.daos.EmployeeRepository;
-import com.internationalairport.airportmanagementsystem.daos.RoleRepository;
-import com.internationalairport.airportmanagementsystem.daos.UserEntityRepository;
 import com.internationalairport.airportmanagementsystem.dtos.AuthResponseDTO;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostEmployeeDto;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostLoginDto;
-import com.internationalairport.airportmanagementsystem.dtos.post.PostPassengerDto;
-import com.internationalairport.airportmanagementsystem.dtos.post.PostRegisterDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutEmployeeDto;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
-import com.internationalairport.airportmanagementsystem.entities.Passenger;
-import com.internationalairport.airportmanagementsystem.entities.Role;
 import com.internationalairport.airportmanagementsystem.entities.UserEntity;
-import com.internationalairport.airportmanagementsystem.mappers.EmployeeMapper;
+import com.internationalairport.airportmanagementsystem.exceptions.AuthorizationException;
 import com.internationalairport.airportmanagementsystem.security.JWTGenerator;
 import com.internationalairport.airportmanagementsystem.service.interfaces.EmployeeService;
+import com.internationalairport.airportmanagementsystem.service.interfaces.UserEntityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +19,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -34,27 +29,35 @@ import java.util.List;
 public class EmployeeRestController {
     private EmployeeService employeeService;
     private AuthenticationManager authenticationManager;
-    private UserEntityRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
-    private EmployeeMapper employeeMapper;
-    private EmployeeRepository employeeRepository;
+
     private JWTGenerator jwtGenerator;
+
+    private UserEntityService userEntityService;
     @Autowired
     public EmployeeRestController(EmployeeService theEmployeeService,
-    AuthenticationManager authenticationManager, UserEntityRepository userRepository,
-    RoleRepository roleRepository, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator,
-                                  EmployeeRepository employeeRepository,EmployeeMapper employeeMapper) {
+                                    AuthenticationManager authenticationManager,
+                                    JWTGenerator jwtGenerator,
+                                    UserEntityService userEntityService) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
         this.jwtGenerator=jwtGenerator;
-        this.employeeMapper=employeeMapper;
-        this.employeeRepository=employeeRepository;
         employeeService = theEmployeeService;
+        this.userEntityService = userEntityService;
     }
 
+    @Operation(
+            description = "Endpoint to log in an employee",
+            summary = "Login for employees",
+            responses = {
+                    @ApiResponse(
+                            description = "Successful login",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PostMapping("/public/auth/employees/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody PostLoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
@@ -66,66 +69,160 @@ public class EmployeeRestController {
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
+    @Operation(
+            description = "Endpoint to register a new employee",
+            summary = "Register new employee",
+            responses = {
+                    @ApiResponse(
+                            description = "Successful registration",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Username is taken",
+                            responseCode = "400"
+                    )
+            }
+    )
     @PostMapping("/private/auth/employees/register")
     public ResponseEntity<String> register(@RequestBody PostEmployeeDto postEmployeeDto) {
-        if (userRepository.existsByUsername(postEmployeeDto.username())) {
+        if (userEntityService.existsByUsername(postEmployeeDto.username())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
 
-        Employee employee = employeeMapper.postToEmployee(postEmployeeDto);
-        String hashedPassword=passwordEncoder.encode(employee.getUserEntity().getPassword());
-        employee.getUserEntity().setPassword(hashedPassword);
-
-        Role passengerRole = roleRepository.findByRoleName("PASSENGER").get();
-        Role employeeRole = roleRepository.findByRoleName("EMPLOYEE").get();
-        employee.getUserEntity().addRole(passengerRole);
-        employee.getUserEntity().addRole(employeeRole);
-
-        employeeRepository.save(employee);
+        employeeService.save(postEmployeeDto);
 
         return new ResponseEntity<>("Employee registered successfully!", HttpStatus.OK);
     }
+    @Operation(
+            description = "Endpoint to retrieve all employees",
+            summary = "Retrieve all employees",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/private/employees")
     public List<Employee> findAll() {
+        UserEntity user = getAuthenticatedUser();
+        if (isEmployee(user)) {
+            Employee employee = employeeService.findById(user.getEmployee().getEmployeeId());
+            return Collections.singletonList(employee);
+        }
+
         return employeeService.findAll();
     }
+    @Operation(
+            description = "Endpoint to retrieve an employee by ID",
+            summary = "Retrieve an employee by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Employee not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @GetMapping("/private/employees/{employeeId}")
     public Employee getEmployee(@PathVariable int employeeId) {
         Employee theEmployee = employeeService.findById(employeeId);
-        if (theEmployee == null) {
-            throw new RuntimeException("Employee id not found - " + employeeId);
+        if(theEmployee == null){
+            throw new RuntimeException("Employee id not found - " + theEmployee);
         }
+        UserEntity user = getAuthenticatedUser();
+        authorizeAccess(user, theEmployee);
+
         return theEmployee;
     }
-    @PostMapping("/private/employees")
-    public Employee addEmployee(@RequestBody PostEmployeeDto postEmployeeDto) {
-        return employeeService.save(postEmployeeDto);
-    }
+
+    @Operation(
+            description = "Endpoint to update an employee",
+            summary = "Update an employee",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Employee not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @PutMapping("/private/employees")
-    public Employee updateEmployee(@RequestBody PutEmployeeDto putEmployeeDto) {
-        return  employeeService.save(putEmployeeDto);
+    public ResponseEntity<String> updateEmployee(@RequestBody PutEmployeeDto putEmployeeDto) {
+        Employee theEmployee = employeeService.findById(putEmployeeDto.employeeId());
+        if(theEmployee == null){
+            throw new RuntimeException("Employee not found - " + theEmployee);
+        }
+        UserEntity user = getAuthenticatedUser();
+        authorizeAccess(user, theEmployee);
+        employeeService.save(putEmployeeDto);
+        return new ResponseEntity<>("Employee updated successfully!", HttpStatus.OK);
     }
+
+    @Operation(
+            description = "Endpoint to delete an employee by ID",
+            summary = "Delete an employee by ID",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    ),
+                    @ApiResponse(
+                            description = "Employee not found",
+                            responseCode = "404"
+                    ),
+                    @ApiResponse(
+                            description = "Unauthorized",
+                            responseCode = "401"
+                    )
+            }
+    )
     @DeleteMapping("/private/employees/{employeeId}")
     public String deleteEmployee(@PathVariable int employeeId) {
-        Employee tempEmployee = employeeService.findById(employeeId);
-        if (tempEmployee == null) {
-            throw new RuntimeException("Employee id not found - " + employeeId);
+        Employee theEmployee = employeeService.findById(employeeId);
+        if(theEmployee == null){
+            throw new RuntimeException("Employee id not found - " + theEmployee);
         }
+        UserEntity user = getAuthenticatedUser();
+        authorizeAccess(user, theEmployee);
         employeeService.deleteById(employeeId);
-        return "Deleted employee id - " + employeeId;
+        return "Deleted Employee id - " + employeeId;
+    }
+
+    private UserEntity getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userEntityService.findByUsername(username);
+    }
+
+    private boolean isEmployee(UserEntity user) {
+        return user.getRole().getRoleName().equals("EMPLOYEE");
+    }
+
+    private void authorizeAccess(UserEntity user, Employee employee) {
+        if (isEmployee(user)) {
+            Employee theEmployee = user.getEmployee();
+            if (theEmployee.getEmployeeId() != employee.getEmployeeId()) {
+                throw new AuthorizationException("You don't have access to this resource");
+            }
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

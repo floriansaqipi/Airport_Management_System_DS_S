@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -26,13 +27,20 @@ public class Employee {
     private String contactInfo;
 
     @ManyToMany(mappedBy = "employees")
-    @JsonBackReference
+    @JsonIgnoreProperties({"departureAirport", "arrivalAirport", "aircraft", "checkIns", "baggages", "feedbacks", "gateAssignments", "tickets", "flightSchedules", "cargos", "employees"})
     private List<Flight> flights;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "e_user_id")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"role", "passenger", "employee"})
     private UserEntity userEntity;
+
+    @PreRemove
+    public void preRemove(){
+        for(Flight flight : flights) {
+            flight.getEmployees().remove(this);
+        }
+    }
 
     // Constructors, getters, and setters
     public Employee() {

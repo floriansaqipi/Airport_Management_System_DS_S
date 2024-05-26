@@ -50,6 +50,11 @@ public class BoardingPassServiceImpl implements BoardingPassService {
     }
 
     @Override
+    public List<BoardingPass> findByPassengerId(Integer passengerId) {
+        return boardingPassRepository.findByPassengerId(passengerId);
+    }
+
+    @Override
     public List<BoardingPass> findAll() {
         return boardingPassRepository.findAll();
     }

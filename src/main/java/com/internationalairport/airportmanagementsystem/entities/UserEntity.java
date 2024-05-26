@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -22,20 +23,17 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    @JsonManagedReference
-    private List<Role> roles;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    @JsonIgnoreProperties({"abilities", "users"})
+    private Role role;
 
-    @OneToOne(mappedBy = "userEntity")
-    @JsonBackReference
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties({"baggages", "feedbacks", "checkIns", "tickets", "userEntity"})
     private Passenger passenger;
-    @OneToOne(mappedBy = "userEntity")
-    @JsonBackReference
+
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties({"flights", "userEntity"})
     private Employee employee;
     
     // Constructors, getters, and setters
@@ -71,20 +69,12 @@ public class UserEntity {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void addRole(Role tempRole) {
-        if (roles == null){
-            roles = new ArrayList<>();
-        }
-
-        roles.add(tempRole);
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public Passenger getPassenger() {

@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.engine.internal.Cascade;
@@ -30,30 +31,42 @@ public class Passenger {
     @Column(name = "contact_details")
     private String contactDetails;
 
-    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    @JsonManagedReference
+    @OneToMany(mappedBy = "passenger")
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<Feedback> feedbacks;
 
-    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    @JsonManagedReference
+    @OneToMany(mappedBy = "passenger")
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<CheckIn> checkIns;
 
-    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    @JsonManagedReference
+    @OneToMany(mappedBy = "passenger")
+    @JsonIgnoreProperties({"flight", "passenger", "boardingPass"})
     private List<Ticket> tickets;
 
-    @OneToMany(mappedBy = "passenger", cascade = {CascadeType.DETACH, CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH})
-    @JsonManagedReference
+    @OneToMany(mappedBy = "passenger")
+    @JsonIgnoreProperties({"flight", "passenger"})
     private List<Baggage> baggages;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "p_user_id")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"role", "passenger", "employee"})
     private UserEntity userEntity;
+
+    @PreRemove
+    public void preRemove(){
+        for(Feedback feedback : feedbacks) {
+            feedback.setPassenger(null);
+        }
+        for(CheckIn checkIn : checkIns) {
+            checkIn.setPassenger(null);
+        }
+        for(Ticket ticket : tickets) {
+            ticket.setPassenger(null);
+        }
+        for(Baggage baggage : baggages) {
+            baggage.setPassenger(null);
+        }
+    }
 
 
     // Constructors, getters, and setters

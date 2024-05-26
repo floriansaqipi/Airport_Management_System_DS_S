@@ -4,10 +4,18 @@ import com.internationalairport.airportmanagementsystem.dtos.post.PostPassengerD
 import com.internationalairport.airportmanagementsystem.dtos.put.PutPassengerDto;
 import com.internationalairport.airportmanagementsystem.entities.Passenger;
 import com.internationalairport.airportmanagementsystem.entities.UserEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PassengerMapper {
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public PassengerMapper(PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
+    }
     public Passenger postToPassenger(PostPassengerDto postPassengerDto) {
 
 
@@ -18,7 +26,8 @@ public class PassengerMapper {
                 postPassengerDto.contactDetails()
         );
         passenger.setPassengerId(0);
-        UserEntity user= new UserEntity(postPassengerDto.username(), postPassengerDto.password());
+        UserEntity user= new UserEntity(postPassengerDto.username(),
+                passwordEncoder.encode(postPassengerDto.password()));
         passenger.setUserEntity(user);
 
         return passenger;
@@ -33,7 +42,8 @@ public class PassengerMapper {
         );
         passenger.setPassengerId(putPassengerDto.passengerId());
 
-        UserEntity user= new UserEntity(putPassengerDto.username(), putPassengerDto.password());
+        UserEntity user= new UserEntity(putPassengerDto.username(),
+                passwordEncoder.encode(putPassengerDto.password()));
         passenger.setUserEntity(user);
         return passenger;
     }

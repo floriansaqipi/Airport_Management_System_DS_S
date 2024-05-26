@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -18,8 +19,8 @@ public class Role {
     @Column(name = "role_name")
     private String roleName;
 
-    @ManyToMany(mappedBy = "roles")
-    @JsonBackReference
+    @OneToMany(mappedBy = "role")
+    @JsonIgnoreProperties({"role", "passenger", "employee"})
     private List<UserEntity> users;
 
     @ManyToMany
@@ -28,8 +29,16 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "ability_id")
     )
-    @JsonManagedReference
+    @JsonIgnoreProperties({"roles"})
     private List<Ability> abilities;
+
+    @PreRemove
+    public void preRemove(){
+        for(UserEntity userEntity : users) {
+            userEntity.setRole(null);
+        }
+
+    }
 
     // Constructors, getters, and setters
     public Role() {}

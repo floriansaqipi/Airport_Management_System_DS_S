@@ -3,6 +3,7 @@ package com.internationalairport.airportmanagementsystem.mappers;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutFlightDto;
 import com.internationalairport.airportmanagementsystem.entities.Aircraft;
+import com.internationalairport.airportmanagementsystem.entities.Airport;
 import com.internationalairport.airportmanagementsystem.entities.Employee;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,18 @@ public class FlightMapper {
                 postFlightDto.arrivalTime()
         );
         flight.setFlightId(0);
+
+        if(postFlightDto.departureAirportId() != null) {
+            Airport airport = new Airport();
+            airport.setAirportId((postFlightDto.departureAirportId()));
+            flight.setDepartureAirport(airport);
+        }
+
+        if(postFlightDto.arrivalAirportId() != null) {
+            Airport airport = new Airport();
+            airport.setAirportId((postFlightDto.arrivalAirportId()));
+            flight.setArrivalAirport(airport);
+        }
 
         if(postFlightDto.aircraftId() != null){
             Aircraft aircraft = new Aircraft();
@@ -41,6 +54,18 @@ public class FlightMapper {
                 putFlightDto.arrivalTime()
         );
         flight.setFlightId(putFlightDto.flightId());
+
+        if(putFlightDto.departureAirportId() != null) {
+            Airport airport = new Airport();
+            airport.setAirportId((putFlightDto.departureAirportId()));
+            flight.setDepartureAirport(airport);
+        }
+
+        if(putFlightDto.arrivalAirportId() != null) {
+            Airport airport = new Airport();
+            airport.setAirportId((putFlightDto.arrivalAirportId()));
+            flight.setArrivalAirport(airport);
+        }
 
         if(putFlightDto.aircraftId() != null){
             Aircraft aircraft = new Aircraft();

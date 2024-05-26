@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -23,8 +24,15 @@ public class Airline {
     private String name;
 
     @OneToMany(mappedBy = "airline")
-    @JsonManagedReference
+    @JsonIgnoreProperties({"airline", "flights", "maintenances"})
     private List<Aircraft> aircrafts;
+
+    @PreRemove
+    public void preRemove(){
+        for(Aircraft aircraft : aircrafts) {
+            aircraft.setAirline(null);
+        }
+    }
 
     // Constructors, Getters, and Setters
     public Airline() {

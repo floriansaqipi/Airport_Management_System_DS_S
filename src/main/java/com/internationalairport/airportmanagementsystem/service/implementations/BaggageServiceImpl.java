@@ -49,9 +49,16 @@ public class BaggageServiceImpl implements BaggageService {
         return theBaggage;
     }
 
+
+
     @Override
     public List<Baggage> findAll() {
         return baggageRepository.findAll();
+    }
+
+    @Override
+    public List<Baggage> findByPassengerId(Integer passengerId) {
+        return baggageRepository.findByPassengerId(passengerId);
     }
 
     @Override

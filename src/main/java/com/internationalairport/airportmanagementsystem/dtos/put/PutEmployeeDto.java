@@ -7,6 +7,7 @@ public record PutEmployeeDto(
         String name,
         String role,
         String contactInfo,
-        UserEntity userEntity
+        String username,
+        String password
 ) {
 }

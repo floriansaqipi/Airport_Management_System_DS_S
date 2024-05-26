@@ -30,5 +30,6 @@ https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <include file="/db/changelog/scripts/22-altering-one-to-one-relationships.sql"/>
     <include file="/db/changelog/scripts/23-creating-users-roles-tables.sql"/>
     <include file="/db/changelog/scripts/24-creating-abilities-role-abilities-tables.sql"/>
+    <include file="/db/changelog/scripts/25-modifying-user-roles.sql"/>
 
 </databaseChangeLog>
