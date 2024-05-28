@@ -86,7 +86,8 @@ public class CustomAuthorizationManager implements AuthorizationManager<RequestA
 
         for (Ability ability : abilities) {
             if(requestUri.contains(ability.getEntity()) &&
-                    (ability.getVerb() == null || ability.getVerb().equals(method))
+                    (ability.getVerb() == null || ability.getVerb().equals(method)) &&
+                    ability.getField() == null
             ) {
                 return false;
             }
