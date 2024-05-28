@@ -2,6 +2,7 @@ package com.internationalairport.airportmanagementsystem.rest;
 
 import com.internationalairport.airportmanagementsystem.entities.ErrorResponse;
 import com.internationalairport.airportmanagementsystem.exceptions.AuthorizationException;
+import com.internationalairport.airportmanagementsystem.exceptions.FlightAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -65,5 +66,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAuthenticationCredentialsNotFoundException(AuthenticationCredentialsNotFoundException ex) {
         // Log the exception or handle it in any other way
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("JWT was expired or incorrect");
+    }
+
+    @ExceptionHandler(FlightAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleFlightAlreadyExistsException(FlightAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setMessage(ex.getMessage());
+        errorResponse.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

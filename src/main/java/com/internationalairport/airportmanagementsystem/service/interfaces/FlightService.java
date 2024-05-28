@@ -10,6 +10,8 @@ public interface FlightService {
     Flight save(PostFlightDto postFlightDto);
     Flight save(PutFlightDto putFlightDto);
     Flight findById(Integer id);
+
+    Boolean existsByFlightNumber(String flightNumber);
     List<Flight> findAll();
     void deleteById(Integer theId);
     String deleteAll();

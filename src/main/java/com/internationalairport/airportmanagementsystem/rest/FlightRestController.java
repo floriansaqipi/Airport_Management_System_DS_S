@@ -3,10 +3,13 @@ package com.internationalairport.airportmanagementsystem.rest;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostFlightDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutFlightDto;
 import com.internationalairport.airportmanagementsystem.entities.Flight;
+import com.internationalairport.airportmanagementsystem.exceptions.FlightAlreadyExistsException;
 import com.internationalairport.airportmanagementsystem.service.interfaces.FlightService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -80,6 +83,9 @@ public class FlightRestController {
     )
     @PostMapping("/private/flights")
     public Flight addFlight(@RequestBody PostFlightDto postFlightDto) {
+        if (flightService.existsByFlightNumber(postFlightDto.flightNumber())) {
+            throw new FlightAlreadyExistsException("Flight with that number already exists!");
+        }
         return flightService.save(postFlightDto);
     }
 

@@ -39,7 +39,9 @@ public class Ticket {
 
     @PreRemove
     private void preRemove(){
-        boardingPass.setTicket(null);
+        if(boardingPass != null){
+            boardingPass.setTicket(null);
+        }
     }
 
     public Ticket() {
