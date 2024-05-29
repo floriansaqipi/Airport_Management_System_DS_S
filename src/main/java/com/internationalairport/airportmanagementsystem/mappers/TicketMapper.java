@@ -35,7 +35,7 @@ public class TicketMapper {
                 putTicketDto._class(),
                 putTicketDto.price()
         );
-        ticket.setTicketId(putTicketDto.tickedId());
+        ticket.setTicketId(putTicketDto.ticketId());
 
         Passenger passenger = new Passenger();
         passenger.setPassengerId(putTicketDto.passengerId());
