@@ -177,21 +177,17 @@ public class PassengerRestController {
     )
     @PutMapping("/private/passengers")
     public ResponseEntity<String> updatePassenger(@RequestBody PutPassengerDto putPassengerDto) {
-        UserEntity user = userEntityService.findByUsername(putPassengerDto.username());
+
         Passenger thePassenger = passengerService.findById(putPassengerDto.passengerId());
-        if (user == null) {
-            throw new RuntimeException("User not found for username - " + putPassengerDto.username());
-        }
-        else if (userEntityService.existsByUsername(putPassengerDto.username()) &&
+        UserEntity user = thePassenger.getUserEntity();
+
+        if (userEntityService.existsByUsername(putPassengerDto.username()) &&
                 !putPassengerDto.username().equals(user.getUsername())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }
-        if(thePassenger == null){
-            throw new RuntimeException("Passenger id not found - " + thePassenger);
-        }
+
         UserEntity user1 = getAuthenticatedUser();
         authorizeAccess(user1, thePassenger);
-
         passengerService.save(putPassengerDto);
 
         return new ResponseEntity<>("Passenger updated successfully!", HttpStatus.OK);
