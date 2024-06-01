@@ -78,7 +78,7 @@ public class PassengerServiceImpl implements PassengerService {
     @Override
     public Passenger save(PutPassengerDto putPassengerDto) {
         Passenger passenger = passengerMapper.putToPassenger(putPassengerDto);
-        UserEntity user = userEntityService.findByUsername(putPassengerDto.username());
+        UserEntity user = findById(passenger.getPassengerId()).getUserEntity();
         Role role = user.getRole();
         passenger.getUserEntity().setUserId(user.getUserId());
         passenger.getUserEntity().setRole(role);
