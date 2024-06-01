@@ -182,7 +182,7 @@ public class PassengerRestController {
         if (user == null) {
             throw new RuntimeException("User not found for username - " + putPassengerDto.username());
         }
-        if (userEntityService.existsByUsername(putPassengerDto.username()) &&
+        else if (userEntityService.existsByUsername(putPassengerDto.username()) &&
                 !putPassengerDto.username().equals(user.getUsername())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
         }

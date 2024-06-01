@@ -167,12 +167,22 @@ public class EmployeeRestController {
     )
     @PutMapping("/private/employees")
     public ResponseEntity<String> updateEmployee(@RequestBody PutEmployeeDto putEmployeeDto) {
+        UserEntity user = userEntityService.findByUsername(putEmployeeDto.username());
         Employee theEmployee = employeeService.findById(putEmployeeDto.employeeId());
+
+        if (user == null) {
+            throw new RuntimeException("User not found for username - " + putEmployeeDto.username());
+        }
+        else if (userEntityService.existsByUsername(putEmployeeDto.username()) &&
+                !putEmployeeDto.username().equals(user.getUsername())) {
+            return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
+        }
+
         if(theEmployee == null){
             throw new RuntimeException("Employee not found - " + theEmployee);
         }
-        UserEntity user = getAuthenticatedUser();
-        authorizeAccess(user, theEmployee);
+        UserEntity user1 = getAuthenticatedUser();
+        authorizeAccess(user1, theEmployee);
         employeeService.save(putEmployeeDto);
         return new ResponseEntity<>("Employee updated successfully!", HttpStatus.OK);
     }
