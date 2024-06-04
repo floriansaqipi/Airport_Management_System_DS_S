@@ -3,10 +3,14 @@ package com.internationalairport.airportmanagementsystem.rest;
 import com.internationalairport.airportmanagementsystem.dtos.post.PostRoleDto;
 import com.internationalairport.airportmanagementsystem.dtos.put.PutRoleDto;
 import com.internationalairport.airportmanagementsystem.entities.Role;
+import com.internationalairport.airportmanagementsystem.entities.UserEntity;
+import com.internationalairport.airportmanagementsystem.exceptions.RoleAlreadyExistsException;
 import com.internationalairport.airportmanagementsystem.service.interfaces.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -81,6 +85,10 @@ public class RoleRestController {
     )
     @PostMapping("/roles")
     public Role addRole(@RequestBody PostRoleDto postRoleDto) {
+        if (roleService.existsByRoleName(postRoleDto.roleName())) {
+            throw new RoleAlreadyExistsException("A role with that name already exists!");
+        }
+
         return roleService.save(postRoleDto);
     }
 
@@ -99,6 +107,12 @@ public class RoleRestController {
     )
     @PutMapping("/roles")
     public Role updateRole(@RequestBody PutRoleDto putRoleDto) {
+        Role role = roleService.findById(putRoleDto.roleId());
+
+        if (roleService.existsByRoleName(putRoleDto.roleName()) &&
+                !putRoleDto.roleName().equals(role.getRoleName())) {
+            throw new RoleAlreadyExistsException("A role with that name already exists!");
+        }
         return roleService.save(putRoleDto);
     }
 
@@ -120,13 +134,13 @@ public class RoleRestController {
             }
     )
     @DeleteMapping("/roles/{RoleId}")
-    public String deleteRoleById(@PathVariable Integer RoleId) {
+    public ResponseEntity<String> deleteRoleById(@PathVariable Integer RoleId) {
         Role role = roleService.findById(RoleId);
         if (role == null) {
             throw new RuntimeException("Role not found for id - " + RoleId);
         }
         roleService.deleteById(RoleId);
-        return "Deleted Role with id - " + RoleId;
+        return new ResponseEntity<>("Role by Id - " + RoleId + " deleted!", HttpStatus.OK);
     }
 
 

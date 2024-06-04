@@ -1,14 +1,12 @@
 package com.internationalairport.airportmanagementsystem.dtos.put;
 
 public record PutTicketDto (
-        Integer tickedId,
+        Integer ticketId,
         Integer flightId,
         Integer passengerId,
         String seatNumber,
         String _class,
-        Double price,
-
-        Integer boardingPassId
+        Double price
 
 ) {
 }

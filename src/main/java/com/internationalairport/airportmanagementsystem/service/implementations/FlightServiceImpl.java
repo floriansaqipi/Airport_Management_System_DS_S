@@ -50,6 +50,11 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
+    public Boolean existsByFlightNumber(String flightNumber) {
+        return flightRepository.existsByFlightNumber(flightNumber);
+    }
+
+    @Override
     public List<Flight> findAll() {
         return flightRepository.findAll();
     }

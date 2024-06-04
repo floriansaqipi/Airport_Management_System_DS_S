@@ -13,6 +13,9 @@ public interface RoleService {
     Role save(PutRoleDto putRoleDto);
 
     Role findById(Integer userId);
+
+    Boolean existsByRoleName(String roleName);
+
     List<Role> findAll();
     void deleteById(Integer theId);
     String deleteAll();

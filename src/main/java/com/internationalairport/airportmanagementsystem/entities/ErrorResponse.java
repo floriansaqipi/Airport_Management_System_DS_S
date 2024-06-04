@@ -23,12 +23,12 @@ public class ErrorResponse {
         this.status = status;
     }
 
-    public String getMesssage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(String messsage) {
-        this.message = messsage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public long getTimeStamp() {

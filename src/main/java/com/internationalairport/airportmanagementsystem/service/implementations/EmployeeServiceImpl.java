@@ -64,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee save(PutEmployeeDto putEmployeeDto) {
         Employee employee = employeeMapper.putToEmployee(putEmployeeDto);
-        UserEntity user = userEntityService.findByUsername(putEmployeeDto.username());
+        UserEntity user = findById(employee.getEmployeeId()).getUserEntity();
         Role role = user.getRole();
         employee.getUserEntity().setUserId(user.getUserId());
         employee.getUserEntity().setRole(role);

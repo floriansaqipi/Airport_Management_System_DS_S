@@ -1,6 +1,7 @@
 package com.internationalairport.airportmanagementsystem.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -23,7 +24,7 @@ public class BoardingPass {
 
     @OneToOne
     @JoinColumn(name = "ticket_id")
-    @JsonBackReference
+    @JsonIgnoreProperties({"flight", "passenger", "boardingPass"})
     private Ticket ticket;
 
     // Constructors

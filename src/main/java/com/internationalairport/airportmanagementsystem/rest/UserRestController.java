@@ -162,12 +162,20 @@ public class UserRestController {
                     )
             }
     )
+    
+    @GetMapping("/private/users/username/{username}")
+    public UserEntity getUserByUsername(@PathVariable String username) {
+        UserEntity user = userEntityService.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found for username - " + username);
+        }
+        return user;
+    }
+
     @PutMapping("/private/users")
     public ResponseEntity<String> updateUser(@RequestBody PutUserDto putUserDto) {
         UserEntity user = userEntityService.findById(putUserDto.userId());
-        if (user == null) {
-            throw new RuntimeException("User not found for id - " + putUserDto.userId());
-        }
+
         if (userEntityService.existsByUsername(putUserDto.username()) &&
                 !putUserDto.username().equals(user.getUsername())) {
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);

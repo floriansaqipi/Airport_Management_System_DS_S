@@ -48,6 +48,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Boolean existsByRoleName(String roleName) {
+        return roleRepository.existsByRoleName(roleName);
+    }
+
+    @Override
     public List<Role> findAll() {
         return roleRepository.findAll();
     }
