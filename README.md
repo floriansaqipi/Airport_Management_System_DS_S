@@ -52,6 +52,18 @@ Below is a list of the primary database tables utilized in our Airport Managemen
 
 ---
 
+### Authentication and Authorization
+
+To secure our API, we implemented custom authentication and authorization mechanisms:
+
+- **Custom Spring Filter**: We developed a custom Spring filter to handle authentication. This filter intercepts incoming requests and checks for valid authentication tokens.
+- **Custom User Details Provider**: We created a custom user details provider to load user-specific data. This setup allows us to control which routes are public and which are private.
+- **Role-Based Authorization**: For private routes, we implemented role-based authorization. This ensures that users can only access resources and perform actions that are permitted by their roles and abilities. Different roles such as Admin, Staff, and Passenger have varying levels of access and permissions.
+
+### Documentation
+
+To document our REST API, we utilized **Swagger**. Swagger provides an interactive interface for exploring and testing the API endpoints, making it easier for developers to understand and use our API. The Swagger documentation is automatically generated from the annotations in our controllers and can be accessed.
+
 ### Exception Handling
 
 Our API incorporates a General Exception Handler, ensuring that any errors are communicated effectively through well-structured error messages. This feature enhances the robustness and user-friendliness of our system.
