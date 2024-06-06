@@ -230,4 +230,5 @@ public class EmployeeRestController {
             }
         }
     }
+    String var = "This is a commit";
 }
